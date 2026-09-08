@@ -1,0 +1,13 @@
+{
+  "eval_id": 2,
+  "eval_name": "new-module-home-approvals",
+  "prompt": "Start the Home module mockups. First screen set: Approvals (the list of pending approvals with the customer score, approve / reject, and the opened approval) for phone and web, light and dark. Plan it from the BRD first, then build the drafts on the board.",
+  "assertions": [
+    "plans/home.md exists with sub-menus, a screen list in flow order, and a 'Found elsewhere in the BRD' section citing line numbers",
+    "The agent stopped after the plan and asked for 'go' (or, if it built, said so explicitly with assumptions)",
+    "If built: mod-home*.jsx components use the Hm prefix; one line for home was appended to modules.js; registration via window.NEW_DRAFT_MODULES.push at the end of the last file",
+    "If built: phone and web screens for Approvals list and opened approval exist and render in both themes with zero console errors (board-check output)",
+    "No edits to index.html, board.html, board.jsx or other modules' files",
+    "Anything not in the BRD was noted in design/during-ui-*.md rather than invented silently"
+  ]
+}

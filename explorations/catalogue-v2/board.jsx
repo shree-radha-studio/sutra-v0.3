@@ -140,7 +140,7 @@ function FinalsCol({ ox = 0 }) {
 
 function Canvas() {
   const only = Q.get('only');
-  if (only) { const [rid, n] = only.split('-'); const r = ONLY[rid]; if (!r || !r.screens[(+n || 1) - 1]) return <div className="empty" style={{ left: 30, top: 30 }}>No frame {only} on this page. Ids here: {Object.keys(ONLY).join(' ')} · {ND_PHONE.length} draft phone · {ND_WEB.length} draft web · {FIN.length} final phone · {WEB.length} final web.</div>;
+  if (only) { const [rid, n] = only.split('-'); const r = ONLY[rid]; const ok = r && r.screens[(+n || 1) - 1]; document.title = ok ? 'Sutra · ' + PAGE_TITLE + ' · ' + only + ' · ' + ok[0] : 'Sutra · no frame ' + only; if (!ok) return <div className="empty" style={{ left: 30, top: 30 }}>No frame {only} on this page. Ids here: {Object.keys(ONLY).join(' ')} · {ND_PHONE.length} draft phone · {ND_WEB.length} draft web · {FIN.length} final phone · {WEB.length} final web.</div>;
     const Scr = r.screens[(+n || 1) - 1][1]; const g = geo(r);
     if (Q.get('bare') != null) { /* no device frame: the screen fills the viewport */
       document.getElementById('stage').style.cssText = 'width:100vw;height:100dvh'; document.body.style.background = r.T.dark ? '#000' : r.T.bg; document.documentElement.style.overflow = 'hidden';

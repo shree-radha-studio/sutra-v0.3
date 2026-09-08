@@ -1,0 +1,14 @@
+{
+  "eval_id": 1,
+  "eval_name": "edit-existing-module-add-sheet",
+  "prompt": "In the CRM mockups, the payments phone flow needs one more screen: a 'Log payment' sheet where the user picks a bill, enters amount and mode (cash / UPI / cheque / bank), a reference number and a note, then confirms. Draw it light and dark and put it on the CRM board page after the bill sheet. Don't touch other modules.",
+  "assertions": [
+    "A new phone screen component with a Cr prefix exists in a mod-crm*.jsx file and draws a Log payment sheet (bill, amount, mode, reference, note, confirm)",
+    "The screen is registered inside the existing CRM band under the Payments sub-menu, after the bill sheet, as a [caption, Component] pair",
+    "No file outside mod-crm*.jsx and plans/crm.md was modified (index.html, board.html, board.jsx, finals.jsx, other modules untouched)",
+    "No new .html page was created for verification",
+    "The board-check script (or an equivalent headless render) was run and reported zero console errors for the CRM page",
+    "The final message names board.html?m=crm and the frame id(s) to look at",
+    "tools/sync.sh was run with a message, or the exact command was given to the owner"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "skill_name": "sutra-mockups",
+  "evals": [
+    {
+      "id": 1,
+      "eval_name": "edit-existing-module-add-sheet",
+      "prompt": "In the CRM mockups, the payments phone flow needs one more screen: a 'Log payment' sheet where the user picks a bill, enters amount and mode (cash / UPI / cheque / bank), a reference number and a note, then confirms. Draw it light and dark and put it on the CRM board page after the bill sheet. Don't touch other modules.",
+      "expected_output": "A new phone screen component added to a CRM file (prefixed Cr\u2026), registered inside the existing CRM band under Payments in flow order; renders in FINAL and FINALD with no console errors; verified with the board-check script; nothing edited in index.html/board.html/board.jsx or other modules' files; sync script run or offered with the right message.",
+      "files": [],
+      "assertions": [
+        "A new phone screen component with a Cr prefix exists in a mod-crm*.jsx file and draws a Log payment sheet (bill, amount, mode, reference, note, confirm)",
+        "The screen is registered inside the existing CRM band under the Payments sub-menu, after the bill sheet, as a [caption, Component] pair",
+        "No file outside mod-crm*.jsx and plans/crm.md was modified (index.html, board.html, board.jsx, finals.jsx, other modules untouched)",
+        "No new .html page was created for verification",
+        "The board-check script (or an equivalent headless render) was run and reported zero console errors for the CRM page",
+        "The final message names board.html?m=crm and the frame id(s) to look at",
+        "tools/sync.sh was run with a message, or the exact command was given to the owner"
+      ]
+    },
+    {
+      "id": 2,
+      "eval_name": "new-module-home-approvals",
+      "prompt": "Start the Home module mockups. First screen set: Approvals (the list of pending approvals with the customer score, approve / reject, and the opened approval) for phone and web, light and dark. Plan it from the BRD first, then build the drafts on the board.",
+      "expected_output": "A plan file plans/home.md with sub-menus, flow, screens and a 'Found elsewhere in the BRD' section with line references; new mod-home.jsx (+ web) with Hm-prefixed components; one appended line in modules.js; self-registration at the end of the last file; the Home page renders with no console errors; the plan shown or summarised to the owner with open questions.",
+      "files": [],
+      "assertions": [
+        "plans/home.md exists with sub-menus, a screen list in flow order, and a 'Found elsewhere in the BRD' section citing line numbers",
+        "The agent stopped after the plan and asked for 'go' (or, if it built, said so explicitly with assumptions)",
+        "If built: mod-home*.jsx components use the Hm prefix; one line for home was appended to modules.js; registration via window.NEW_DRAFT_MODULES.push at the end of the last file",
+        "If built: phone and web screens for Approvals list and opened approval exist and render in both themes with zero console errors (board-check output)",
+        "No edits to index.html, board.html, board.jsx or other modules' files",
+        "Anything not in the BRD was noted in design/during-ui-*.md rather than invented silently"
+      ]
+    },
+    {
+      "id": 3,
+      "eval_name": "draft-variant-of-final-for-compare",
+      "prompt": "For the Catalogue web finals, the owner wants to compare an alternative: the sale orders 'opened order' screen with the customer pane collapsed and the order lines as a full-width table instead. Draw that as a draft variant so it can be compared side by side with the current final on the board.",
+      "expected_output": "A new web screen registered as a Catalogue draft (module name starting with 'Catalogue'), reusing WebShell3 / existing chrome, not editing finals.jsx or the FIN/WEB lists; the agent points the owner to board.html?m=catalogue&v=compare and the frame id; no console errors; no new html pages created.",
+      "files": [],
+      "assertions": [
+        "A new web screen was added as a Catalogue draft (registration module name starts with 'Catalogue'), not by editing finals.jsx / FIN / WEB",
+        "The variant reuses WebShell3 or the existing web chrome and shows the order lines as a full-width table with the customer pane collapsed",
+        "The final message points the owner to board.html?m=catalogue&v=compare (or the compare view) and gives the frame id",
+        "Zero console errors reported by a headless render of the catalogue page",
+        "No new .html pages created; no other module files touched"
+      ]
+    }
+  ]
+}

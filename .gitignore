@@ -3,9 +3,8 @@ explorations/catalogue-v2/for-claude-design/
 # per-session scratch pages used for screenshots
 explorations/catalogue-v2/_verify.html
 explorations/catalogue-v2/crm-[pw]*.html
-# local Claude settings; .claude/skills and launch.json are shared. The sutra-design skill is a symlink to design-system/
+# local Claude settings; .claude/skills and launch.json are shared
 .claude/settings.local.json
-.claude/skills/sutra-design
 # OS
 Thumbs.db
 .DS_Store
@@ -16,3 +15,5 @@ explorations/catalogue-v2/share/
 # scratch screenshots dropped at the project root by verification runs
 /*.jpeg
 /*.png
+# headless verification output (scripts/board-check.sh)
+.board-check/
