@@ -280,3 +280,37 @@ new Payments › Broker / agency screen, then on the owner's word the Purchased 
 Orders tabs on the customer pane. Screens still worth adding if the owner agrees: the Payments Bills and Customers
 tabs as their own screens, the Customers picker as a left-pane list inside Share, and the Sale executive's no-₹ phone
 variants.
+
+## 8. Every tab, sub-menu and button, on both devices (9 Sep)
+
+The owner asked for every web view to exist on the phone and for every tab, sub-menu and button activity to be
+drawn. The module now has 47 web and 54 phone screens (light and dark each), registered in flow order per sub-menu
+from `mod-crm-phone.jsx`. What each interactive element opens:
+
+| Sub-menu | Tabs and buttons | Screen (web · phone) |
+|---|---|---|
+| Follow-ups | Journey board · Today · History tabs | board · Today tab · History tab |
+| | list chooser "+" | new saved list sheet |
+| | sort & filter | customers sort & filter (assignment, geography, quality, taste, activity, credit) |
+| | step pane: pencil, Snooze, Skip, Done → next | edit message · snooze menu · (skip is a confirm toast on Done) · done, next customer |
+| | WhatsApp group / Call / Share / + | sent state on Share · call is the phone's dialler · Share terminal · picture picker = Share grids |
+| Share | queue strip ‹ › and search | customer picker |
+| | customer pane tabs | Info · Packets · Orders |
+| | grid sort caret, Sort & filter | sort menu · sort & filter sheet |
+| | picture tap (long press on the phone) | picture viewer with in-packet toggle |
+| | Verify stock | verified grid and tray |
+| | packet rows, Send | composer · sent |
+| | composer: + Contact, Export, Place logo, Position per picture | send to · export · place logo · logo on all pictures |
+| Payments | Journey map · Bills · Customers · Broker / agency tabs | journey map · Bills · Customers · Broker / agency |
+| | sort & filter | bills sort & filter (stage, bill, customer risk, follow-up task, automation, broker) |
+| | pane: Snooze, Escalate, Log payment | snooze · escalate · log payment · bill cleared |
+| | report: Preview, Schedule, PDF, Pause, Send now | report preview · schedule (PDF, Pause, Send now are actions on the preview) |
+| Customers | search chips, sort & filter, columns | list · sort & filter · column chooser (fields on the phone) |
+| | dossier tabs | Info · Packets · Orders · Invoices & payments · Shipments · Returns & credit notes · Growth |
+| | Follow up, Share | start a follow-up sheet · Share terminal |
+| Journeys | journey tabs | Payments map · Refill customer journey (New samples, Cold revival, Sale order share the layout) |
+| | node tap, toolbar drop, New journey, Test, Publish | step settings · adding a step · new journey · test run · publish |
+
+Not drawn as separate frames because they are system or trivial: the phone dialler on Call, the "Add to packet"
+increment on the Packets tab, Clear on the packet pane (a confirm toast), Reset on the logo tool, Discard / Remove
+confirms (a toast), the Cold revival, New samples and Sale order journey maps (same layout as Refill).

@@ -27,7 +27,7 @@ const ST_SHEET = Array.from({ length: 10 }, (_, i) => ({ n: i + 1, name: 'Design
 const ST_FLAT = Array.from({ length: 6 }, (_, i) => ({ n: i + 1, name: 'Flat ' + (i + 1), src: ST_A + `flat-${String(i + 1).padStart(2, '0')}.jpg` }));
 const ST_MAIN = { code: '8337', name: 'Multicolour floral blouse', cat: 'Blouse', price: 12995, src: ST_A + 'blouse-main.jpg', pos: '50% 62%', score: 87, pcs: 164, band: 'High', colours: ['Rani', 'Peach', 'Bottle'] };
 const ST_PRODUCTS = [ST_MAIN,
-  { code: '8111', name: 'Gold corset', cat: 'Blouse', price: 8995, src: 'assets/crm/8111.jpg', pos: '50% 12%', score: 82, pcs: 121, band: 'High' },
+  { code: '8111', name: 'Red bridal lehenga', cat: 'Lehenga', price: 8995, src: 'assets/crm/8111.jpg', pos: '50% 12%', score: 82, pcs: 121, band: 'High' },
   { code: '8321', name: 'Bridal lehenga', cat: 'Lehenga', price: 11495, src: 'assets/crm/8321.jpg', pos: '50% 12%', score: 74, pcs: 58, band: 'Med-high' },
   { code: '8477', name: 'Sharara set', cat: 'Sharara', price: 5495, src: 'assets/crm/8477.jpg', pos: '50% 14%', score: 66, pcs: 92, band: 'Med' },
   { code: '8190', name: 'Peach gown', cat: 'Gown', price: 9495, src: 'assets/crm/8190.jpg', pos: '50% 10%', score: 71, pcs: 40, band: 'Med-high' },
@@ -90,7 +90,7 @@ function StTile({ T, src, pos, on, w, h, r = 12, n, foot, meta, mark, dark, styl
     {(foot || meta) && <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: '42%', background: 'linear-gradient(180deg, rgba(20,18,17,0), rgba(20,18,17,.6))', pointerEvents: 'none' }} />}
     {n != null && <span style={{ position: 'absolute', top: 6, left: 6, minWidth: 20, height: 20, padding: '0 6px', borderRadius: 10, ...veil({ background: 'rgba(8,8,12,.5)' }), fontFamily: T.fontUI, fontSize: 10.5, fontWeight: 600, display: 'grid', placeItems: 'center' }}>{n}</span>}
     {on && <><span style={{ position: 'absolute', inset: 0, boxShadow: `inset 0 0 0 2.5px ${T.accent}`, borderRadius: 'inherit', pointerEvents: 'none' }} /><span style={{ position: 'absolute', top: 6, right: 6, width: 20, height: 20, borderRadius: 10, background: T.accent, color: T.onAccent, display: 'grid', placeItems: 'center', boxShadow: '0 1px 4px rgba(0,0,0,.35), 0 0 0 1.5px rgba(255,255,255,.85)' }}><Ic name="check" size={12} sw={2.6} /></span></>}
-    {mark && <span style={{ position: 'absolute', right: 6, bottom: 6 }}><StMark /></span>}
+    {mark && <span style={{ position: 'absolute', right: 6, [meta || foot ? 'top' : 'bottom']: 6 }}><StMark /></span>}
     {(foot || meta) && <div style={{ position: 'absolute', left: 8, right: 8, bottom: 6, display: 'flex', alignItems: 'baseline', gap: 6, color: '#fff', textShadow: '0 1px 2px rgba(0,0,0,.5)', whiteSpace: 'nowrap', overflow: 'hidden' }}>{foot && <span style={{ fontFamily: T.fontDisplay, fontSize: 14, fontWeight: 600, letterSpacing: '.01em' }}>{foot}</span>}<span style={{ flex: 1 }} />{meta && <span style={{ fontFamily: T.fontUI, fontSize: 10.5, opacity: .92 }}>{meta}</span>}</div>}
     {children}
   </div>;

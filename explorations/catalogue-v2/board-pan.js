@@ -25,6 +25,6 @@
   addEventListener('mousemove', function (e) { if (pan) window.scrollTo(pan.sx - (e.clientX - pan.x), pan.sy - (e.clientY - pan.y)); });
   addEventListener('mouseup', function () { pan = null; document.body.classList.remove('panning'); });
   /* open zoomed to the phone column (board.jsx sets __FIT after its first render); Fit row / Fit all are one click away */
-  set(Math.min(1, (innerWidth - 40) / (window.__FIT || W())));
-  addEventListener('sutra:fit', function () { set(Math.min(1, (innerWidth - 40) / (window.__FIT || W()))); });
+  function fit() { set(Math.min(1, (innerWidth - 40) / (window.__FIT || W()))); window.scrollTo(0, 0); }
+  fit(); addEventListener('sutra:fit', fit);
 })();

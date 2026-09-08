@@ -150,3 +150,8 @@ function WebDPendingList({ T }) {
   </WebShell3>;
 }
 Object.assign(window, { WebSO3, WebAnalytics3, PEND, STAGES, Journey, StagePill, PendingJourneyPane, OrderPane, WebDReady3, WebDReadySel, WebDPendingGrid, WebDPendingList });
+
+/* Board registration moved here from index.html on 9 Sep 2026 (the board is one page per module; see modules.js). */
+(window.NEW_DRAFT_MODULES = window.NEW_DRAFT_MODULES || []).push({ module: 'Dispatch · on the approved bar', note: 'Ready and Pending as separate sub-menus on the approved header (8 Sep). The Dispatch band above still shows the earlier bar until its screens are moved over', subs: [
+    { name: 'Ready & Pending', flow: 'ready, in-stock on, pane = pending book as a journey → a card picked, pane = that order → pending sub-menu: four situations, grid → list', phone: [], web: [['Ready · in-stock filter on, pane = all pending as a journey', WebDReady3], ['Ready · order picked, pane = that order, All pending goes back', WebDReadySel], ['Pending · four situations, grid, order pane', WebDPendingGrid], ['Pending · list view', WebDPendingList]] },
+] });

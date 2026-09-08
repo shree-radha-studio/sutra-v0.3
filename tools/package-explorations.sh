@@ -8,19 +8,11 @@ rm -rf "$V2/for-claude-design"; mkdir -p "$OUT"
 cp "$SRC/common.jsx" "$SRC/themes.jsx" "$SRC/screens.jsx" "$OUT/"
 cp "$V2/themes2.jsx" "$V2/screens2.jsx" "$V2/final.jsx" "$V2/web.jsx" "$V2"/mod-*.jsx "$V2/finals.jsx" "$V2/board.jsx" "$V2/board.css" "$V2/board-pan.js" "$V2/modules.js" "$V2/audit.md" "$OUT/"; [[ -d "$V2/assets" ]] && cp -r "$V2/assets" "$OUT/"; cp "$V2/README.claude-design.md" "$OUT/" 2>/dev/null || true
 [[ -f "$OUT/README.claude-design.md" ]] && mv "$OUT/README.claude-design.md" "$OUT/README.md"
-fix_paths() { # $1 = source html, $2 = destination
-  sed -e 's#\.\./\.\./design-system/styles\.css#../../styles.css#'       -e 's#\.\./\.\./design-system/ui_kits/data\.js#../data.js#'       -e 's#\.\./\.\./design-system/ui_kits/sutra-mobile/ios-frame\.jsx#../sutra-mobile/ios-frame.jsx#'       -e 's#\.\./\.\./design-system/ui_kits/catalogue-explorations/#./#'       "$1"     | python -c "
-import sys,re
-s=sys.stdin.buffer.read().decode('utf-8')
-s=re.sub(r'<script>/\* data\.js resolves.*?</script>
-','',s,flags=re.S)
-s=re.sub(r'<!-- PATHS:.*?-->
-','',s,flags=re.S)
-open(sys.argv[1],'w',encoding='utf-8').write(s)" "$2"
-}
+fix_paths() { python "$P/tools/fix-paths.py" "$1" "$2"; } # $1 = source html, $2 = destination
 fix_paths "$V2/index.html" "$OUT/index.html"
 fix_paths "$V2/board.html" "$OUT/board.html"
 fix_paths "$V2/drafts-archive.html" "$OUT/drafts-archive.html"
+fix_paths "$V2/legacy-index.html" "$OUT/legacy-index.html"
 # modules.js base paths point into the snapshot; inside the kit the same files sit one level up
 sed -i -e "s#'\.\./\.\./design-system/ui_kits/sutra-mobile/#'../sutra-mobile/#" -e "s#'\.\./\.\./design-system/ui_kits/catalogue-explorations/#'./#" "$OUT/modules.js"
 

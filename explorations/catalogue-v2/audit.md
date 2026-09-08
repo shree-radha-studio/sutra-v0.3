@@ -323,3 +323,78 @@ Customers tabs of Payments as their own screens, the Sale executive's no-₹ var
 - Production's `NextPill` renamed `PrNextPill` (CRM exports a `NextPill` too; the later file's export won on `window`).
 
 **Open for the owner.** Over-receive handling, default margins and who edits them, karigar score weights, sample-reading threshold, the Ready-production material invoice (Hub side), and real material photos. Listed in `plans/production-coverage.md` §5.
+
+
+## Studio · AI Designer "Stitch" (New drafts) · 9 Sep 2026 — `mod-studio.jsx`, `mod-studio-web.jsx`, plan in `plans/studio-designer.md` (§12 = the owner's go decisions)
+
+13 phone and 15 web screens, light and dark, on the Studio page (`board.html?m=studio`). Registered from the end of
+`mod-studio-web.jsx`; one line in `modules.js`. Renders on the stage are the owner's own ChatGPT output (the 12-cut grid,
+the numbered design sheet, the flat lay), cut into tiles in `assets/studio/`; every render carries "AI render · not a fit
+sample" on screen.
+
+What was drawn and why
+
+- **The Stitch window is deep space.** The owner asked for "deep space black and white contrast" so the designer reads as
+  agentic. The chat column and the canvas sit on a cool near-black (`SP.bg` #0B0B0F light theme, #050507 dark), white
+  type, hairlines at 8 % white; everything around it (rail, header, right pane, Tracks, Moodboard, History, Memory,
+  Settings) stays sand / espresso, so the window reads as a different room inside the ERP. Maroon stays the one accent
+  line inside the window: the send button, the active zone, the current version, the kept tile.
+- **Stitch's personality, kept subtle.** No avatar, no emoji. Stitch speaks in the display face (Cormorant) while the
+  user speaks in Jost on a chip; a spectral thread (the listening aura's colours) runs beside Stitch's words, under the
+  stage while it draws, beside anything it proposed (moodboard items, taste rules) and on the AI-render mark; the orb
+  breathes on the window head with a status line that cycles like the rail greeting ("Stitch is looking at 8337").
+- **Modular blocks, the same on web and phone**: StChat (head · tray · conversation · prompt box; collapses to a spine),
+  StCanvas (dotted stage, set or picked design, zone overlay, tool palette, compare slider), StStrip (versions with the
+  branch mark), StTray (context thumbs with one Main ring and the sales-data switch), StPane in three states (Set
+  options · Zone · Version; head, what was made, one-click row, buttons at the foot, always in the same place), StTuner
+  (translucent pane, five fixed tabs, "as you left it" per thread), StSwipe (the phone approval card), StTile / StThumb /
+  StSwatch / StSeg / StSlider / StToggle. The web docks them; the phone stacks them or opens them as sheets.
+- **Tracks are per-category memory** (plan §12): category cards carry threads, last worked and one line of what Stitch
+  has learned; threads sit below with their state pill. The chat head reads "Blouse track · Multicolour floral, cuts".
+- **Feedback is explicit**: thumbs on every set and tile (web and phone), the picked cell counts, and the phone has a
+  swipe approval screen (right keep, left discard, up save) over the listening aura at low opacity.
+- **The phone has every web option.** Only the right pane differs: a Pane button on the canvas opens a half-height glass
+  sheet on black with the picture still visible above it (zone pane and tuner drawn); the selector is a full sheet.
+- **History and Settings are sub-menus** (plan §12): History by day with the item pane (share via WhatsApp packet,
+  export, moodboard; "Use as design content" → new product master or new material master; save as sample); Settings
+  with Models (one model per template, providers pane with key state, usage), Defaults (sales data fields and default,
+  cells, variations, memory retention, forget) and Sharing (WhatsApp share-in number, who edits).
+- **Memory** = What works (rows, not conclusions; "Not enough data yet" until five rows finish their read) and Taste
+  rules with provenance (typed by you · proposed by Stitch from thread X), with the "Stitch proposes" pane.
+- Money: sold ₹ never on tiles; the selector shows demand band and score with pcs when sales data is on; target price on
+  the save-as-sample sheet is marked money roles; usage cost "shows for admin only".
+
+New components (all `St…` / `ST_…`): StThread, StMood, StMark, StSwatch, StTile, StThumb, StSeg, StSlider, StToggle,
+StToggleRow, StCaret, StBtn, StThumbs, StHead, StTray, StMsg, StPrompt, StChat, StZoneOverlay, StCanvas, StStrip,
+StVariations, StRow, StChipRow, StPane, StTuner, StSwipe, StTop, StNodes, StHeader, StHalfSheet, StTrackCard,
+StThreadRow, StMoodTile, StHistRow, StVerdict, StWorksRow, StRuleRow, StModelRow, StSelTabs, StSelGrid, StSelTray,
+StCanvasCard, StCanvasScreen (phone); StShell, StMain, StBar, StCard, StPPane, TuneBtn, StStage, StSelector,
+StSaveSheet, StThreadPane, StMoodPane, StHistPane, StWorksPane (web).
+
+Known limits of the drawing
+
+- The phone status-bar time is drawn by the device frame in dark ink on light-theme frames; over the black Stitch
+  window it disappears (it shows in the dark pair). A device-frame change, not a screen change.
+- Zone rectangles are hand-placed percentages over the picked render; on a real product the agent would draw them.
+- Materials have no photos yet; swatches are drawn (velvet, sequin net, silk, mono net, tissue, lace, satin).
+- The models are named the way the BRD names them (nano banana, gpt image 2) plus a neutral "chat model"; the
+  OpenRouter route is a technical note, not a design element.
+
+Open for the owner: the ten questions in plan §9 minus the three answered by the go message (one Studio module, keep the
+zone edit, roles as drawn); whether History should also list generations that were never kept; whether the swipe screen
+should offer "up = save to moodboard" instead of "save as sample".
+
+### CRM · every tab, sheet and button, phone and web (9 Sep)
+
+Two more files: `mod-crm-more.jsx` (the remaining web states) and `mod-crm-phone.jsx` (phone counterparts for every
+web view, and the module's registration rebuilt in flow order). 47 web and 54 phone screens now. Shared sheet bodies
+(NewListBody, CustFilterBody, BillFilterBody, TemplateBody, SnoozeMenu, SortMenu, CustomerPickerBody, ViewerBody,
+ContactBody, ExportBody, SentBody, LogPaymentBody, EscalateBody, StartFollowBody, NewJourneyBody, PublishBody,
+TestRunBody, ScheduleBody, ColumnsBody, the four dossier tab bodies, LogoAllBody, TodayRows, HistoryRows,
+BillsTable, PayCustomerRows) render inside a web sheet (`WSheet`) or popover (`Pop`) and inside the phone `Sheet`
+via `pSheet`. Base screens took `overlayX` / `paneX` (web) and `over` (phone) hooks so states stack on the same
+screen. The journey map takes `nodes` / `edges` (Refill journey) and a `ghost` node; on the phone the map is a
+vertical flow (`JFlow`). New web chrome: `Overlay`, `WSheet`, `Pop`, `MenuRow`, `FRow`, `Fld`, `Toggle`, `Check`;
+phone: `pSheet`, `pFoot`, `PTabs`, `PCard`. Verified light and dark in the browser, no console errors. Fixes from the
+pass: snooze popovers moved up, logo grid tiles shrunk, bills table columns fit the pane, journey toolbar top-left,
+phone filter sheet foot, verify tray text. Plan §8 maps every button to its screen.

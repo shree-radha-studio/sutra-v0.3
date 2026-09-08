@@ -106,7 +106,7 @@ function Table({ laid, ox = 0 }) {
 /* views: drafts (default when the module has drafts) · finals · compare (both tables side by side, same height).
    ?v=drafts|finals|compare. The archive of the old Catalogue explorations is its own page (drafts-archive.html). */
 const VIEW = ['drafts', 'finals', 'compare'].includes(Q.get('v')) ? Q.get('v') : (NEW_DRAFTS.length ? 'drafts' : 'finals');
-const TOP = 20, Y0 = TOP + 260, COMPARE_GAP = 400;
+const TOP = 110, Y0 = TOP + 260, COMPARE_GAP = 400; /* TOP clears the fixed view bar */
 const NEW_LAID = NEW_DRAFTS.length ? layoutBoard(Y0, NEW_DRAFTS, resolveDraft) : { items: [], end: Y0 + 260 };
 const LAID = FINALS.length ? layoutBoard(Y0, FINALS, resolveFinal) : { items: [], end: Y0 + 260 };
 const COUNTS = { np: ND_PHONE.length, nw: ND_WEB.length, fp: FINALS.reduce((a, m) => a + m.subs.reduce((b, s) => b + s.phone.length, 0), 0), fw: FINALS.reduce((a, m) => a + m.subs.reduce((b, s) => b + s.web.length, 0), 0) };

@@ -428,7 +428,7 @@ mode); video; comments on a sheet (v2).
    Memory › Settings.
 10. Which templates use which image model, and does usage cost show to sub-admins or admin only? Drawn: admin only.
 
-## 10. Screen count (superseded by section 12: 15 web, 12 phone)
+## 10. Screen count (superseded by section 12: 15 web, 13 phone)
 
 Web 13 (W1–W13), phone 9 (P1–P9), each in light and dark = 44 frames. Sub-menus drawn: Stitch (Tracks · Designer),
 Moodboard (Mine · Stitch's), Memory (Sessions · What works · Settings); plus the context selector, the hand-off
@@ -512,7 +512,7 @@ What changes against sections 0 to 11:
 Screen list changes: W1 redrawn as category tracks; **W14 History** (grid by thread with the share and design-content
 actions in the pane); **W15 Settings > Models** (picker per template, keys, usage); Memory drops the Settings tab.
 Phone: P1 redrawn; **P10 Swipe approval**; **P11 History**; **P12 Settings > Models**; P3 and P4 redrawn with the
-Pane button and the half-height sheet. New count: 15 web, 12 phone.
+Pane button and the half-height sheet, plus the tuner as the same sheet. New count: 15 web, 13 phone.
 
 Not a mockup decision, logged in design/during-ui-technical-design.md: the owner named OpenRouter as the
 intelligence route with several providers for image and video. The drawings show a model picker with the model
