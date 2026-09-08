@@ -510,8 +510,12 @@ challan sticker, the dye WIP lineage into the recipe, and the sample → product
 
 ## 8. Build notes (8 Sep 2026)
 
-Files: `mod-production.jsx` (data, components, phone), `mod-production-web.jsx` (part A), `mod-production-web2.jsx`
-(part B and the board registration). Loaded after `mod-topbar2.jsx`. Header3 / WebShell3 in `web.jsx` gained an
+Files: `mod-production.jsx` (data, components, floor-phone screens), `mod-production-phone2.jsx` (the phone counterparts
+added 9 Sep), `mod-production-web.jsx` (part A), `mod-production-web2.jsx` (part B), `mod-production-web3.jsx` (part C and the
+board registration). Since the 9 Sep board restructure the module opens on its own page,
+`board.html?m=production` (`&v=drafts|finals|compare`); the five files are listed in `modules.js` in that order. Single
+frames: `board.html?m=production&only=n-3&z=0.8`, where `n-` / `nd-` (phone light / dark) and `nw-` / `nwd-` (web) count
+within this page, so they no longer shift when other modules add screens. Header3 / WebShell3 in `web.jsx` gained an
 optional `searchWidth` prop (default unchanged) so the eight-button sub-menu fits. Material photographs do not exist in
 the project yet; `Swatch` draws a fabric texture tinted by the shade as a stand-in and says so on the material pane.
 Coverage review and the resulting work items: `plans/production-coverage.md`.

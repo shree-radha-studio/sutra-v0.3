@@ -4,7 +4,8 @@ Checked against three sources: the Production section of `design-system/research
 states and rules, sub-menus, role lines 36–38), the owner's notes given with the brief (dye ledger, sampling, material catalogue,
 combined order + lifecycle, job cards over all jobs), and the plan `plans/production.md` (screen list W0–W27 / P1–P16). Every
 sub-menu and option named in those sources now has a web mockup and a phone mockup on the board (New drafts › Production).
-Counts: 47 web screens, 46 phone screens, each rendered light and dark.
+Counts: 47 web screens, 46 phone screens, each rendered light and dark. Open them at `board.html?m=production`; single
+frames with `&only=n-3&z=0.8` (ids count within the module page).
 
 ## 1. BRD Production scope → mockups
 
