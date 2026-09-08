@@ -295,3 +295,31 @@ JMap, AGENCIES.
 Open questions (plan §4): journey per list or per customer; step completes per customer or per attempt; who owns a
 customer's follow-up; RED as a Payments list or a Home approval; ₹ on the phone in Payments. Not drawn: the Bills and
 Customers tabs of Payments as their own screens, the Sale executive's no-₹ variants on the phone.
+
+
+## 9 Sep 2026 · the board split into pages
+
+**What changed.** One `index.html` held every frame of every module (about 400 device frames, each a full screen, all compiled by Babel and rendered at once). It stopped loading and barely scrolled, and several chats were editing the same file. Now: `index.html` is a hub; `board.html?m=<id>` shows one module with three views (New drafts, Finals, Compare side by side); `drafts-archive.html` keeps the six pre-final Catalogue explorations untouched; `modules.js` is a one-line-per-module manifest; `finals.jsx` holds FIN / WEB / BOARD; `board.jsx` renders frames lazily (a frame mounts within about a viewport of the visible area and unmounts when it leaves) and opens zoomed to the phone column. React loads as the production build (same library, minified; `&dev` for readable errors). The inline Dispatch, App shell and Catalogue sale-orders registrations moved verbatim from `index.html` to the end of `mod-dispatch-web.jsx`, `mod-topbar2.jsx` and `mod-appshell.jsx`. The old single-file board is kept as `legacy-index.html`.
+
+**Why.** Load time was Babel compiling about 1 MB of JSX per page; scroll lag was the DOM size. Splitting files alone would not have fixed the scroll, so pages and lazy frames go together. Module-scoped ids stop shifting when another module adds screens.
+
+**Team.** The project is a git repository on github.com/shree-radha-studio/sutra-v0.3 (org members have write access); `tools/sync.sh` is the one step (pull, or commit + push). GitHub Pages needs the repo public on the org's free plan; the owner decides.
+
+**Open.** Whether to keep `legacy-index.html`; whether `mod-dispatch.jsx` should give up its shared primitives (Body, Meta, Pill, Mono …) to a `shared.jsx` so Dispatch stops being a base file every page compiles.
+
+## Production module (New drafts) · 8–9 Sep 2026
+
+**What was built.** Five files (`mod-production.jsx` data, shared components and floor-phone screens; `mod-production-phone2.jsx` the phone counterparts added after the coverage review; `mod-production-web.jsx` overview, purchase, materials, dye ledger, process setting; `mod-production-web2.jsx` orders, lifecycle, job cards; `mod-production-web3.jsx` samples, costing, karigars, locked role, board registration). 47 web and 46 phone screens, all light and dark, registered under one `NEW_DRAFT_MODULES.push` at the end of web3. Plan in `plans/production.md`, coverage table in `plans/production-coverage.md`.
+
+**Decisions taken while drawing.**
+- Sub-menu row: Purchase ▾ · Materials ▾ · Process setting · Orders ▾ · Job cards ▾ · Samples ▾ · Costing · Karigars; the overview is the module root. Header3/WebShell3 gained an optional `searchWidth` so the eight buttons fit.
+- One filled maroon button per screen: the pane's action when a pane form is open (New PO, Assign, Issue, Receive, New sample …), otherwise the open job panel's; toolbar "New …" buttons are outlined. Action tags filled, state pills outlined.
+- Timeline colours from the BRD: done ok, active blue, not started grey, stuck danger. Order states are the BRD batch states as pills.
+- Dye is not a process: the Dye ledger (bulk issue → cut orders that reserve → dyed lot received as a "dye WIP" material with lineage) feeds Process setting's Materials pane and the lifecycle's "Add or swap an input".
+- Sampling: free moves (any process, karigar, material); receive a move; deploy for a 15-day reading; make product derives the sequence and the averages (issued ÷ pieces) and opens Process setting 5 for review.
+- Money (rates, values, dues, costing) only on money-role screens with the lock mark; the floor phone shows none. Karigar-recorded entries (jobber phone) stay Unverified — no due, voucher or gate token — until the floor verifies them.
+- Costing arithmetic corrected: materials at average purchase rate + job rates = unit cost; price = cost ÷ (1 − margin); default margin per category.
+- Material photographs do not exist in the project; `Swatch` draws a fabric texture by shade and the pane says so.
+- Production's `NextPill` renamed `PrNextPill` (CRM exports a `NextPill` too; the later file's export won on `window`).
+
+**Open for the owner.** Over-receive handling, default margins and who edits them, karigar score weights, sample-reading threshold, the Ready-production material invoice (Hub side), and real material photos. Listed in `plans/production-coverage.md` §5.

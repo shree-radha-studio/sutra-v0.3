@@ -4,7 +4,7 @@
    modules and sub-menus, columns are phone (3 light + dark pairs per line) and web (2 pairs per line).
 
    Frames render lazily: a frame mounts its screen when it comes within about a viewport of the visible area and
-   unmounts again when it leaves, so the page holds a few dozen live frames instead of hundreds. Placeholders keep
+   unmounts again when it leaves (tracked from scroll and zoom, not IntersectionObserver), so the page holds a few dozen live frames instead of hundreds. Placeholders keep
    the exact size, so ids, captions and scroll positions never move.
 
    Ids on a module page: n-<i> / nd-<i> (new-draft phone light / dark), nw-<i> / nwd-<i> (web), counted within
@@ -36,26 +36,36 @@ const BOARD_RIGHT = WB.x + WB.cellW;
 
 const Device = ({ web, T, Scr }) => web ? <LaptopDevice width={1280} height={800} dark={T.dark}><Scr T={T} /></LaptopDevice> : <IOSDevice width={390} height={844} dark={T.dark}><Scr T={T} /></IOSDevice>;
 
-/* one frame that only holds its screen while near the viewport */
-const LAZY = Q.get('lazy') !== '0' && 'IntersectionObserver' in window;
-function LazyFrame({ web, T, Scr, id, left, top }) {
-  const ref = React.useRef(null); const [on, setOn] = React.useState(!LAZY);
+/* Lazy frames without IntersectionObserver (which misbehaves under CSS zoom): the Canvas tracks the visible part of
+   the stage in stage coordinates (scroll ÷ zoom), widened by ~one viewport on every side, and each frame compares its
+   known rectangle against it. Mounted screens are memoised, so a scroll re-renders only the on/off decision. */
+const LAZY = Q.get('lazy') !== '0';
+const VisCtx = React.createContext(null);
+const DeviceM = React.memo(Device);
+const viewRect = () => { const z = window.__zoom || 1, w = innerWidth / z, h = innerHeight / z, mx = w * 0.75, my = h * 0.75; return { x0: scrollX / z - mx, y0: scrollY / z - my, x1: scrollX / z + w + mx, y1: scrollY / z + h + my }; };
+function useVisibleRect() {
+  const [v, setV] = React.useState(viewRect);
   React.useEffect(() => {
-    if (!LAZY) return;
-    const io = new IntersectionObserver(es => es.forEach(e => setOn(e.isIntersecting)), { rootMargin: '75% 75% 75% 75%' } /* % of the viewport, so it tracks the zoom level */);
-    io.observe(ref.current); return () => io.disconnect();
+    let raf = 0; const on = () => { if (raf) return; raf = requestAnimationFrame(() => { raf = 0; setV(viewRect()); }); };
+    addEventListener('scroll', on, { passive: true }); addEventListener('resize', on); addEventListener('sutra:view', on);
+    return () => { removeEventListener('scroll', on); removeEventListener('resize', on); removeEventListener('sutra:view', on); };
   }, []);
+  return v;
+}
+function LazyFrame({ web, T, Scr, id, left, top, ox = 0 }) {
+  const v = React.useContext(VisCtx);
   const w = web ? WB.outer : PH.w, h = web ? 838 : PH.h;
-  return <div ref={ref} className="frame" id={id} style={{ left, top, width: w, height: h }}>{on ? <Device web={web} T={T} Scr={Scr} /> : <div className="ph" style={{ width: w, height: h, borderRadius: web ? 18 : 54 }} />}</div>;
+  const on = !LAZY || !v || (left + ox < v.x1 && left + ox + w > v.x0 && top < v.y1 && top + h > v.y0);
+  return <div className="frame" id={id} style={{ left, top, width: w, height: h }}>{on ? <DeviceM web={web} T={T} Scr={Scr} /> : <div className="ph" style={{ width: w, height: h, borderRadius: web ? 18 : 54 }} />}</div>;
 }
 
 /* light + dark pair of one screen, with a big caption. entry = { name, Scr, idL, idD } */
-function Pair({ web, entry, x, y, n }) {
+function Pair({ web, entry, x, y, n, ox }) {
   const w = web ? WB.outer : PH.w;
   return <>
     <div className="capL" style={{ left: x, top: y - CAP, width: w * 2 + GAP }}><span className="num">{n}</span><span className="name">{entry.name}</span><span className="ld">{entry.idL} · light · dark</span></div>
-    <LazyFrame web={web} T={FINAL} Scr={entry.Scr} id={entry.idL} left={x} top={y} />
-    <LazyFrame web={web} T={FINALD} Scr={entry.Scr} id={entry.idD} left={x + w + GAP} top={y} />
+    <LazyFrame web={web} T={FINAL} Scr={entry.Scr} id={entry.idL} left={x} top={y} ox={ox} />
+    <LazyFrame web={web} T={FINALD} Scr={entry.Scr} id={entry.idD} left={x + w + GAP} top={y} ox={ox} />
   </>;
 }
 const resolveFinal = (web, idx) => { const [name, Scr] = (web ? WEB : FIN)[idx - 1]; const L = web ? 'w' : 'f'; return { name, Scr, idL: L + '-' + idx, idD: L + 'd-' + idx }; };
@@ -78,7 +88,7 @@ function layoutBoard(y0, defs, resolve) {
   });
   return { items, end: y };
 }
-function Table({ laid }) {
+function Table({ laid, ox = 0 }) {
   const cell = (x, w, y, h, extra) => <div className="cell" style={{ left: x, width: w, top: y, height: h, ...extra }} />;
   return <>{laid.items.map((it, k) => {
     if (it.type === 'head') return <React.Fragment key={k}><div className="th" style={{ left: LBL.x, width: LBL.w, top: it.y }}>Module › sub-menu</div><div className="th" style={{ left: PH.x, width: PH.cellW, top: it.y }}>Phone · 390 × 844 · light + dark</div><div className="th" style={{ left: WB.x, width: WB.cellW, top: it.y }}>Web · 1280 × 800 · light + dark</div></React.Fragment>;
@@ -89,7 +99,7 @@ function Table({ laid }) {
       {cell(PH.x, PH.cellW, it.y, it.h)}
       {cell(WB.x, WB.cellW, it.y, it.h)}
     </React.Fragment>;
-    return <Pair key={k} web={it.web} entry={it.entry} n={it.n} x={it.x} y={it.y} />;
+    return <Pair key={k} web={it.web} entry={it.entry} n={it.n} x={it.x} y={it.y} ox={ox} />;
   })}</>;
 }
 
@@ -115,16 +125,16 @@ function ViewBar() {
     <a className="lnk" href="drafts-archive.html" target="_blank" rel="noopener">Old drafts ↗</a>
   </div>;
 }
-function DraftsCol() {
+function DraftsCol({ ox = 0 }) {
   return <>
     <div className="section" style={{ top: TOP, width: W }}><div className="section-title">{PAGE_TITLE} · New drafts</div><div className="section-sub">Screens in planning, drawn in the final design language (light + dark, phone + web). A module moves to Finals once every screen is signed off. {COUNTS.np} phone · {COUNTS.nw} web.</div></div>
-    {NEW_DRAFTS.length ? <Table laid={NEW_LAID} /> : <div className="empty" style={{ top: TOP + 200, left: X0, width: W }}>No draft screens registered for this page. A module registers from the end of its own mod-*.jsx via window.NEW_DRAFT_MODULES.push and one line in modules.js.</div>}
+    {NEW_DRAFTS.length ? <Table laid={NEW_LAID} ox={ox} /> : <div className="empty" style={{ top: TOP + 200, left: X0, width: W }}>No draft screens registered for this page. A module registers from the end of its own mod-*.jsx via window.NEW_DRAFT_MODULES.push and one line in modules.js.</div>}
   </>;
 }
-function FinalsCol() {
+function FinalsCol({ ox = 0 }) {
   return <>
     <div className="section" style={{ top: TOP, width: W }}><div className="section-title">{PAGE_TITLE} · Finals</div><div className="section-sub">The signed-off screens. Rows are modules and their sub-menus; columns are phone and web. Screens run in flow order, each as a light + dark pair. {COUNTS.fp} phone · {COUNTS.fw} web.</div></div>
-    {FINALS.length ? <Table laid={LAID} /> : <div className="empty" style={{ top: TOP + 200, left: X0, width: W }}>Nothing signed off yet for this module. When the owner signs a module off, its screens are appended to FIN / WEB in finals.jsx and a BOARD entry with this module's id is added.</div>}
+    {FINALS.length ? <Table laid={LAID} ox={ox} /> : <div className="empty" style={{ top: TOP + 200, left: X0, width: W }}>Nothing signed off yet for this module. When the owner signs a module off, its screens are appended to FIN / WEB in finals.jsx and a BOARD entry with this module's id is added.</div>}
   </>;
 }
 
@@ -137,19 +147,20 @@ function Canvas() {
       return <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', paddingTop: 'env(safe-area-inset-top)' }}><Scr T={r.T} /></div>; }
     document.getElementById('stage').style.cssText = `width:${g.w + 80}px;height:${g.h + 90}px` + (Q.get('z') ? ';zoom:' + Q.get('z') : ''); document.body.style.background = r.T.dark ? '#0f0b09' : '#D9D0C5';
     return <div className="frame" style={{ left: 30, top: 30 }}><Device web={r.web} T={r.T} Scr={Scr} /></div>; }
+  const vis = useVisibleRect();
   const cols = VIEW === 'compare' ? 2 : 1;
   const H = Math.max(VIEW === 'finals' ? 0 : NEW_LAID.end, VIEW === 'drafts' ? 0 : LAID.end) + 120;
   const SW = cols === 2 ? COL_W * 2 + COMPARE_GAP : COL_W;
-  React.useEffect(() => { const st = document.getElementById('stage'); st.style.width = SW + 'px'; st.style.height = H + 'px'; window.__W = cols === 2 ? COL_W : SW; window.__H = H; window.__FIT = LBL.w + PH.cellW + 200; /* open zoomed to the phone column */ document.title = 'Sutra · ' + PAGE_TITLE + ' · ' + VIEW; dispatchEvent(new Event('sutra:fit')); }, []);
-  return <>
+  React.useEffect(() => { const st = document.getElementById('stage'); st.style.width = SW + 'px'; st.style.height = H + 'px'; window.__W = cols === 2 ? COL_W : SW; window.__H = H; window.__FIT = LBL.w + PH.cellW + 200; /* open zoomed to the phone column */ document.title = 'Sutra · ' + PAGE_TITLE + ' · ' + VIEW + (Q.has('t') ? ' · ' + Math.round(performance.now()) + 'ms' : ''); dispatchEvent(new Event('sutra:fit')); }, []);
+  return <VisCtx.Provider value={vis}>
     <ViewBar />
     {VIEW === 'drafts' && <DraftsCol />}
     {VIEW === 'finals' && <FinalsCol />}
     {VIEW === 'compare' && <>
       <div className="col" style={{ left: 0 }}><DraftsCol /></div>
       <div className="vdiv" style={{ left: COL_W + COMPARE_GAP / 2, top: TOP, height: H - TOP - 60 }} />
-      <div className="col" style={{ left: COL_W + COMPARE_GAP }}><FinalsCol /></div>
+      <div className="col" style={{ left: COL_W + COMPARE_GAP }}><FinalsCol ox={COL_W + COMPARE_GAP} /></div>
     </>}
-  </>;
+  </VisCtx.Provider>;
 }
 ReactDOM.createRoot(document.getElementById('root')).render(<Canvas />);

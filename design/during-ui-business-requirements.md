@@ -111,3 +111,19 @@ the screen it came from so the BRD can absorb it later. Newest at the bottom.
   with the picture still visible for editing.
 - 9 Sep: the chat UI and the Studio UX are modular blocks (chat column, canvas, pane, version strip, context tray,
   tuner, swipe card) reused unchanged across Studio screens and across web and phone.
+
+## 9 Sep 2026 · Production module, coverage review (plans/production-coverage.md)
+
+- Every Production sub-menu and option has a phone counterpart; floor roles (warehouse executive, karigar app) see no
+  money anywhere, manager phones show costing, dues and rates with the lock mark. From ScreenPCosting / ScreenPKarigar.
+- Over-receive: pieces received that were never issued are counted, flagged "held", and wait for PM verification; the
+  karigar's material balance is not reduced for them. From the Receive pane (WebPReceive) and the jobber verification.
+- Karigar-recorded entries (the karigar's own phone) raise no due, no accounts voucher and no gate token until the floor
+  verifies; the job shows an Unverified pill meanwhile. From WebPKarigarVerify / ScreenPKarigarVerify.
+- Sample reading: 15 days after deployment; views, cart adds and waitlisted orders are counted daily; "high growth"
+  suggests a first production order sized from waitlist + growth; a flat reading can be re-read once or dropped.
+  From WebPSamplesDeployed.
+- Costing: unit cost = materials at average purchase rate + job rates per pc; recommended price = cost ÷ (1 − margin);
+  default margin per category (Lehenga 40 %, Saree 35 %, Blouse 45 % as placeholders), editable by admin.
+- Ready production (Direct book): the issue records the order, nothing leaves the godown; the receive counts finished
+  pieces; the job rate is the purchase price. The on-paper material invoice to the karigar lives in Hub/accounts.

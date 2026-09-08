@@ -29,5 +29,6 @@ window.SUTRA_MODULES = {
     { id: 'dispatch',   name: 'Dispatch',   note: 'ready · pending · packing · billed · out of stock · warehouse stock · sale return',          names: ['Dispatch'],   files: [] },
     { id: 'production', name: 'Production', note: 'purchase · materials · process setting · orders & lifecycle · job cards · samples · karigars', names: ['Production'], files: ['mod-production.jsx', 'mod-production-phone2.jsx', 'mod-production-web.jsx', 'mod-production-web2.jsx', 'mod-production-web3.jsx'] },
     { id: 'crm',        name: 'CRM',        note: 'follow-ups · share · payments · customers · journeys',                                        names: ['CRM'],        files: ['mod-crm.jsx', 'mod-crm-web.jsx', 'mod-crm-more.jsx', 'mod-crm-phone.jsx'] },
+    { id: 'studio',     name: 'Studio',     note: 'AI designer Stitch · tracks · designer terminal · context selector · moodboard · history · memory · settings',           names: ['Studio'],     files: ['mod-studio.jsx', 'mod-studio-web.jsx'] },
   ],
 };

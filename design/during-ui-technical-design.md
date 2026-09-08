@@ -101,3 +101,15 @@ Full hand-off is in `design-system/guidelines/chips-filters-sorts.md` section 5.
   image slot and a provenance link to the History item; the master flow (Hub > Masters) completes the rest.
 - Modular UI blocks imply one component contract per block (header, body, foot, collapsed state) shared by web
   and phone; layout preferences (chat side, pane docked or floating) are per-user settings.
+
+## 9 Sep 2026 · Production module, coverage review
+
+- Board: global component names collide across module files (both CRM and Production exported `NextPill`); the
+  per-module board pages remove the risk, but module files should still prefix shared-sounding names.
+- Verification state on issue/receive rows: recorded-by (floor / karigar app), verified-by, verified-at; dues, vouchers
+  and gate tokens are created at verification time, not at recording time.
+- Over-receive needs a held quantity per colour on the job, separate from received, released by PM approval.
+- Dye lots are materials with lineage (source material, dyer, cut order, shade code, loss) and appear in recipes and in
+  a running order's inputs; the recipe frozen on an order must allow an input swap without changing the recipe version.
+- Sample reading metrics per day (views, cart adds, waitlist orders) for 15 days after deployment; the suggestion
+  needs a growth threshold constant.

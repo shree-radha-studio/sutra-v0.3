@@ -10,7 +10,7 @@
   function set(nz, cx, cy) { /* keep the point under (cx,cy) fixed */
     nz = Math.max(.1, Math.min(2, nz)); var sx = window.scrollX, sy = window.scrollY;
     if (cx == null) { cx = innerWidth / 2; cy = innerHeight / 2; }
-    var dx = (sx + cx) / z, dy = (sy + cy) / z; z = nz; stage.style.zoom = z;
+    var dx = (sx + cx) / z, dy = (sy + cy) / z; z = nz; stage.style.zoom = z; window.__zoom = z; dispatchEvent(new Event('sutra:view'));
     window.scrollTo(dx * z - cx, dy * z - cy);
     bar.querySelector('.pct').textContent = Math.round(z * 100) + '%';
     bar.querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', b.dataset.z === String(z)); });

@@ -84,6 +84,18 @@
         "127.0.0.1"
       ],
       "port": 8790
+    },
+    {
+      "name": "static-studio",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8782",
+        "--bind",
+        "127.0.0.1"
+      ],
+      "port": 8782
     }
   ]
 }

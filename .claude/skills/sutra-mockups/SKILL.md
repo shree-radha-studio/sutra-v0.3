@@ -37,9 +37,13 @@ design number is the head; every screen for phone and web, light and dark.
   - `design/during-ui-business-requirements.md` — business rules, roles, fields, copy, thresholds, owner decisions.
   - `design/during-ui-technical-design.md` — anything the architecture pass will need (grain, payload shape,
     permissions, calculation timing, sync). Notes, not designs; nothing gets built.
-- One board, one file: every module's screens render on `explorations/catalogue-v2/index.html`. Do not create
-  separate canvases, design-canvas artifacts or per-module HTML boards; do not push to Claude Design unless the user
-  asks in that message.
+- One board, one page per module: `explorations/catalogue-v2/index.html` is the hub, `board.html?m=<id>` is a
+  module's page (views: New drafts · Finals · Compare side by side), `drafts-archive.html` holds the old Catalogue
+  explorations. Modules are one line each in `modules.js`. Do not create separate canvases, design-canvas
+  artifacts or ad-hoc html pages; do not push to Claude Design unless the user asks in that message.
+- The project is a git repository (github.com/shree-radha-studio/sutra-v0.3). Start every build with
+  `bash tools/sync.sh` (pull) and end it with `bash tools/sync.sh "<Module> · <what changed>"` (commit + push).
+  Nobody types git commands; the script is the whole step.
 
 ## Workflow
 
@@ -70,6 +74,7 @@ design number is the head; every screen for phone and web, light and dark.
   open questions. Show it to the user before building; if they said "just build", state assumptions and go.
 
 ### 2. Build the screens
+- `bash tools/sync.sh` first, so you draw on top of the others' latest files.
 - Create `explorations/catalogue-v2/mod-<module>.jsx`. Every screen is a function `({ T }) => ...` that renders
   through the theme object, so the same code yields light (`FINAL`) and dark (`FINALD`). Phone screens use
   `frameF(T, body, dock)` from final.jsx; web screens use `<WebShell T={T} ...>` from web.jsx.
@@ -77,41 +82,49 @@ design number is the head; every screen for phone and web, light and dark.
   parcel, a karigar row). Put them in the module file and export with `Object.assign(window, {...})`.
 - Keep the rules: sand canvas, espresso ink, one maroon line, photo beside every design number, number as the head,
   Lucide only, no emoji, money only where the BRD allows, sentence case, `PriceF` on customer-facing prices.
-- Load the file in `index.html` after `web.jsx`.
+- Add ONE line for the module to `modules.js` (`{ id, name, note, names: ['<Module>'], files: [your files in load
+  order] }`). Files every module borrows from (final, web, appshell, tags, dispatch, topbar2) are in `base` there and
+  load on every page; put a file in `base` only when another module needs something from it. Never edit
+  `index.html`, `board.html` or `board.jsx` for module work.
 
 ### 3. Place on the board
-- While planning: register the module from the END of its own `mod-<module>.jsx` (do not edit the `NEW_DRAFTS`
-  array in `index.html`; several chats work on the board at once and that block has been overwritten before):
+- While planning: register the module from the END of its own `mod-<module>.jsx` (several chats work on the board
+  at once; nobody edits a shared array):
   `(window.NEW_DRAFT_MODULES = window.NEW_DRAFT_MODULES || []).push({ module, note, subs: [{ name, flow, phone: [[name, Screen]], web: [[name, WebScreen]] }] })`.
-  `index.html` spreads `window.NEW_DRAFT_MODULES` into `NEW_DRAFTS`, so the only shared edit is the one script tag
-  after `web.jsx`. Screens are `[name, Component]` pairs in flow order, phone and web separately, grouped by
-  sub-menu. They render as light + dark pairs in the "New drafts" table between Drafts and Finals. Board order =
-  script-tag order; ids `n-<i>` / `nw-<i>` shift when a module above yours adds screens, so quote ids after loading
-  the board (`ND_PHONE.map(e => e[0])` in the console).
-- When the user signs the module off: append the screens to `FIN` (phone) and `WEB` (web) and add a `BOARD` entry
-  that references their indexes; remove the module from `NEW_DRAFTS`. Never edit or reorder existing `FIN` / `WEB`
-  entries (ids are used in links and the phone page).
+  The `module` string must start with one of the `names` in your `modules.js` line ('CRM', 'CRM · payments' both
+  land on the CRM page). Screens are `[name, Component]` pairs in flow order, phone and web separately, grouped by
+  sub-menu. They render as light + dark pairs in the module page's "New drafts" view. Ids `n-<i>` / `nw-<i>` count
+  within the module page only, so they no longer shift when another module adds screens; each caption shows its id.
+- When the user signs the module off: append the screens to `FIN` (phone) and `WEB` (web) in `finals.jsx` and add
+  a `BOARD` entry there with `id: '<module id>'` referencing their indexes; remove the drafts registration. Never
+  edit or reorder existing `FIN` / `WEB` entries (ids are used in links and the phone page).
 - The stage sizes itself. Sections stay separated by `SECTION_GAP`.
 
 ### 4. Verify (every time)
-- Serve the project root over http via `.claude/launch.json` (`static` 8765, `lan` 8766, `static-b` 8767; another chat
-  may hold one, so pick a free config); never file://.
-- Open single frames with `index.html?only=<id>&z=0.8` where ids are `n-<i>` / `nd-<i>` (new draft phone light /
-  dark), `nw-<i>` / `nwd-<i>` (web), `f-<i>` / `fd-<i>` / `w-<i>` / `wd-<i>` (finals). Use Chrome (claude-in-chrome)
-  for readable screenshots; the in-app pane's screenshots can fail.
-- Check: no console errors, nothing clipped (captions, trays, buttons), both themes, the whole board frame count.
+- Serve the project root over http via `.claude/launch.json` (`static` 8765 … `static-board` 8790; another chat
+  may hold one, so pick a free config; the pane allows five servers per folder); never file://. Any chat's server
+  serves the same files, so `http://127.0.0.1:<port>/explorations/catalogue-v2/board.html?m=<id>` works from a new
+  tab even when you cannot start your own.
+- Open the module page `board.html?m=<id>` (views `&v=drafts|finals|compare`) and single frames with
+  `board.html?m=<id>&only=<id>&z=0.8` where ids are `n-<i>` / `nd-<i>` (draft phone light / dark), `nw-<i>` /
+  `nwd-<i>` (web), `f-<i>` / `fd-<i>` / `w-<i>` / `wd-<i>` (finals). `&dev` loads the React development build for
+  readable errors; `&lazy=0` renders every frame at once. Use Playwright or Chrome for screenshots; the in-app pane
+  times out on the board.
+- Check: no console errors, nothing clipped (captions, trays, buttons), both themes, the page's frame count
+  (`COUNTS` in the console).
 - Read every visible string once.
 
 ### 5. Package and hand over
 - `bash tools/package-explorations.sh` rebuilds `explorations/catalogue-v2/for-claude-design/`, the drop-in for the
   Claude Design project (the user uploads it; Claude Code cannot write to Claude Design).
 - Update `explorations/catalogue-v2/audit.md` (what changed and why, open questions) and the README screen lists.
-- Tell the user which ids to open and what decisions are pending.
+- `bash tools/sync.sh "<Module> · <what changed>"` commits and pushes; GitHub Pages serves the hub to the team.
+- Tell the user which page and ids to open (`board.html?m=<id>&only=…`) and what decisions are pending.
 
 ## Checklist before saying done
 - [ ] Plan file exists and matches the BRD section
 - [ ] Every screen renders in FINAL and FINALD, phone and web where the BRD implies both
 - [ ] Reused chrome, no restyle; new components documented in audit.md
 - [ ] Board section is right (New drafts vs Finals), flow order, captions correct
-- [ ] Verified in the browser, frame count noted, no console errors
-- [ ] Package rebuilt, docs updated
+- [ ] Verified in the browser on the module page, frame count noted, no console errors
+- [ ] Package rebuilt, docs updated, `tools/sync.sh` run (committed and pushed)

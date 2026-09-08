@@ -1,12 +1,22 @@
-# Catalogue explorations v2
+# Catalogue explorations v2 · the design board
 
-One pannable design board (`index.html`) in two sections.
+**One page per module** (since 9 Sep 2026; before that one file held every frame and stopped loading).
 
-**Drafts (top)**: explorations by module, as rows. Catalogue so far: 1a, 1b, 1a′, 1b′, 3a, 3b. New module explorations are appended here (add a row to `DRAFTS` in index.html).
+- `index.html` — the hub: one card per module, plus the whole board and the drafts archive.
+- `board.html?m=<id>` — a module's page. Three views: `&v=drafts` (New drafts, the default while a module is in planning), `&v=finals`, `&v=compare` (both tables side by side at the same height, to check a draft against the signed-off screen). Frames render lazily as you pan; the page opens zoomed to the phone column (Fit row / Fit all in the zoom bar).
+- `board.html?m=all` — every module on one page. Slow to compile; for the overview only.
+- `drafts-archive.html` — the six Catalogue explorations that preceded the final language (1a Gallery, 1b Atelier, 1a′, 1b′, 3a Editorial, 3b Studio). History; nobody edits these.
+- `modules.js` — the manifest: `base` (files every page loads) and one line per module (`id`, `name`, `note`, `names`, `files`).
+- `finals.jsx` — `FIN` (phone) and `WEB` (laptop) screen lists and `BOARD` (module → sub-menu → indexes, each entry with the module `id`).
+- `board.jsx` / `board.css` / `board-pan.js` — the renderer, its styles and the pan/zoom bar. Module work never edits these.
 
-**New drafts (middle)**: modules in planning, drawn in the final design language as light + dark pairs in the same table layout as Finals. Defined by `NEW_DRAFTS` in index.html (screens as `[name, Component]`); ids `n-<i>`, `nd-<i>`, `nw-<i>`, `nwd-<i>`. Empty when nothing is in planning. The workflow is the project skill `sutra-mockups`; the design language is `design/SUTRA-DESIGN-SCHEMA.md`.
+Single frames: `board.html?m=<id>&only=<fid>&z=0.8`. Ids `n-<i>` / `nd-<i>` (draft phone light / dark) and `nw-<i>` / `nwd-<i>` (draft web) count within the module page; `f-<i>` / `fd-<i>` / `w-<i>` / `wd-<i>` are the finals and never change. `&bare` drops the device frame; `&dev` loads the React development build (readable errors); `&lazy=0` renders every frame at once.
 
-**Finals (bottom, after a wide gap)**: a table. Header cells: Module › sub-menu · Phone · Web. Each module is a row band; each sub-menu is a table row with a label cell (module, sub-menu name, flow, counts), a phone cell (three light + dark pairs per line) and a web cell (two pairs per line). Screens run in flow order with large numbered captions. Defined by `BOARD` in index.html, which points into the `FIN` (phone) and `WEB` (laptop) screen lists, so `?only=` ids are unchanged. To add a module or sub-menu, add an entry to `BOARD`; the stage resizes itself.
+**Adding a module**: create `mod-<id>.jsx` (+ `mod-<id>-web.jsx`), register from its END with `(window.NEW_DRAFT_MODULES = window.NEW_DRAFT_MODULES || []).push({ module: '<Name>', note, subs: [{ name, flow, phone: [[name, Screen]], web: [[name, WebScreen]] }] })`, add one line to `modules.js`. The `module` string must start with one of the line's `names`. **Signing off**: append to `FIN` / `WEB` in `finals.jsx` and add a `BOARD` entry with the module id. The workflow is the project skill `sutra-mockups`; the design language is `design/SUTRA-DESIGN-SCHEMA.md`.
+
+**Team**: the project is a git repository (github.com/shree-radha-studio/sutra-v0.3). `bash tools/sync.sh` pulls; `bash tools/sync.sh "<Module> · <what changed>"` commits and pushes. Each module owns its files; the only shared edits are one line in `modules.js` and, at sign-off, appends to `finals.jsx`.
+
+`legacy-index.html` is the single-file board as it stood before the split, kept for reference until the owner drops it; it no longer receives new modules.
 
 The draft rows:
 
@@ -24,7 +34,7 @@ Final rows (21): 1 grid (active cart) · 2 grid (no cart) · 3 list · 4 listeni
 
 Web rows (14, laptop 1280 × 800): 1 grid · 2 list · 3 sidebar expanded · 4 listening · 5 product customer · 6 product salesperson · 7 carts · 8 sale orders cards · 9 grouped table · 10 order opened · 11-13 analytics · 14 viewer.
 
-Open a single frame with `index.html?only=<row>-<n>`, e.g. `?only=f-4` or `?only=w-9`. Row ids: `1a 1b 1a2 1b2 3a 3b f fd w wd`. Add `&bare` for a frameless full-viewport render, `&z=0.8` to scale.
+Archive rows open with `drafts-archive.html?only=<row>-<n>` (rows `1a 1b 1a2 1b2 3a 3b`); finals with `board.html?m=catalogue&only=f-4` or `w-9`.
 
 - `final.jsx`: FINAL / FINALD tokens, the final chrome, data viz helpers (LineG, BarsV, Donut, Stack), and the phone final screens.
 - `web.jsx`: LaptopDevice, the approved shell (TabStrip, Rail2/Sidebar2 with the greeting, Header3 with SubMenu and ModeSwitch, ViewTabs, WebShell3 and the WebShell wrapper), RightPane, CartPane and the web screens.
@@ -39,7 +49,7 @@ Files
 - `mod-crm.jsx` / `mod-crm-web.jsx`: CRM module for the New drafts table (8 Sep) — 10 phone and 14 web screens: Follow-ups (lists × journeys, step strip, board by step, step pane), Share (queue strip and customer pane with Info · Packets · Orders tabs · Purchased grid with a saved time frame · two 3 × 4 picture grids with gallery selection · packet pane · sort & filter · verify against stock · composer · logo placement), Payments (stage strip with ₹, bills by customer, customer across stages, bill cleared, broker & agency weekly report), Customers (list with dossier pane, phone dossier), Journeys (node-map builder). Product photos in `assets/crm/`. Plan: `plans/crm.md`. Registers itself via `window.NEW_DRAFT_MODULES`; ids `n-33…42`, `nw-58…71` late on 8 Sep (shift if a module above adds screens).
 - `mod-catalogue-tags.jsx`: Catalogue tag system for the New drafts table — grid chips (action chip + state pill), customer mode, Why? panel, sort & filter sheet, salesperson-view tag rail and why sheet; phone and web. Registers itself via `window.NEW_DRAFT_MODULES`.
 - `mod-dispatch.jsx` / `mod-dispatch-web.jsx`: Dispatch module for the New drafts table (8 Sep) — 26 phone and 19 web screens: Ready board with queue rail and priority ring, Pending book (manager ₹ / packer variants), Packing terminal with live invoice → review → done → shipment → A4, phone scan companion, Billed invoices and shipments history, Out of stock (order and restock cards, who-is-waiting pane), Warehouse stock (FG · material · WIP · FG inward), Sale return wizard (box-wise, credit notes to accounts). Plan: `plans/dispatch.md`. Ids `n-9…34`, `nw-15…33` (shift if other modules are added above).
-- `mod-production.jsx` / `mod-production-web.jsx` / `mod-production-web2.jsx`: Production module for the New drafts table (8 Sep) — 17 phone and 28 web screens: overview, purchase (PO calendar, inward, return), picture-first materials catalogue and the dye ledger (bulk issue → cut orders → dyed lot as a dye WIP material), process setting (sequence, materials & averages, BOM grid per colour, lock, right pane with materials / BOMs / search), orders with the lifecycle terminal (job panels, tranches, inputs per colour, issue and receive panes, job card and sticker print), job cards in five views (cards, swimlanes, table, gantt, calendar), samples with free moves and sample → product, costing, karigars. Plan: `plans/production.md`; coverage: `plans/production-coverage.md`. Ids follow the modules above (read `ND_PHONE` / `ND_WEB` in the console).
+- `mod-production.jsx` / `mod-production-phone2.jsx` / `mod-production-web.jsx` / `-web2.jsx` / `-web3.jsx`: Production module for the New drafts table (8–9 Sep) — 46 phone and 47 web screens, light and dark: overview and the locked role; purchase (PO calendar, list, new PO, inward, past inwards, return); picture-first materials catalogue with a new-material form; dye ledger (cut orders, bulk balances and bulk issue, received lots as dye WIP, receive a lot); process setting (sequence, materials & averages, BOM grid per colour, locked by production, imported from a sample); orders (cards with draft and awaiting states, list, new order with readiness) and the lifecycle terminal (job panels, assign, issue by pieces or material, issue on a Direct order, receive with over-receive, finished-goods receive, print A4 + stickers); job cards in five views plus the filters drawer; samples (board, 15-day reading, new sample, free moves, receive a move, make product); costing with default margins; karigars (list, ledger, verification of karigar-recorded entries, new karigar, analytics). The phone carries every sub-menu and option (floor roles see no money; manager phones show costing and dues). Plan: `plans/production.md`; coverage review: `plans/production-coverage.md`. The module registers itself from the end of `mod-production-web3.jsx`.
 
 
 Serving: the JSX is compiled in the browser, so open it over http (any static server at the project root), not `file://`.
