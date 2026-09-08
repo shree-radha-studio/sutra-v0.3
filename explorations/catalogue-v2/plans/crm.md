@@ -215,8 +215,8 @@ Sale manager, admin · pane · not on phone (desk-only; the phone reads journeys
 ## 5. Screen count
 
 Web 14 (W1–W10 plus W3b's grid on W3, W3c as two screens, W8b), phone 10 (P1–P8 with the Share screen drawn on all
-three grids), each in light and dark = 48 frames. Board ids late on 8 Sep, after Production added its screens above:
-phone n-33…42, web nw-58…71; they shift again whenever a module above adds screens (read `ND_WEB` in the console). Components new to the board: the step
+three grids), each in light and dark = 48 frames. The module opens on its own page, `board.html?m=crm`; ids count within that page (phone n-1…54, web nw-1…47, nd-/nwd-
+for dark) and no longer shift. Single frame: `board.html?m=crm&only=nw-10&z=0.8`. Components new to the board: the step
 strip (`StepStrip`), the picker tile (`PickTile`), thumb (`PickThumb`) and grid (`PickGrid`), the customer pane
 (`CustPane`) and its phone head (`CustHead`), the queue strip (`QueueStrip`), the packet pane (`PacketPane`), the
 composer (`Composer`), the logo tool (`LogoStage`, `LogoControls`, `LogoRail`), follow-up card and step pane
@@ -285,7 +285,7 @@ variants.
 
 The owner asked for every web view to exist on the phone and for every tab, sub-menu and button activity to be
 drawn. The module now has 47 web and 54 phone screens (light and dark each), registered in flow order per sub-menu
-from `mod-crm-phone.jsx`. What each interactive element opens:
+from `mod-crm-phone.jsx`; ids on the module page: phone n-1…54, web nw-1…47. What each interactive element opens:
 
 | Sub-menu | Tabs and buttons | Screen (web · phone) |
 |---|---|---|

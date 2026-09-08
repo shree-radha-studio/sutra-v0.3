@@ -250,8 +250,8 @@ their screens are moved. New drafts now: search pane (2), sale-orders table + re
 
 ## CRM drafts (8 Sep, night) — `mod-crm.jsx`, `mod-crm-web.jsx`, plan in `plans/crm.md`
 
-Ten phone and fourteen web screens in the New drafts table (ids late on 8 Sep: `n-33…42`, `nw-58…71`; they shift
-when a module above adds screens). Built on top bar v2 (`WebShell3`), sub-menu Follow-ups · Share · Payments · Customers ·
+First pass: ten phone and fourteen web screens in the New drafts table (the module now opens on its own page,
+`board.html?m=crm`, where ids count within the page). Built on top bar v2 (`WebShell3`), sub-menu Follow-ups · Share · Payments · Customers ·
 Journeys, the phone node scroller in the same order.
 
 - Follow-ups is the engine: preset lists (Today's to-do · Refill due · What worked · New samples · Cold revival · Hot ·
@@ -387,7 +387,7 @@ should offer "up = save to moodboard" instead of "save as sample".
 ### CRM · every tab, sheet and button, phone and web (9 Sep)
 
 Two more files: `mod-crm-more.jsx` (the remaining web states) and `mod-crm-phone.jsx` (phone counterparts for every
-web view, and the module's registration rebuilt in flow order). 47 web and 54 phone screens now. Shared sheet bodies
+web view, and the module's registration rebuilt in flow order). 47 web and 54 phone screens now; on `board.html?m=crm` they are nw-1…47 and n-1…54 (nd-/nwd- dark). Shared sheet bodies
 (NewListBody, CustFilterBody, BillFilterBody, TemplateBody, SnoozeMenu, SortMenu, CustomerPickerBody, ViewerBody,
 ContactBody, ExportBody, SentBody, LogPaymentBody, EscalateBody, StartFollowBody, NewJourneyBody, PublishBody,
 TestRunBody, ScheduleBody, ColumnsBody, the four dossier tab bodies, LogoAllBody, TodayRows, HistoryRows,
