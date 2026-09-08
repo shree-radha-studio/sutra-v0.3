@@ -1,0 +1,15 @@
+# generated bundle for the Claude Design project (rebuild with tools/package-explorations.sh)
+explorations/catalogue-v2/for-claude-design/
+# per-session scratch pages used for screenshots
+explorations/catalogue-v2/_verify.html
+explorations/catalogue-v2/crm-[pw]*.html
+# local Claude settings; .claude/skills and launch.json are shared. The sutra-design skill is a symlink to design-system/
+.claude/settings.local.json
+.claude/skills/sutra-design
+# OS
+Thumbs.db
+.DS_Store
+# playwright MCP logs
+.playwright-mcp/
+# share bundle (rebuild with tools/share-bundle.sh)
+explorations/catalogue-v2/share/

@@ -1,0 +1,51 @@
+<!-- @dsCard group="Screens" viewport="1400x930" name="Sutra design board — hub" subtitle="One page per module · New drafts above Finals · phone + web · light + dark · drafts archive" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Sutra · design board</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- THE HUB · lists every module page. The board is split by module because one page holding every frame stopped
+     loading (9 Sep 2026). Module pages: board.html?m=<id>. Whole board: board.html?m=all (lazy frames, still slow to
+     compile). Old Catalogue explorations: drafts-archive.html. To add a module: one line in modules.js. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Jost:wght@400;500&display=swap">
+<style>
+html,body{margin:0;background:#D9D0C5;color:#1F1613;font-family:"Jost",sans-serif}
+main{max-width:1180px;margin:0 auto;padding:64px 40px 96px}
+h1{font-family:"Marcellus",serif;font-size:56px;letter-spacing:.04em;text-transform:uppercase;margin:0 0 10px;line-height:1}
+.sub{font-size:16px;color:#5E4F47;max-width:820px;margin:0 0 44px;line-height:1.5}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:18px}
+a.card{display:block;padding:26px 28px 24px;border-radius:22px;background:rgba(255,255,255,.34);border:1.5px solid rgba(31,22,19,.22);text-decoration:none;color:inherit;transition:transform .12s ease-out,background .12s}
+a.card:hover{background:rgba(255,255,255,.55);transform:translateY(-2px)}
+a.card:active{transform:scale(.985)}
+.badge{display:inline-grid;place-items:center;min-width:40px;height:40px;padding:0 10px;border-radius:20px;background:#5A1F27;color:#F7F2EB;font-size:16px;margin-right:12px;vertical-align:middle}
+.badge.all{background:#1F1613}
+.name{font-family:"Marcellus",serif;font-size:30px;letter-spacing:.02em;vertical-align:middle}
+.note{margin:14px 0 0;font-size:14.5px;color:#5E4F47;line-height:1.5}
+.meta{margin:16px 0 0;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#8C7B71}
+h2{font-family:"Marcellus",serif;font-weight:400;font-size:22px;letter-spacing:.04em;text-transform:uppercase;margin:56px 0 16px;padding-top:22px;border-top:2px solid rgba(31,22,19,.35)}
+.how{font-size:15px;color:#3E2F28;line-height:1.65;max-width:900px}
+.how code{font-family:"DM Mono",ui-monospace,monospace;font-size:13px;background:rgba(31,22,19,.08);padding:2px 6px;border-radius:6px}
+.how li{margin:6px 0}
+</style>
+<script src="modules.js"></script>
+</head>
+<body><main>
+<h1>Sutra · design board</h1>
+<p class="sub">One page per module. Each page shows the module's <b>New drafts</b> (screens in planning) above its <b>Finals</b> (signed off), phone beside web, every screen as a light + dark pair. Frames load as you scroll.</p>
+<div class="grid" id="modules"></div>
+<h2>How the board works</h2>
+<div class="how">
+<ul>
+<li><b>Open a module</b>: <code>board.html?m=&lt;id&gt;</code>. One frame: <code>&amp;only=n-3&amp;z=0.8</code> (ids <code>n- nd- nw- nwd-</code> count within the page; <code>f- fd- w- wd-</code> are the finals and never change). <code>&amp;bare</code> drops the device frame. <code>&amp;dev</code> loads the React development build for readable errors.</li>
+<li><b>Add a module</b>: create <code>mod-&lt;id&gt;.jsx</code>, register from its end with <code>window.NEW_DRAFT_MODULES.push({…})</code>, add one line to <code>modules.js</code>. Never edit <code>index.html</code> or <code>board.html</code>.</li>
+<li><b>Sign off</b>: append the screens to <code>FIN</code> / <code>WEB</code> in <code>finals.jsx</code> and add a <code>BOARD</code> entry carrying the module id.</li>
+<li><b>Share</b>: commit and push; GitHub Pages serves this hub. Pull before you draw.</li>
+</ul>
+</div>
+<script>
+(function () {
+  var M = window.SUTRA_MODULES, g = document.getElementById('modules'), h = '';
+  M.modules.forEach(function (m) { h += '<a class="card" href="board.html?m=' + m.id + '"><span class="badge">' + m.name[0] + '</span><span class="name">' + m.name + '</span><p class="note">' + (m.note || '') + '</p><p class="meta">' + (m.files.length ? m.files.length + ' module file' + (m.files.length > 1 ? 's' : '') : 'in the shared files') + ' · board.html?m=' + m.id + '</p></a>'; });
+  h += '<a class="card" href="board.html?m=all"><span class="badge all">∑</span><span class="name">Whole board</span><p class="note">Every module on one page. Frames render lazily, but every file still compiles, so it opens slowly. Use it for the overview, not for work.</p><p class="meta">board.html?m=all</p></a>';
+  h += '<a class="card" href="drafts-archive.html"><span class="badge all">A</span><span class="name">Drafts archive</span><p class="note">The six Catalogue explorations that preceded the final design language: Gallery, Atelier, their audited duplicates, Editorial, Studio.</p><p class="meta">drafts-archive.html · history only</p></a>';
+  g.innerHTML = h;
+})();
+</script>
+</main></body></html>

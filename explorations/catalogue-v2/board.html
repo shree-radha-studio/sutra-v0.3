@@ -1,0 +1,36 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Sutra · board</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- ONE MODULE PER PAGE · board.html?m=<module id from modules.js> · ?m=all for the whole board.
+     Loads modules.js, then the base files and only that module's files, then finals.jsx and board.jsx (the renderer).
+     Do not add script tags here: a module is one line in modules.js plus its own mod-*.jsx.
+     ?dev            React development build (readable errors, slower)
+     ?lazy=0         render every frame at once (for a full-board screenshot; heavy)
+     ?only=n-3&z=.8  one frame; ids n-/nd-/nw-/nwd- count within this page, f-/fd-/w-/wd- are global
+     PATHS: this page lives in explorations/catalogue-v2/; "../../design-system/" is the read-only snapshot. -->
+<link rel="stylesheet" href="../../design-system/styles.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="board.css">
+<script>/* React: production build by default (same library, minified, no dev warnings); ?dev for readable errors. */
+(function () { var dev = new URLSearchParams(location.search).has('dev'), f = dev ? 'development' : 'production.min';
+  document.write('<script src="https://unpkg.com/react@18.3.1/umd/react.' + f + '.js" crossorigin="anonymous"><\/script><script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.' + f + '.js" crossorigin="anonymous"><\/script>'); })();</script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script src="../../design-system/ui_kits/data.js"></script>
+<script>/* data.js resolves assets relative to design-system/ui_kits/<kit>/; re-point them from here. */
+(function(){var D=window.SUTRA_DATA,o=D.A,n='../../design-system/assets/';D.A=n;D.designs.forEach(function(d){if(d.src)d.src=d.src.replace(o,n)});})();</script>
+<script src="modules.js"></script>
+<script>/* write the script tags for this page: base + the chosen module's files, then finals and the renderer */
+(function () {
+  var q = new URLSearchParams(location.search), m = q.get('m') || 'all', M = window.SUTRA_MODULES;
+  var mods = m === 'all' ? M.modules : M.modules.filter(function (x) { return x.id === m; });
+  if (!mods.length) { document.write('<p style="font:16px Jost,sans-serif;padding:40px">No module "' + m + '" in modules.js. Known: ' + M.modules.map(function (x) { return x.id; }).join(', ') + ' · <a href="index.html">hub</a></p>'); return; }
+  var files = M.base.slice(); mods.forEach(function (x) { x.files.forEach(function (f) { if (files.indexOf(f) < 0) files.push(f); }); });
+  files.push('finals.jsx', 'board.jsx');
+  files.forEach(function (f) { document.write('<script type="text/babel" src="' + f + '"><\/script>'); });
+  window.__BOARD_FILES = files;
+})();
+</script>
+</head>
+<body><div id="stage"><div id="root"></div></div>
+<script src="board-pan.js"></script>
+</body></html>

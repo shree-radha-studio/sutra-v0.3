@@ -1,0 +1,36 @@
+/* Sutra final tokens (5 Sep 2026). Mirrors FINAL / FINALD in explorations/catalogue-v2/final.jsx.
+   Light on :root, dark under [data-theme="dark"]. Maroon is the only accent line; gold is for the mark only. */
+:root{
+--f-bg:#F4EFE8;--f-bg2:#ECE6DE;--f-surface:#FCFAF6;--f-surface2:#F6F2EC;
+--f-line:rgba(36,23,18,.08);--f-line2:rgba(36,23,18,.16);
+--f-ink:#241712;--f-ink2:#65524A;--f-ink3:#9C8B80;
+--f-accent:#561C24;--f-accent-soft:rgba(86,28,36,.09);--f-accent-line:rgba(86,28,36,.28);--f-on-accent:#FDFBF7;
+--f-gold:#C0953F;--f-custom:#8F6A2B;
+--f-ok:#3F7D5A;--f-warn:#B8862B;--f-danger:#B23A3A;--f-blue:#5B6C7A;
+--f-glass:rgba(252,250,246,.78);--f-glass-edge:rgba(255,255,255,.65);--f-glass-hi:rgba(255,255,255,.8);
+--f-strip:rgba(252,250,246,.55);--f-chip:rgba(36,23,18,.06);
+--f-header:rgba(255,255,255,.55);--f-header-shadow:0 8px 24px -18px rgba(36,23,18,.35);
+--f-rail:#241712;--f-rail-ink:#F4EFE8;--f-rail-ink2:rgba(244,239,232,.55);
+--f-photo-bg:linear-gradient(180deg,#ECE6DE,#DDD3C7);
+--f-depth:linear-gradient(180deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,0) 30%,rgba(36,23,18,0) 70%,rgba(36,23,18,.05) 100%);
+--f-shadow:0 18px 44px -14px rgba(36,23,18,.28);
+--f-veil:rgba(20,18,17,.30);
+--f-r-photo:16px;--f-r-card:22px;--f-r-ctl:14px;--f-r-dock:33px;--f-r-pill:999px;
+--f-font-display:"Cormorant Garamond",Georgia,serif;--f-font-ui:"Jost",sans-serif;--f-font-mono:"IBM Plex Mono",monospace;
+--f-blur:blur(22px) saturate(1.35);--f-veil-blur:blur(14px) saturate(1.2);
+}
+[data-theme="dark"]{
+--f-bg:#140F0C;--f-bg2:#1C1512;--f-surface:#221A16;--f-surface2:#2C221D;
+--f-line:rgba(250,247,242,.08);--f-line2:rgba(250,247,242,.16);
+--f-ink:#FAF7F2;--f-ink2:#C8BDB3;--f-ink3:#8A7D74;
+--f-accent:#B24A5A;--f-accent-soft:rgba(178,74,90,.18);--f-accent-line:rgba(178,74,90,.45);--f-on-accent:#FAF7F2;
+--f-custom:#C8BDB3;
+--f-ok:#6FB58C;--f-warn:#D8B15A;--f-danger:#E48383;--f-blue:#8FB0D6;
+--f-glass:rgba(28,21,18,.62);--f-glass-edge:rgba(250,247,242,.10);--f-glass-hi:rgba(250,247,242,.10);
+--f-strip:rgba(28,21,18,.45);--f-chip:rgba(250,247,242,.08);
+--f-header:rgba(250,247,242,.035);--f-header-shadow:0 8px 24px -18px rgba(0,0,0,.6);
+--f-rail:#0D0908;--f-rail-ink:#FAF7F2;--f-rail-ink2:rgba(250,247,242,.5);
+--f-photo-bg:linear-gradient(180deg,#2C221D,#1C1512);
+--f-depth:radial-gradient(120% 50% at 50% -10%,rgba(250,247,242,.06),transparent 60%);
+--f-shadow:0 24px 50px -20px rgba(0,0,0,.7);
+}

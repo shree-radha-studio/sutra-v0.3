@@ -1,0 +1,82 @@
+:root{
+/* ---- Sutra canvas (warm sand) — the product-photo backdrop ---- */
+--sand-0:#FDFBF7;
+--sand-50:#F8F3EC;
+--sand-100:#F3ECE2;
+--sand-200:#EAE0D3;
+--sand-300:#DCCFBF;
+--sand-400:#C9B9A6;
+/* ---- Espresso ink ramp (text, strokes) ---- */
+--ink-900:#241712;
+--ink-800:#2E1E18;
+--ink-700:#4A3831;
+--ink-600:#65524A;
+--ink-500:#7E6C62;
+--ink-400:#9C8B80;
+--ink-300:#BBAB9F;
+--ink-200:#D6CABF;
+--ink-100:#E9E0D6;
+/* ---- Sutra gold (from the सूत्र mark) — Sutra's own accent; sparse ---- */
+--gold-700:#8F6A2B;
+--gold-600:#A97F35;
+--gold-500:#C0953F;
+--gold-400:#D2AC5E;
+--gold-200:#EBD9B3;
+--gold-100:#F5ECD9;
+/* ---- Brand (client-tunable) — defaults to Shree Radha Studio deep maroon ---- */
+--brand-900:#3E000C;
+--brand-800:#4D0E13;
+--brand-700:#561C24;
+--brand-600:#6D2932;
+--brand-500:#8B3A45;
+--brand-400:#A85C64;
+--brand-300:#C4868C;
+--brand-200:#E1BDBF;
+--brand-100:#F2E3E3;
+--brand-50:#F9F1F0;
+/* ---- Semantic status — muted, warm-leaning ---- */
+--ok-600:#2F6B4A;
+--ok-500:#3F7D5A;
+--ok-100:#DFEDE3;
+--warn-600:#9A6B12;
+--warn-500:#B8862B;
+--warn-100:#F6EAD0;
+--danger-600:#9E2F2F;
+--danger-500:#B23A3A;
+--danger-100:#F5DEDC;
+--info-600:#4E6273;
+--info-500:#5B6C7A;
+--info-100:#E2E7EB;
+/* ---- Priority ring scale (dispatch P1..P5) ---- */
+--p1:#B23A3A;--p2:#C4762A;--p3:#B8862B;--p4:#7E6C62;--p5:#BBAB9F;
+/* ---- Semantic aliases ---- */
+--bg-page:var(--sand-100);
+--bg-sunken:var(--sand-200);
+--bg-raised:var(--sand-50);
+--surface-card:var(--sand-0);
+--surface-card-hover:#FFFFFF;
+--surface-inverse:var(--ink-900);
+--surface-brand:var(--brand-700);
+--surface-overlay:rgba(36,23,18,.48);
+--surface-glass:rgba(253,251,247,.82);
+--text-primary:var(--ink-900);
+--text-secondary:var(--ink-600);
+--text-muted:var(--ink-400);
+--text-inverse:var(--sand-50);
+--text-brand:var(--brand-700);
+--text-price:var(--ink-900);
+--text-link:var(--brand-700);
+--text-link-hover:var(--brand-900);
+--border-subtle:rgba(36,23,18,.08);
+--border-default:rgba(36,23,18,.14);
+--border-strong:rgba(36,23,18,.28);
+--border-brand:var(--brand-700);
+--accent:var(--brand-700);
+--accent-hover:var(--brand-800);
+--accent-active:var(--brand-900);
+--accent-soft:var(--brand-100);
+--accent-on:var(--sand-50);
+--focus-ring:0 0 0 2px var(--sand-0),0 0 0 4px var(--brand-500);
+--photo-backdrop:linear-gradient(180deg,var(--sand-200),var(--sand-300));/* @kind other */
+--photo-scrim-strength:.55;/* @kind other */
+}

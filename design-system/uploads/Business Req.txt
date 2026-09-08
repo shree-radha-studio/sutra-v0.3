@@ -1,0 +1,186 @@
+Business Req Prompt
+
+
+
+####Reference documents for this prompt - Tags Matrix Sheet (https://docs.google.com/spreadsheets/d/1FPf49tAidis77VR30ZqUxoJcz5Okl_aj3RBZJZ1hh1c/edit?usp=sharing) and Busy Wireframe Sheet (mostly Prod and Prodn V2 sheet) (https://docs.google.com/spreadsheets/d/1ByHWG9MYjTvLMMsc37cP-A4EkrXnoC22IKVFs0KL5T8/edit?usp=sharing). And for screenshot folder (notice that screenshots are numbered. I'll be referencing screenshots by numbers below in the relevant view by 'SS 01" etc.- (https://drive.google.com/drive/folders/170h_BNTFi-w99GFw7Z9iu1GURPBHvN9M?usp=sharing) #### ..
+
+####glossary and definitions:
+Design:
+A commercially sellable style with one design number. Might have different colors within one design style.
+
+SKU:
+A specific design + colour + size combination.
+
+Production batch:
+A planned quantity of one or more SKUs that moves through an ordered
+process recipe.
+
+WIP:
+Inventory received from a process that has not yet completed the final
+production step.
+
+Finished goods:
+Inventory received after the final configured process in the product recipe.
+
+Jobber:
+An external third party performing a production process such as dyeing,
+embroidery, or stitching at a cost for us.####
+..
+
+
+
+
+### We are a garment manufacturer (we outsource jobs to jobbers (like dyes, embroideries, stitching, etc - normally in that order) and sell to wholesale customers. we make on average 2000 designs per year in 3 colors on average and we source fabrics and pre-embroidered patches for lehengas and blouses both. and we also also source some materials locally. We issue materials from our end to our jobbers (whether it be base unprocessed materials like satin for a stitching process or work-in-progress materials like the embroidery-processed Lycra), and receive either work in progress material of productions or finished goods at a per production order assigned last process. (((*extra context - any of our processes (in a single production and although they do have to happen for every material in a sequence - set for each design at time of mastercreation)  can be updated on any day. for eg - we'll send the dyed net directly to stitching if it has come, even if embroidery process hasn't started yet (the example is for extra net that has to go to stitching not the net that has to go for embroidery. that will go to emb first, get converted into emb wip, and then move to stitching. and we can also receive back or issue to jobbers in part wips and materials) )))
+
+
+###Purpose - make an end to end erp which is primarily photos based (every real metric is given against a design's picture - not just the dno - except for the samples module and materials module), has an app with multiple modules (role based) and an admin dashboard with mostly the same screens as the app but a few more and configured to a desktop/tab view. We have to record these entries:
+
+1) Production -
+- give out POs (optional in flow),
+- take in purchases (and give purchase return), 
+- product master creation and process setting (with material averages to be used in a particular design and process recipe). this is set in a view like the busy wireframe view I showed you in gsheet. we also made a production dashboard prototype in shrey's handover folder you'll find for reference. 
+- production lifecycle - issuing and receiving materials and wips to and from jobbers in a single production batch lifecycle view (like in the wireframe sheet and the prototype) 
+- sample issuing - send materials against a temporary design number (in any process order and at any average without setting the process sequence). their lifecycle still visible in the lifecycle view in the samples section. 
+- sample iteration - same view like actual production batches lifecycle view above from the busy sheet. 
+2) sale and dispatch:
+- sale orders making, approvals
+- packing slips from pending orders
+- invoices of packed boxes 
+- sale returns
+- finished goods inwards (from last step of production) 
+3) Product masters and material masters (with multiple picture uploads - with easy tagging ability) - masters meaning each product's own config I guess. 
+4) new ledger master creation for app based cart ordering. (most of the app will be used internally, except karigar to karigar external entries, which will be recorded on app and punched when our floor verified.) 
+5) new jobber master creation in prodn module. ####..
+
+
+
+###the app will have the following modules and views:
+1) Home Module-
+Description: a home page with quick access links to all things priority and some core daily use analytics for the role . like approvals pending -sale orders,  sale returns, productions or purchase-ins; notifications; priority production recommendations (according to the tag matrix gsheet we worked on - pick the latest), high selling low stock reccs, discounted products view. and some core analytics like no of sale orders today. total revenue today. no of pcs today. customers hit this week. aged stock clearance (sale from products marked for sell through lot- stock aged more than 2 months old ). referenced in SS01.
+
+Views through module:
+- Notifications - based on role 
+- approvals - a tinder type view (without the swipe)(and like the one you can see in the approvals screenshot - SS 16 and SS 18) of different approvals to different transactions which has all relevant info about one specific transaction on one page and the admin would have to review and approve or decline. you can see in the sale order approval screenshot. 
+- priority sell-through designs: (these recommendation views like priority sell, priority produce, discount reccs will also have the tinder type approval and review view and a grid style view by setting these concerned filters in the catalog. that should be the behaviour when grid view is selected on priority reccs page.). Goes to SS
+this view shows the products that are marked by our logic that are qualified to priority sell ((whether there stock is getting more than two months old or it mismatches a lot with the trendiness score (the p(t) ). with all metrics as to why. these are discount or lot recommendations to approve and be able to assign discount product wise or even color wise. 
+- priority production recommendations - products that have been marked as priority sample production or priority reproduction by our system (in the gsheet tags matrix). with all the metrics as to why (like trendiness score  or rank). The view for this quick access link opens in product catalog for sales roles and production module for production roles. View referenced in SS30.
+
+2) Product and Materials Catalog-
+Description: A catalog view like in the product catalog ss for viewing all products in a grid, and every product's own customer side view page and sales admin side view page, with different levels of information about that sku and sku group (we have one design's one color as one sku, not one design number as a sku and colors under it as parametrics. For eg- I'll have 8584.Red as an item, and we'll have to group them as product groups on our end to show in one place the three skus related to 8584). This view is also to be used for adding to cart when a sale order is started and visible as multi carts/baskets below the catalog like in the screenshot (SS11 and SS15), and the user can start with the cart module to create and manage carts, and then browse the catalog to add things to any cart. There is also a barcode scanning feature here with 128 encryption which scans our current barcodes to pull up the product page right there to add. 
+
+Views in this module:
+- grid page with all products and with sorting and filtering features as follows -- ((Filter Options -  production in progress / or not, new samples (temporary design numbers that are not in production yet), priority production reccs, discounted products, priority sell-through marked (by logic - finished stock inward for a particular design still in stock > 60 days), by colors, by price ranges (pick tiers from tags matrix sheet), Design Number, Design Category (lehenga, crop top etc.), Design's work (picked at the time of master creation for that product of process setting for that product.), State wise product lists (have the user pick a state out of the list - and show the products that sell through most in that state. Show 30 highest selling products in that state by pcs - which have current stock), Ranking category (have tiers of top 20, top 20-50, top 50-100, and 100 above - ranked by revenue brought in by a design)). ((Sorting should be according to pricewise, date of arrival wise, trendiness score wise, overall ranking wise, total discount % wise, total performance wise (no. of pcs sold) and totalperformance revenue wise. )). View referenced in SS11.
+
+- customer side product page - opens to the primary product color marked for that product and shows all colors with their pictures below the main, along with its price, category, and "manipulative tags" (tags set by sale admin to mark products with fake tags like "low stock", "trending" etc to "manipulate" customer into buying a particular design. 
+- Admin side Product Page - shows one particular design and color, and its complete info including stock, production info, reserved stock (stock reserved for approved sale orders, but not dispatched yet), lifetime analytics etc. Both kinds of product pages referenced in SS12. 
+
+3) Carting - 
+Description: module for creating and managing and finalizing carts (can be multiple at a time since we have 3-4 customers in one b2b sample showing sitting setup.). Also has an option to create a new customer ledger master from the app itself. Open carts all add up at the bottom ofthe screen like in the screenshot and carry along in all the modules to pick products from anywhere (mostly from the catalogue), but also in case the user has to view some other info in some other module while carting is going on. 
+
+Views:
+- Add a cart - have two books of sale orders. One for a WhatsApp order capture, and one for in cabin order capture. (SS14)
+- Add/pick a customer - a dropdown of current customers to select for the cart, or an option to make a new customer. The required fields here are only customer name, contact, and city. 
+- Edit and submit carts. (SS15)
+
+
+4) Dispatch - 
+Description: module for managing dispatch and pending orders at the warehouse. Our dispatch process - approved sale orders get added to a list of pending orders. They are packed according to whatever is in stock. And is packed in parcel boxes of capacity of 10-12 pcs and an invoice is generated per parcel. Not per order. Since there can be pcs packed from multiple pending orders of the same customer in a single box. The invoice format has to contain all the order numbers the pcs are from, for reference of the customer. We also source pending items that are already in production and at the last step. Often, the jobber has some ready stock of those designs and we call them for specific quantities from pending orders. 
+
+Views:
+- Total approved sale Orders grouped customer wise, with a core filter of filtering pending order items only by in-stock items (to get view of what is currently dispatchable). This total grid will also have sorting and filtering features like ((Sort According to: Customer Score, Order Priority(put at the time of submitting a sale order - 3 for neutral and out of 5), Total Pcs (High to Low), Total Pcs (Low to High), Due days left (Oldest to Most Recent), Due days left (Most Recent to Oldest), Created on (Oldest to Recnt), Created on (Recent to Oldest).) ((Filters: Due Days left less than < ( for eg <2), Date Created on Before, Show only In stock, Customer Tier, Order Priority, Total PC less than <)). Referenced in SS20.
+- Currently packing - The dispatch manager picks customers or orders to pack from the total pending orders list and usually has 7-8 packing programs going on at once. Another customer is picked only after 1 of the 7-8 is closed, billed and sent. (SS21)
+- Total Billed Today - list of all invpiced pending orders today and the state of pending still left for those customers. (SS22) 
+- To source view - all pending order items shown by design number and total pcs needed, with info of its production progress (with due dates of incoming stock, and the jobbers calling number on the click of a button). (SS23)
+
+
+5) Production - 
+
+Description: module for creating, managing, and viewing (with blockage troubleshooting for any jobs) production lifecycle of designs, and creating new products and samples from scratch (creating masters in the erp). Here, process and recipe for each design is set, and then a production batch is ordered for specific no of pcs per color set in that design. Then the process of issuing and receiving materials, wip and finished goods start, with setting jobbers, job cost and due dates with pcs for each process in the batch. The module also shows reccomendations and urgent production reccomendations (from priority production and low stock but still running list). It also has a view jobs wise in a grid which can be filtered by due date defualts to know blockages. more below. 
+
+Views: 
+1.Production Overview: shows core daily analytics like total production batches acitve, total pcs in production, total fg pcs rcvd today, total serviceable jobs (materials or wip that has to be issued for it is in stock and not sent). Referenced in SS30. 
+- has links to grid views of high growth production samples (made for the first time) (sourced from list made with logci from tags matrix sheet) 
+- low stock reorder prodction recommendations - stock which have sustained velocity but stock will run out within 15 days. 
+- stop further production reccs- low sell through or below avg trendiness score flagged acc to logic from tags matrix sheet. 
+2. Production Lifecycle: shows grid view of production batches with minimal important info visible of lifecycle and progress on the cards in the grid itelf. 
+- each product opens up to their own lifecycle view (like in ss - ) which has an overview scren for that batch with all relevant info, and then diff tabs for all processes set in that design's recipe, and their progress, materials required, materials issued, recd, and in-stock to send etc. (mostly what's projected per job in the busy wireframe sheet). This view will also have the feature to make issue and receive challans for the jobbers and our documentation. A final job cost voucher is pushed into our accounting software (which is busy erp right now) acc to the number of pcs recd from a jobber at the time of check (the jobber can come at any random time to have their balance till date cleared)(just for context, this payment also goes through the approval gate). Referenced in SS31 (still to make ui design but view all the info on the excel ss beside it, of each particular job I'd need on that page tied into that productions lifecycle view - you'll find this excel to better understand in the busy wireframe sheet as well) 
+3. Job Cards view: this is the job cards view. Every job in every production plan active, is present on this view as a grid. Then there are sorting and filtering features as follows to find out where the blockages and serviceable-now jobs are. ((Filters -- In progress/not started/to-be-issued in-stock, Assigned / Not Assigned to jobber (all job cards of production batches automatically show up on the job card view, as soon as a production batch is created - no matter whether they have been assigned yet or not. I want to use this filter to find out which jobs are just being postponed out of our laziness, Design Number, Design Category (lehenga, crop top etc.), Job Type (process name))). ((Sorting options -- Number of pieces in a jobs order (more to less, less to more); Date of Production Order (Most recently planned, oldest planned) or job order; time to due date (can go in negative, would wanna filter that for more urgent jobs to cater to)))
+
+4. Karigar analytics view - showing all karigar wise assigned production batches (active and histoy), basic analytics and scoring over due date adherence, no of pcs delivered, actual capacity (entered by us once), pcs returned for rework, etc. Also has fabric or material balances with karigars against active job orders or ad hoc material balance with them (that we sometimes keep with them). 
+5. Sample lifecycle and non-sequential issuing and receiving against temporary design numbers. View similar to actual lifecycle view, but only with relevant infos.
+
+
+6) CRM/Customers View:
+ 
+- Description - This is where our crm staff will live. All customers presented in one place with all kinds of filters and sorting options available. And a color coded follow up system where each tier of parties can be set for different frequencies of follow ups, and the "Today's To-do" tab gives the list of need-to-contact today. Also, every party on clicking would open up their complete info like payment score, returns ratio, past purchase history, tags assigned to customer (by logic of tags framework) etc. And every customer has a grid view which shows which prodcuts would be best recommended for that customer (mostly recognized by the state, city, colors they purchased before, their appetite kind - from tags matrix logic, and our product rankings and tags)
+
+- this grid per customer will also have an option to download a packet of selected images or products from the grid and send to WhatsApp. Make basic easy logo putting and placement options per share. 
+- view for desktop referenced in SS32. Have to make the same for mobile/tab as well. 
+
+
+
+
+
+
+
+
+####Do not silently invent business rules.
+
+When a required rule is missing:
+- Mark it as an unresolved decision.
+- Explain its database or workflow impact.
+- Use a reversible placeholder only when necessary.
+- Keep the placeholder isolated and clearly documented.####	
+
+
+
+####Photo-first UI requirements:
+
+- Product photo must appear beside every design number in search results.
+- Colour-specific photos must be shown wherever a colour is selected.
+- Batch cards must show the primary product image. Primary product image should be settable and editable within the overall images for that product. 
+- Material issues must show both material and destination-product images.
+- Users must be able to search by design number, colour, category and tags.
+- Images are supporting identifiers; database IDs remain the authoritative
+  record keys.
+- Samples and raw materials may exist without a final product photograph.####
+
+
+
+####a role-permission matrix::
+
+| Action                  | Admin | Production Manager | Floor Verifier |          Jobber | Sales | Packing |
+| ----------------------- | ----: | -----------------: | -------------: | --------------: | ----: | ------: |
+| Create production batch |   Yes |                Yes |             No |              No |    No |      No |
+| Record jobber receipt   |   Yes |                Yes |            Yes | Yes, unverified |    No |      No |
+| Verify external receipt |   Yes |                Yes |            Yes |              No |    No |      No |
+| Approve sale order      |   Yes |                 No |             No |              No |   Yes |      No |
+| Generate packing slip   |   Yes |                 No |             No |              No |   Yes |     Yes |
+####	
+
+
+
+####Production batch states:
+
+Draft
+→ Approved
+→ Materials Pending
+→ Ready for Issue
+→ Process 1 Issued
+→ Process 1 Partially Received
+→ Process 1 Fully Received
+→ Process 2 Issued
+→ ...
+→ Final Process Received
+→ Finished Goods Verified
+→ Closed
+
+Rules:
+- Partial issue and partial receipt are allowed.
+- Received quantity may be lower than issued quantity.
+- Rejection, process loss and excess receipt must be recorded separately.
+- The next process may be issued only from available received WIP.
+- The final process receipt creates finished-goods stock, not WIP stock.####
+
+
+

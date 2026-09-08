@@ -1,0 +1,78 @@
+Dispatch Module — Screen Overview
+Sutra v2 · product-owner brief · as-built August 2026.  ⚠ marks intended behaviour not yet in the build.
+1.  Dispatch
+A single desktop-first order-queue board (QSR style) with one sticky top bar: firm logo, SUTRA wordmark, dark-mode toggle, LIVE/OFFLINE realtime chip, logout. Six nodes on desktop — READY, PACKING, BILLED | STOCK, OUT OF STOCK, GOODS RETURN — with live count badges on Ready, Packing and Pending. Mobile collapses to a 7-tab scroller and defaults to Pending Orders. Realtime is SSE with a 20-second poll fallback; every node is deep-linkable via ?tab=.
+1.1  Sub Menus
+1.1.1  Ready Orders
+The floor&apos;s “what can I pack right now” board. Only customers with at least one in-stock line appear.
+Left Pane
+⚠ Not built. Ready is main window + right pane only; the left rail exists on Packing. Intended: a persistent queue/filter rail so sort + filter state is visible without opening a popover.
+Main Window
+Card grid one card per customer (1–4 columns by width), outlined with a 2px priority ring in the colour of that customer&apos;s most urgent order (P1 red → P5 grey).
+Card head customer name, tier chip, market · city, and tap-to-call chips for customer, transport agency and broker.
+Per order order no, created date, due-days pill (red at ≤ 2 days), amber “n/m pcs in stock” when partial, priority disc, optional note strip.
+Per line photo thumb, design no, colour dot, × qty, stock tick. No rate and no amount anywhere on this board — deliberate.
+Footer total pcs (with packable count) and a large PACK ▸ button; the whole card is the same target. Fully packed customers show a green “Fully planned” pill instead.
+PACK ▸ moves the whole customer into Packing, flips their approved orders to PACKING, auto-opens one empty parcel and jumps to the Packing node with that parcel selected.
+Controls search (customer or design no), 8 server-side sorts (default: due days, oldest first) and 6 filters — due days, created before, in-stock only, tier, priority, total pcs. All persist in the URL.
+⚠ Collapse-all / expand-all buttons are specced but omitted on this board.
+Right Pane
+Pending Orders pane overlay docked under the top bar, open by default ≥ 1280px, collapsed to a 44px rail below that; ESC collapses. Read-only — see 1.1.2 for contents.
+⚠ Not drag-resizable here (only the Packing panes are).
+1.1.2  All Pending Orders
+The same component in two places: the Ready right pane on desktop, and the full-screen default node on the phone webview.
+Scope every approved order, in stock or not, grouped by customer. Refreshes on realtime tick + 20s poll; a failed refresh keeps the last good list behind an amber “showing last loaded list” strip.
+Three levels customer chip (name, N orders · P pcs, due-days pill) → expanded customer (tier, market · city, call chips, total pcs and ₹) → order row (order no, date, red “n short” badge, priority disc) → expanded order (qty × ₹rate = ₹amount, plus “n of this design at last step” for short lines).
+Money rates and amounts live here and on the packing screen only — never on Ready cards.
+Actions none. Search and expand/collapse only; no approve, no pack, no dispatch. Approval happens upstream.
+⚠ No sort and no filter controls — only search. On a 200-customer day this pane is a scroll.
+1.1.3  Packing Terminal
+The packing desk console. A chips row across the top is the master selector: one chip per customer (name, OOS/PLS shortfall, invoiced/floor parcels, progress bar, packed/ordered pcs), plus an “All Parcels” chip. The chip scopes all three zones.
+Left Pane — Current Order
+Shows the selected customer&apos;s whole live order book (approved + packing), collapsible by order no → design no → colour line.
+Per line photo, colour × qty, “N in stock · M pending”, a ✗ / n⁄m / ✓ progress disc, and a PACK › button that adds one piece to the selected box for items that can&apos;t be scanned.
+Header name, city, and call chips for customer, transport and broker. No rates on this side.
+Main Window — Parcel Boxes
+Board masonry of parcel cards, each with a 6px customer-colour bar, short code (AA01), status pill OPEN / PACKED / INVOICED, and a “PACKING INTO” tag on the active box.
+Scanning a “Scan here” toggle claims the desk for the Bluetooth scanner (arbitrated so a phone and the desk can&apos;t double-fire). Every scan is server-authoritative: accepted (line pulses), accepted-with-warning (stock exhausted), or rejected loudly — duplicate, not in this order, line full, parcel closed, unknown serial.
+Per box lines with photo, design · colour × packed/planned, a qty stepper and a remove ✗ (both behind a confirm that warns the pieces become scannable elsewhere), + Add Line, and CLOSE PARCEL. Plus + Add Parcel below the board.
+Controls collapse/expand all, sort (board order, pcs, created), filter (open / packed-awaiting-invoice / invoiced-awaiting-shipment), and a Select-for-shipment mode with a floating “N parcels · M pcs → Create shipment” bar.
+Phone companion /dispatch/scan runs picker → scan → review → invoiced with a giant tally, green flash on accept, wake lock, and a CLOSE PARCEL that hands the box back to the desk.
+Right Pane — Live Invoice
+LIVE a real letterhead invoice building itself as pieces are scanned — Title | Color | Qty | Rate | Amount, pcs and ₹ total.
+REVIEW triggered by CLOSE PARCEL. Amber banner: “fix qty/rate, then confirm — nothing reaches Busy until you do.” Qty and rate are editable; Bill-to party (gaddi / branch ledger) is chosen here. Confirm → Push to Busy cuts the invoice and sets the print flag.
+DONE invoice no, totals, “pushed to Busy — print flagged”, and Print A4. The box stays on the board greyed as “awaiting shipment” until it is grouped.
+Shipment CLOSE SHIPMENT opens a sheet — consignee selector, pre-ticked list of invoiced-unshipped parcels, optional note — and issues a transport document. Unticked parcels stay for the next trip.
+⚠ No GST / tax computation anywhere on the invoice — line amounts and total only. The phone also silently drops scan warnings on an accepted scan.
+1.1.4  Billed
+Shows delivered / invoiced orders grouped by customer — order no, created on, delivered on, delivered-in-days, then lines (design · colour · qty × rate).
+Filters date range (defaults to today) and customer tier, both URL-persisted and shareable.
+Per order Open Invoice popup (customer score, last broker, last purchase, Busy voucher no, totals) and a Return shortcut into the goods-return screen.
+Print A4 sale invoice (letterhead, bill-to vs goods-for split, lines, amount in words) and a separate transport document for shipments.
+⚠ Two real gaps: line items never render (the API does not return them, so only totals show), and there is no shipments-history list — shipment history still lives only inside the Packing board.
+1.1.5  Out of Stock
+Two row kinds ORDER — ordered and out of free stock; and RESTOCK — high demand, low cover, no order yet. The restock half is live off the nightly tag/demand engine, not mocked.
+Restock rule velocity &gt; 0, days-of-cover below the lead time, and the design is not already tagged priority-sale. Cards read “selling 4/day · 22 days cover · 18 free · score 61”. Thresholds are config-driven and tune without a deploy.
+Counts strip pcs to produce, sourceable now, in production but not at last step, and nothing in production (red, links to Production).
+Per design photo, colour matrix — pcs needed, at last step, in order, received, six due dates — with red “Nil” cells, karigar pills with score and call button, and a link to the product page.
+Controls Sourceable-now vs Everything-short toggle, restock suggestions on/off, three sorts, karigar filter.
+⚠ Cover is measured against lead time (45 days), not the “one month” in the original brief — worth confirming which we want.
+1.1.6  Warehouse Stock
+Grain one row per design + colour (SKU), reading that colour&apos;s own free stock and in-production — not the design rollup.
+Columns photo, design no (links to catalogue), colour, FG stock, in production, status pill OUT OF STOCK / LOW / OK. Stat tiles for SKUs shown, pcs in stock, low, out.
+Controls search by design or colour, four sorts (scarcity first by default), three filters — low only, out only, in production only.
+⚠ Finished Goods only. Material and WIP are not on this screen at all — that is the largest single gap in the module against the brief.
+⚠ A pagination bug silently stops the board after 20 designs, so tiles and flags are incomplete. One-line fix, but it must ship before floor use.
+1.1.7  Sale Return
+Four-step desk wizard Customer → Pieces → Preview → Credit note, with the step rail always visible.
+1 Customer pick the customer, enter parcels accepted (the first thing the desk counts), then multi-select the dispatched / invoiced orders being credited against.
+2 Pieces scan the barcode to resolve design + colour at the design&apos;s price, or search a design and tap a colour chip. Repeat scans bump the line; qty is editable, 0 removes.
+3 Preview design · colour · qty · rate · amount with totals and an optional note. Blockers are listed explicitly rather than just disabling the button.
+4 Credit note issues CN-YYMMDD-0001 in the same transaction, so the customer leaves with the document. Screen shows the note, return no, parcels, orders and total, with Print. A “recent returns” list is the desk&apos;s audit trail.
+Business rule the credit note is issued immediately, but pieces re-enter finished goods only when the return clears accounts approval — the note carries a “stock on approval” badge.
+Open gaps to decide on
+Billed: wire line items through the API and add the shipments-history list.
+Warehouse Stock: fix the 20-row pagination stop; decide whether Material and WIP are tabs here or their own node.
+Invoice: confirm whether GST lines belong on the A4 sale invoice or stay a Busy-side concern.
+Ready / Pending: left rail and collapse-all still open; Pending has no sort or filter at all.
+Out of Stock: confirm 45-day lead-time cover vs the one-month rule in the brief.

@@ -1,0 +1,16 @@
+<!-- @dsCard group="Components" viewport="700x430" name="Catalogue" subtitle="ProductCard · PriceText · ColourDots · Thumb — picture first, always" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>components/catalogue/catalogue.card.html</title><link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>body{padding:16px}#root{display:flex;flex-direction:column;gap:14px}.r{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.lbl{font:var(--text-overline);letter-spacing:var(--tracking-caps);text-transform:uppercase;color:var(--text-muted);width:70px;flex:none}@keyframes spin{to{transform:rotate(360deg)}}</style></head><body><div id="root"></div><script type="text/babel">const DS=window.SutraDesignSystem_58929b;const {ProductCard,ColourDots,Thumb,PriceText}=DS;const cols=[{name:'Sky',hex:'#8FB3D9'},{name:'Purple',hex:'#8B6BAE'},{name:'Seagreen',hex:'#6FA391'},{name:'Peach',hex:'#E8B99B'}];
+function Demo(){const [c,setC]=React.useState('Sky');return <>
+<div className="r" style={{alignItems:'flex-start',gap:14}}>
+<ProductCard width={170} src="../../assets/samples/2798-sky.jpg" code="2798" name="Plazo Set" price={4995} tag="Top 30" note="Low stock" colours={cols} activeColour={c} onColour={setC} onAdd={()=>{}}/>
+<ProductCard width={170} src="../../assets/samples/6002-lilac.jpg" code="6002" name="Lilac Court" price={4995} onAdd={()=>{}}/>
+<ProductCard width={170} code="1457" name="Crop Top" price={3995} colours={cols.slice(0,2)} stats={{free:47,fg:47,'in prod':0}}/>
+<div style={{display:'flex',flexDirection:'column',gap:12}}><ProductCard width={140} ratio={1} src="../../assets/samples/4566-blush.jpg" code="4566" name="Blush Cape" price={null} tag="Sample" tagTone="gold"/>
+<div className="r"><Thumb src="../../assets/samples/2006-lavender.jpg" code="2006" size={44}/><Thumb code="D9111" colour="#3F7D5A" size={44}/><Thumb code="1243" size={44}/><ColourDots colours={cols} active={c} onSelect={setC} size={18}/></div><div className="r"><PriceText value={3999} size={26}/><PriceText value={12495} size={20}/><PriceText value={null} size={20}/><span className="lbl" style={{width:"auto"}}>lead digit +5%</span></div></div>
+</div></>}ReactDOM.createRoot(document.getElementById('root')).render(<Demo/>);</script></body></html>

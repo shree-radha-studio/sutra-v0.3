@@ -1,0 +1,73 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Sutra · Catalogue drafts archive</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- ARCHIVE · the six Catalogue exploration rows that preceded the final design language (Gallery, Atelier, their
+     audited duplicates, Editorial, Studio). History only; nobody edits these. Moved off the working board on 9 Sep 2026.
+     ?only=<row>-<n> with rows 1a 1b 1a2 1b2 3a 3b still works; ?dev for the React development build. -->
+<link rel="stylesheet" href="../../design-system/styles.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="board.css">
+<script>(function () { var dev = new URLSearchParams(location.search).has('dev'), f = dev ? 'development' : 'production.min';
+  document.write('<script src="https://unpkg.com/react@18.3.1/umd/react.' + f + '.js" crossorigin="anonymous"><\/script><script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.' + f + '.js" crossorigin="anonymous"><\/script>'); })();</script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script src="../../design-system/ui_kits/data.js"></script>
+<script>(function(){var D=window.SUTRA_DATA,o=D.A,n='../../design-system/assets/';D.A=n;D.designs.forEach(function(d){if(d.src)d.src=d.src.replace(o,n)});})();</script>
+</head>
+<body><div id="stage"><div id="root"></div></div>
+<script type="text/babel" src="../../design-system/ui_kits/sutra-mobile/ios-frame.jsx"></script>
+<script type="text/babel" src="../../design-system/ui_kits/catalogue-explorations/common.jsx"></script>
+<script type="text/babel" src="../../design-system/ui_kits/catalogue-explorations/themes.jsx"></script>
+<script type="text/babel" src="../../design-system/ui_kits/catalogue-explorations/screens.jsx"></script>
+<script type="text/babel" src="themes2.jsx"></script>
+<script type="text/babel" src="screens2.jsx"></script>
+<script type="text/babel">
+const ORIG =[['Catalogue grid', ScreenGrid], ['Product · customer view', ScreenProductCustomer], ['Product · salesperson view', ScreenProductSales], ['Product · analytics & orders', ScreenAnalytics], ['Scan-to-add pop-up', ScreenScan], ['Carts', ScreenCarts]];
+const V2 = [['Catalogue grid · stepper on every card', ScreenGrid2], ['Product · customer view', ScreenProductCustomer2], ['Product · salesperson view', ScreenProductSales], ['Product · analytics & orders', ScreenAnalytics], ['Scan · recognised-product pop-up', ScreenScan2], ['Carts', ScreenCarts], ['Full-screen viewer · swipe colours, then media', ScreenViewer], ['Cart card · double tap on a cart chip', ScreenCartCard], ['Side menu · all modules', ScreenSideMenu]];
+const DRAFTS = [
+  { id: '1a', label: '1a', T: GALLERY, screens: ORIG, title: 'Gallery', sub: 'Original, untouched · ivory editorial · hairlines · Marcellus & Cormorant · maroon as a single line · colour bars instead of dots' },
+  { id: '1b', label: '1b', T: ATELIER, screens: ORIG, title: 'Atelier', sub: 'Original, untouched · espresso boutique · tactile pills · Bodoni Moda & Outfit · photos glow on dark · gold carts' },
+  { id: '1a2', label: '1a′', T: GALLERY2, screens: V2, title: 'Gallery, refined', sub: 'Audit applied · 44px targets and press feedback · one glass dock replaces tray + bar · five labelled tabs · caps only on tags · stepper on every card · viewer, cart card and side menu added' },
+  { id: '1b2', label: '1b′', T: ATELIER2, screens: V2, title: 'Atelier, refined', sub: 'Audit applied · scrim shortened so the hem stays lit, caption on a frosted strip carries the stepper · one radius scale (20 / 14) · glass dock over content · Bodoni never below 17px' },
+  { id: '3a', label: '3a', T: EDITORIAL, screens: V2, title: 'Editorial', sub: 'Ground-up · the design system’s own ivory and espresso, taken seriously · Cormorant for what a customer reads, Jost for the interface · maroon once per screen · search is a field with Sort & filter inside · rounded, glass, quiet', isNew: true },
+  { id: '3b', label: '3b', T: STUDIO, screens: V2, title: 'Studio', sub: 'Ground-up · neutral graphite (cool, not brown), ivory type, Manrope throughout · Sutra gold is the only accent · photos are the only colour · captions on frosted strips · island bar with the scan button raised in the centre', isNew: true },
+];
+const X0 = 60, GAP = 30;
+const geo = r => ({ dx: 460, per: 9, lh: 1000, w: 390, h: 844 });
+const Q = new URLSearchParams(location.search);
+const LAZY = 'IntersectionObserver' in window;
+function LazyFrame({ T, Scr, id, left, top }) {
+  const ref = React.useRef(null); const [on, setOn] = React.useState(!LAZY);
+  React.useEffect(() => { if (!LAZY) return; const io = new IntersectionObserver(es => es.forEach(e => setOn(e.isIntersecting)), { rootMargin: '1500px' }); io.observe(ref.current); return () => io.disconnect(); }, []);
+  return <div ref={ref} className="frame" id={id} style={{ left, top, width: 390, height: 844 }}>{on ? <IOSDevice width={390} height={844} dark={T.dark}><Scr T={T} /></IOSDevice> : <div className="ph" style={{ width: 390, height: 844, borderRadius: 54 }} />}</div>;
+}
+function Row({ r, y }) {
+  const g = geo(r);
+  return <>
+    <div className="row-label" style={{ top: y - 130 }}><span className={'badge' + (r.isNew ? ' new' : '')}>{r.label}</span>{r.title}<small>{r.sub}</small></div>
+    {r.screens.map(([name, Scr], i) => { const x = X0 + (i % g.per) * g.dx, yy = y + Math.floor(i / g.per) * g.lh; return <React.Fragment key={name}>
+      <div className="cap" style={{ left: x, top: yy - 30, maxWidth: g.dx - 20 }}>{name}</div>
+      <LazyFrame T={r.T} Scr={Scr} id={r.id + '-' + (i + 1)} left={x} top={yy} />
+    </React.Fragment>; })}
+  </>;
+}
+const rowH = r => { const g = geo(r); return Math.ceil(r.screens.length / g.per) * g.lh + 100; };
+const YS = DRAFTS.reduce((a, r, i) => { a.push(i ? a[i - 1] + rowH(DRAFTS[i - 1]) : 230); return a; }, []);
+const END = YS[YS.length - 1] + rowH(DRAFTS[DRAFTS.length - 1]);
+const W = 9 * 460;
+function Canvas() {
+  const only = Q.get('only');
+  if (only) { const [rid, n] = only.split('-'); const r = DRAFTS.find(x => x.id === rid) || DRAFTS[0]; const Scr = (r.screens[(+n || 1) - 1] || r.screens[0])[1];
+    document.getElementById('stage').style.cssText = 'width:470px;height:934px' + (Q.get('z') ? ';zoom:' + Q.get('z') : ''); document.body.style.background = r.T.dark ? '#0f0b09' : '#D9D0C5';
+    return <div className="frame" style={{ left: 30, top: 30 }}><IOSDevice width={390} height={844} dark={r.T.dark}><Scr T={r.T} /></IOSDevice></div>; }
+  React.useEffect(() => { const st = document.getElementById('stage'); st.style.width = (W + 120) + 'px'; st.style.height = (END + 120) + 'px'; window.__W = W + 120; window.__H = END + 120; }, []);
+  return <>
+    <div className="section" style={{ top: 20, width: W }}><div className="section-title">Drafts · archive</div><div className="section-sub"><a className="hub-link" href="index.html">← All modules</a> Past Catalogue explorations, kept for the record. Two originals, two audited duplicates, two ground-up directions. The final design language grew out of 3a Editorial.</div></div>
+    {DRAFTS.map((r, k) => <Row key={r.id} r={r} y={YS[k]} />)}
+    <div className="band" style={{ top: YS[2] - 175, width: W }}><span>Audited duplicates</span></div>
+    <div className="band" style={{ top: YS[4] - 175, width: W }}><span>New directions</span></div>
+  </>;
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<Canvas />);
+</script>
+<script src="board-pan.js"></script>
+</body></html>

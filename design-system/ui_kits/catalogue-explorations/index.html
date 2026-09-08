@@ -1,0 +1,31 @@
+<!-- @dsCard group="Screens" viewport="1400x930" name="Catalogue explorations — Gallery & Atelier" subtitle="Two directions for the full catalogue module: grid · customer product · salesperson · analytics · scan-to-add · carts" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Sutra · Catalogue explorations</title>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script src="../data.js"></script>
+<style>html,body{margin:0;background:#D9D0C5}body{position:relative;width:2860px;height:2200px}.frame{position:absolute}.row-label{position:absolute;left:60px;font-family:"Marcellus",serif;font-size:34px;color:#1F1613;letter-spacing:.02em}.row-label small{display:block;font-family:"Jost",sans-serif;font-size:14px;color:#5E4F47;margin-top:6px;letter-spacing:.02em}.badge{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:50%;background:#1F1613;color:#F7F2EB;font-family:"Jost",sans-serif;font-size:16px;margin-right:16px;vertical-align:middle}.cap{position:absolute;white-space:nowrap;font-family:"Jost",sans-serif;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:#5E4F47}</style></head>
+<body><div id="root"></div>
+<script type="text/babel" src="../sutra-mobile/ios-frame.jsx"></script>
+<script type="text/babel" src="common.jsx"></script>
+<script type="text/babel" src="themes.jsx"></script>
+<script type="text/babel" src="screens.jsx"></script>
+<script type="text/babel">
+const SCREENS = [['Catalogue grid', ScreenGrid], ['Product · customer view', ScreenProductCustomer], ['Product · salesperson view', ScreenProductSales], ['Product · analytics & orders', ScreenAnalytics], ['Scan-to-add pop-up', ScreenScan], ['Carts', ScreenCarts]];
+function Row({ id, T, y, title, sub }) {
+  return <>
+    <div className="row-label" style={{ top: y - 130 }}><span className="badge">{id}</span>{title}<small>{sub}</small></div>
+    {SCREENS.map(([name, Scr], i) => <React.Fragment key={name}>
+      <div className="cap" style={{ left: 60 + i * 460, top: y - 26 }}>{name}</div>
+      <div className="frame" style={{ left: 60 + i * 460, top: y }} id={id + '-' + (i + 1)}><IOSDevice width={390} height={844} dark={T.dark}><Scr T={T} /></IOSDevice></div>
+    </React.Fragment>)}
+  </>;
+}
+function Canvas() { const q = new URLSearchParams(location.search); const only = q.get('only'); if (only) { const [row, n] = only.split('-'); const T = row === '1b' ? ATELIER : GALLERY; const Scr = SCREENS[(+n || 1) - 1][1]; document.body.style.cssText = 'width:470px;height:930px;background:' + (T.dark ? '#0f0b09' : '#D9D0C5'); return <div className="frame" style={{ left: 30, top: 30 }}><IOSDevice width={390} height={844} dark={T.dark}><Scr T={T} /></IOSDevice></div>; }
+  return <><Row id="1a" T={GALLERY} y={170} title="Gallery" sub="Ivory editorial · hairlines · Marcellus & Cormorant · maroon as a single line · colour bars instead of dots" /><Row id="1b" T={ATELIER} y={1270} title="Atelier" sub="Espresso boutique · tactile pills · Bodoni Moda & Outfit · photos glow on dark · gold carts" /></>; }
+ReactDOM.createRoot(document.getElementById('root')).render(<Canvas />);
+</script></body></html>

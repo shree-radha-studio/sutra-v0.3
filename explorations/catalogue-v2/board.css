@@ -1,0 +1,80 @@
+html,body{margin:0;background:#D9D0C5}
+#stage{position:relative;width:4600px;height:21400px;transform-origin:0 0}
+/* agent orb: hollow ring with a dark border and the agent mark; a spectral ring outside spins and breathes while listening */
+.orb{position:relative;display:inline-grid;place-items:center;border-radius:50%;border:2px solid;background:radial-gradient(circle at 50% 45%,rgba(255,255,255,.06),rgba(0,0,0,.05) 70%)}
+.orb::before{content:"";position:absolute;inset:-5px;border-radius:50%;background:conic-gradient(from 0deg,rgba(224,80,122,0) 0%,rgba(224,80,122,.9) 20%,rgba(110,123,255,.9) 45%,rgba(255,179,71,.9) 70%,rgba(79,209,197,.8) 85%,rgba(224,80,122,0) 100%);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3.5px));mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3.5px));opacity:.45;filter:blur(.3px)}
+.orb.on::before{opacity:1;animation:orbspin 1.6s linear infinite,orbbreathe 1.8s ease-in-out infinite}
+.orb.on{box-shadow:0 0 18px rgba(224,80,122,.55),0 0 40px rgba(110,123,255,.35)}
+.orb.on svg{animation:orbmark 1.8s ease-in-out infinite}
+@keyframes orbspin{to{transform:rotate(360deg)}}
+@keyframes orbbreathe{0%,100%{inset:-5px}50%{inset:-8px}}
+@keyframes orbmark{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+/* listening aura: blurred lights breathing behind the island */
+.glow-a{animation:glowa 4.5s ease-in-out infinite alternate}.glow-b{animation:glowb 5.5s ease-in-out infinite alternate}.glow-c{animation:glowc 6.5s ease-in-out infinite alternate}.glow-d{animation:glowb 7s ease-in-out infinite alternate-reverse}
+@keyframes glowa{from{transform:translate(0,0) scale(1)}to{transform:translate(70px,-14px) scale(1.25)}}
+@keyframes glowb{from{transform:translate(0,0) scale(1.1)}to{transform:translate(-60px,-20px) scale(.9)}}
+@keyframes glowc{from{transform:translate(0,0) scale(.95)}to{transform:translate(-50px,10px) scale(1.3)}}
+.aura-dot{animation:auradot 1.1s ease-in-out infinite}
+@keyframes auradot{0%,100%{opacity:1}50%{opacity:.15}}
+@media (prefers-reduced-motion:reduce){.orb.on::before,.orb.on svg,.glow-a,.glow-b,.glow-c,.glow-d,.aura-dot{animation:none}}
+/* greeting that cycles languages above the user mark (apple-style hello) */
+.hi span{opacity:0;animation:hicycle 17.6s ease-in-out infinite}
+@keyframes hicycle{0%{opacity:0;transform:translateY(3px)}3%{opacity:1;transform:none}11%{opacity:1;transform:none}13.5%{opacity:0;transform:translateY(-3px)}100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.hi span{animation:none}.hi span:first-child{opacity:1}}
+.frame{position:absolute}
+/* zoom toolbar (hidden when embedded in Claude Design, which has its own zoom) */
+#zoom{position:fixed;right:16px;top:16px;z-index:100;display:flex;gap:4px;padding:4px;border-radius:999px;background:rgba(31,22,19,.86);backdrop-filter:blur(12px);box-shadow:0 10px 30px -12px rgba(0,0,0,.5);font-family:"Jost",sans-serif;font-size:12.5px;color:#F7F2EB}
+#zoom button{height:32px;min-width:32px;padding:0 12px;border:0;border-radius:999px;background:transparent;color:inherit;font:inherit;cursor:pointer;white-space:nowrap}
+#zoom button:hover{background:rgba(255,255,255,.12)}
+#zoom button.on{background:#F7F2EB;color:#1F1613}
+#zoom .pct{display:grid;place-items:center;min-width:48px;font-variant-numeric:tabular-nums;opacity:.85}
+#zoom kbd{opacity:.55;font:inherit;margin-left:6px}
+body.panning{cursor:grabbing;user-select:none}
+.row-label{position:absolute;left:60px;font-family:"Marcellus",serif;font-size:34px;color:#1F1613;letter-spacing:.02em}
+.row-label small{display:block;font-family:"Jost",sans-serif;font-size:14px;color:#5E4F47;margin-top:6px;letter-spacing:.02em;max-width:1500px}
+.badge{display:inline-grid;place-items:center;min-width:44px;height:44px;padding:0 10px;border-radius:22px;background:#1F1613;color:#F7F2EB;font-family:"Jost",sans-serif;font-size:16px;margin-right:16px;vertical-align:middle}
+.badge.new{background:#5A1F27}
+.cap{position:absolute;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:"Jost",sans-serif;font-size:17px;font-weight:500;letter-spacing:.04em;color:#3E2F28}
+/* finals: big pair captions, table cells, header cells, label cells */
+.capL{position:absolute;display:flex;align-items:baseline;gap:12px;white-space:nowrap;font-family:"Jost",sans-serif;color:#1F1613}
+.capL .num{display:inline-grid;place-items:center;min-width:30px;height:30px;padding:0 8px;border-radius:15px;background:#1F1613;color:#F7F2EB;font-size:16px;font-weight:500;align-self:center}
+.capL .name{font-size:22px;font-weight:500;letter-spacing:.01em;overflow:hidden;text-overflow:ellipsis}
+.capL .ld{margin-left:auto;font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:#8C7B71}
+.cell{position:absolute;border:1.5px solid rgba(31,22,19,.28);border-radius:18px;background:rgba(255,255,255,.18)}
+.th{position:absolute;height:48px;display:flex;align-items:center;padding:0 22px;border-radius:14px;background:#1F1613;color:#F7F2EB;font-family:"Jost",sans-serif;font-size:17px;letter-spacing:.14em;text-transform:uppercase;box-sizing:border-box}
+.lbl{position:absolute;padding:26px 24px;box-sizing:border-box;font-family:"Jost",sans-serif;color:#5E4F47}
+.lbl-mod{font-size:14px;letter-spacing:.16em;text-transform:uppercase;color:#8C7B71}
+.lbl-sub{font-family:"Marcellus",serif;font-size:38px;color:#1F1613;margin-top:8px;line-height:1.1}
+.lbl-flow{font-size:17px;line-height:1.5;margin-top:16px;color:#5E4F47}
+.lbl-n{font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:#8C7B71;margin-top:18px}
+.empty{position:absolute;box-sizing:border-box;padding:40px 48px;border:2px dashed rgba(31,22,19,.28);border-radius:24px;font-family:"Jost",sans-serif;font-size:22px;color:#5E4F47}
+.band{position:absolute;left:60px;right:60px;height:1px;background:rgba(31,22,19,.18)}
+.band span{position:absolute;left:0;top:-9px;padding:0 10px 0 0;background:#D9D0C5;font-family:"Jost",sans-serif;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#5E4F47}
+/* board structure: section headers (drafts / finals), module rows, sub-menu blocks, column heads, vertical divider */
+.section{position:absolute;left:60px;right:60px;padding:0 0 18px;border-bottom:2px solid rgba(31,22,19,.35)}
+.section-title{font-family:"Marcellus",serif;font-size:64px;letter-spacing:.04em;text-transform:uppercase;color:#1F1613;line-height:1}
+.section-sub{font-family:"Jost",sans-serif;font-size:16px;color:#5E4F47;margin-top:10px;max-width:1400px}
+.module{position:absolute;left:60px;padding-top:22px;border-top:2px solid rgba(31,22,19,.35);font-family:"Marcellus",serif;font-size:44px;color:#1F1613;letter-spacing:.02em}
+.module small{display:block;font-family:"Jost",sans-serif;font-size:16px;color:#5E4F47;margin-top:4px;letter-spacing:.02em}
+.section{right:auto}.band{right:auto}
+.sub{position:absolute;left:60px;right:60px;display:flex;align-items:baseline;gap:18px;font-family:"Jost",sans-serif;font-size:15px;color:#5E4F47;padding:10px 0 0;border-top:1px dashed rgba(31,22,19,.18)}
+.sub b{font-family:"Marcellus",serif;font-weight:400;font-size:24px;color:#1F1613;letter-spacing:.02em}
+.colhead{position:absolute;font-family:"Jost",sans-serif;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#1F1613;padding:6px 14px;border-radius:999px;background:rgba(31,22,19,.08)}
+.vdiv{position:absolute;width:1px;background:rgba(31,22,19,.18)}
+/* Feedback on pointer-down, not release (apple-design §1). */
+.press{cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform 100ms ease-out}
+.press:active{transform:scale(.96)}
+@media (prefers-reduced-motion:reduce){.press{transition:none}}
+/* per-module pages (9 Sep): lazy-frame placeholder and the hub link inside section subtitles */
+.ph{box-sizing:border-box;border:1.5px dashed rgba(31,22,19,.22);background:rgba(31,22,19,.04)}
+.hub-link{display:inline-block;margin-right:14px;padding:4px 12px;border-radius:999px;background:#1F1613;color:#F7F2EB;text-decoration:none;font-family:"Jost",sans-serif;font-size:13px;letter-spacing:.06em}
+.hub-link:hover{background:#5A1F27}
+/* view switcher (fixed, top-left) and the side-by-side compare columns */
+#views{position:fixed;left:16px;top:16px;z-index:100;display:flex;align-items:center;gap:4px;padding:4px 6px;border-radius:999px;background:rgba(31,22,19,.86);backdrop-filter:blur(12px);box-shadow:0 10px 30px -12px rgba(0,0,0,.5);font-family:"Jost",sans-serif;font-size:12.5px;color:#F7F2EB}
+#views a{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:999px;color:inherit;text-decoration:none;white-space:nowrap}
+#views a:hover{background:rgba(255,255,255,.12)}
+#views a.tab.on{background:#F7F2EB;color:#1F1613}
+#views a small{font-size:11px;opacity:.6}
+#views .mod{font-family:"Marcellus",serif;font-size:15px;letter-spacing:.04em;padding:0 10px 0 6px;opacity:.95}
+#views .lnk{opacity:.8}
+.col{position:absolute;top:0}

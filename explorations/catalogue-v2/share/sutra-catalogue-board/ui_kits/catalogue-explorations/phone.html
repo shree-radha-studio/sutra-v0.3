@@ -1,0 +1,24 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Sutra · explorations on your phone</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Jost:wght@400;500;600&display=swap">
+<style>
+body{margin:0;background:#F3ECE2;color:#241712;font-family:"Jost",sans-serif;padding:20px 16px 40px}
+h1{font-family:"Cormorant Garamond",serif;font-weight:500;font-size:30px;margin:8px 0 2px}
+p{margin:0 0 18px;color:#65524A;font-size:14px}
+h2{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#9C8B80;margin:22px 0 8px;font-weight:600}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+a{display:flex;align-items:center;gap:8px;min-height:48px;padding:8px 12px;border-radius:14px;background:#FDFBF7;border:1px solid rgba(36,23,18,.1);color:#241712;text-decoration:none;font-size:13.5px;font-weight:500;line-height:1.2}
+a small{display:block;color:#9C8B80;font-weight:400;font-size:11px;margin-top:2px}
+a.dark{background:#231a16;color:#F3EADF;border-color:transparent}a.dark small{color:#9A8B80}
+.all{grid-column:1/-1;background:#561C24;color:#FDFBF7;border:0;justify-content:center}
+</style></head><body>
+<h1>Catalogue explorations</h1>
+<p>Each link opens one screen full-bleed, the way it would run on this phone. Swipe the viewer; press anything.</p>
+<script>
+const ROWS=[['1a2','Gallery, refined',false],['1b2','Atelier, refined',true],['3a','Editorial',false],['3b','Studio',true]];
+const SCREENS=['Catalogue grid','Product · customer','Product · salesperson','Analytics & orders','Scan pop-up','Carts','Full-screen viewer','Cart card','Side menu'];
+document.write(ROWS.map(([id,name,dark])=>`<h2>${name}</h2><div class="row">${SCREENS.map((s,i)=>`<a class="${dark?'dark':''}" href="index.html?only=${id}-${i+1}&bare">${s}<small>${id}-${i+1}</small></a>`).join('')}</div>`).join(''));
+document.write(`<h2>Originals</h2><div class="row">${[['1a','Gallery',false],['1b','Atelier',true]].map(([id,name,dark])=>SCREENS.slice(0,6).map((s,i)=>`<a class="${dark?'dark':''}" href="index.html?only=${id}-${i+1}&bare">${name} · ${s}<small>${id}-${i+1}</small></a>`).join('')).join('')}</div>`);
+document.write('<div class="row" style="margin-top:22px"><a class="all" href="index.html">Whole canvas (pinch to zoom)</a></div>');
+</script>
+</body></html>

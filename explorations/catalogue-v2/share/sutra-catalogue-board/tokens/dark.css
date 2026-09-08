@@ -1,0 +1,13 @@
+/* Dark mode — espresso room; photos stay lit. Toggle with data-theme="dark" on <html> or any scope. */
+[data-theme="dark"]{
+--bg-page:#1B1310;--bg-sunken:#150E0C;--bg-raised:#231916;
+--surface-card:#261C18;--surface-card-hover:#2C211C;--surface-inverse:var(--sand-50);--surface-overlay:rgba(0,0,0,.6);--surface-glass:rgba(38,28,24,.82);
+--text-primary:#F3ECE2;--text-secondary:#C9B9A6;--text-muted:#8C7B70;--text-inverse:var(--ink-900);--text-price:#F3ECE2;--text-brand:var(--brand-300);--text-link:var(--brand-300);--text-link-hover:var(--brand-200);
+--border-subtle:rgba(243,236,226,.08);--border-default:rgba(243,236,226,.14);--border-strong:rgba(243,236,226,.28);
+--accent:var(--brand-500);--accent-hover:var(--brand-400);--accent-active:var(--brand-600);--accent-soft:rgba(139,58,69,.22);--accent-on:#FDFBF7;
+--ok-100:rgba(63,125,90,.22);--warn-100:rgba(184,134,43,.22);--danger-100:rgba(178,58,58,.22);--info-100:rgba(91,108,122,.22);--gold-100:rgba(192,149,63,.18);--brand-100:rgba(139,58,69,.22);
+
+--photo-backdrop:linear-gradient(180deg,#3A2C26,#2C211C);/* @kind other */
+
+--shadow-2:0 2px 6px rgba(0,0,0,.3),0 8px 20px -8px rgba(0,0,0,.5);--shadow-3:0 12px 32px -10px rgba(0,0,0,.6);
+}

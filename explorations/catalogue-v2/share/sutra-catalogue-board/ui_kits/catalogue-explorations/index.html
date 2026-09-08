@@ -1,0 +1,248 @@
+<!-- @dsCard group="Screens" viewport="1400x930" name="Catalogue explorations — one canvas" subtitle="1a · 1b untouched · 1a′ · 1b′ audited · 3a Editorial · 3b Studio ground-up · viewer, scan pop-up, cart card and side menu on every v2 row" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Sutra · Catalogue explorations v2</title>
+<meta name="design_doc_mode" content="canvas">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script src="../data.js"></script>
+<style>
+html,body{margin:0;background:#D9D0C5}
+#stage{position:relative;width:4600px;height:21400px;transform-origin:0 0}
+/* agent orb: hollow ring with a dark border and the agent mark; a spectral ring outside spins and breathes while listening */
+.orb{position:relative;display:inline-grid;place-items:center;border-radius:50%;border:2px solid;background:radial-gradient(circle at 50% 45%,rgba(255,255,255,.06),rgba(0,0,0,.05) 70%)}
+.orb::before{content:"";position:absolute;inset:-5px;border-radius:50%;background:conic-gradient(from 0deg,rgba(224,80,122,0) 0%,rgba(224,80,122,.9) 20%,rgba(110,123,255,.9) 45%,rgba(255,179,71,.9) 70%,rgba(79,209,197,.8) 85%,rgba(224,80,122,0) 100%);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3.5px));mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3.5px));opacity:.45;filter:blur(.3px)}
+.orb.on::before{opacity:1;animation:orbspin 1.6s linear infinite,orbbreathe 1.8s ease-in-out infinite}
+.orb.on{box-shadow:0 0 18px rgba(224,80,122,.55),0 0 40px rgba(110,123,255,.35)}
+.orb.on svg{animation:orbmark 1.8s ease-in-out infinite}
+@keyframes orbspin{to{transform:rotate(360deg)}}
+@keyframes orbbreathe{0%,100%{inset:-5px}50%{inset:-8px}}
+@keyframes orbmark{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+/* listening aura: blurred lights breathing behind the island */
+.glow-a{animation:glowa 4.5s ease-in-out infinite alternate}.glow-b{animation:glowb 5.5s ease-in-out infinite alternate}.glow-c{animation:glowc 6.5s ease-in-out infinite alternate}.glow-d{animation:glowb 7s ease-in-out infinite alternate-reverse}
+@keyframes glowa{from{transform:translate(0,0) scale(1)}to{transform:translate(70px,-14px) scale(1.25)}}
+@keyframes glowb{from{transform:translate(0,0) scale(1.1)}to{transform:translate(-60px,-20px) scale(.9)}}
+@keyframes glowc{from{transform:translate(0,0) scale(.95)}to{transform:translate(-50px,10px) scale(1.3)}}
+.aura-dot{animation:auradot 1.1s ease-in-out infinite}
+@keyframes auradot{0%,100%{opacity:1}50%{opacity:.15}}
+@media (prefers-reduced-motion:reduce){.orb.on::before,.orb.on svg,.glow-a,.glow-b,.glow-c,.glow-d,.aura-dot{animation:none}}
+.frame{position:absolute}
+/* zoom toolbar (hidden when embedded in Claude Design, which has its own zoom) */
+#zoom{position:fixed;right:16px;top:16px;z-index:100;display:flex;gap:4px;padding:4px;border-radius:999px;background:rgba(31,22,19,.86);backdrop-filter:blur(12px);box-shadow:0 10px 30px -12px rgba(0,0,0,.5);font-family:"Jost",sans-serif;font-size:12.5px;color:#F7F2EB}
+#zoom button{height:32px;min-width:32px;padding:0 12px;border:0;border-radius:999px;background:transparent;color:inherit;font:inherit;cursor:pointer;white-space:nowrap}
+#zoom button:hover{background:rgba(255,255,255,.12)}
+#zoom button.on{background:#F7F2EB;color:#1F1613}
+#zoom .pct{display:grid;place-items:center;min-width:48px;font-variant-numeric:tabular-nums;opacity:.85}
+#zoom kbd{opacity:.55;font:inherit;margin-left:6px}
+body.panning{cursor:grabbing;user-select:none}
+.row-label{position:absolute;left:60px;font-family:"Marcellus",serif;font-size:34px;color:#1F1613;letter-spacing:.02em}
+.row-label small{display:block;font-family:"Jost",sans-serif;font-size:14px;color:#5E4F47;margin-top:6px;letter-spacing:.02em;max-width:1500px}
+.badge{display:inline-grid;place-items:center;min-width:44px;height:44px;padding:0 10px;border-radius:22px;background:#1F1613;color:#F7F2EB;font-family:"Jost",sans-serif;font-size:16px;margin-right:16px;vertical-align:middle}
+.badge.new{background:#5A1F27}
+.cap{position:absolute;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:"Jost",sans-serif;font-size:17px;font-weight:500;letter-spacing:.04em;color:#3E2F28}
+/* finals: big pair captions, table cells, header cells, label cells */
+.capL{position:absolute;display:flex;align-items:baseline;gap:12px;white-space:nowrap;font-family:"Jost",sans-serif;color:#1F1613}
+.capL .num{display:inline-grid;place-items:center;min-width:30px;height:30px;padding:0 8px;border-radius:15px;background:#1F1613;color:#F7F2EB;font-size:16px;font-weight:500;align-self:center}
+.capL .name{font-size:22px;font-weight:500;letter-spacing:.01em;overflow:hidden;text-overflow:ellipsis}
+.capL .ld{margin-left:auto;font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:#8C7B71}
+.cell{position:absolute;border:1.5px solid rgba(31,22,19,.28);border-radius:18px;background:rgba(255,255,255,.18)}
+.th{position:absolute;height:48px;display:flex;align-items:center;padding:0 22px;border-radius:14px;background:#1F1613;color:#F7F2EB;font-family:"Jost",sans-serif;font-size:17px;letter-spacing:.14em;text-transform:uppercase;box-sizing:border-box}
+.lbl{position:absolute;padding:26px 24px;box-sizing:border-box;font-family:"Jost",sans-serif;color:#5E4F47}
+.lbl-mod{font-size:14px;letter-spacing:.16em;text-transform:uppercase;color:#8C7B71}
+.lbl-sub{font-family:"Marcellus",serif;font-size:38px;color:#1F1613;margin-top:8px;line-height:1.1}
+.lbl-flow{font-size:17px;line-height:1.5;margin-top:16px;color:#5E4F47}
+.lbl-n{font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:#8C7B71;margin-top:18px}
+.empty{position:absolute;box-sizing:border-box;padding:40px 48px;border:2px dashed rgba(31,22,19,.28);border-radius:24px;font-family:"Jost",sans-serif;font-size:22px;color:#5E4F47}
+.band{position:absolute;left:60px;right:60px;height:1px;background:rgba(31,22,19,.18)}
+.band span{position:absolute;left:0;top:-9px;padding:0 10px 0 0;background:#D9D0C5;font-family:"Jost",sans-serif;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#5E4F47}
+/* board structure: section headers (drafts / finals), module rows, sub-menu blocks, column heads, vertical divider */
+.section{position:absolute;left:60px;right:60px;padding:0 0 18px;border-bottom:2px solid rgba(31,22,19,.35)}
+.section-title{font-family:"Marcellus",serif;font-size:64px;letter-spacing:.04em;text-transform:uppercase;color:#1F1613;line-height:1}
+.section-sub{font-family:"Jost",sans-serif;font-size:16px;color:#5E4F47;margin-top:10px;max-width:1400px}
+.module{position:absolute;left:60px;padding-top:22px;border-top:2px solid rgba(31,22,19,.35);font-family:"Marcellus",serif;font-size:44px;color:#1F1613;letter-spacing:.02em}
+.module small{display:block;font-family:"Jost",sans-serif;font-size:16px;color:#5E4F47;margin-top:4px;letter-spacing:.02em}
+.section{right:auto}.band{right:auto}
+.sub{position:absolute;left:60px;right:60px;display:flex;align-items:baseline;gap:18px;font-family:"Jost",sans-serif;font-size:15px;color:#5E4F47;padding:10px 0 0;border-top:1px dashed rgba(31,22,19,.18)}
+.sub b{font-family:"Marcellus",serif;font-weight:400;font-size:24px;color:#1F1613;letter-spacing:.02em}
+.colhead{position:absolute;font-family:"Jost",sans-serif;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#1F1613;padding:6px 14px;border-radius:999px;background:rgba(31,22,19,.08)}
+.vdiv{position:absolute;width:1px;background:rgba(31,22,19,.18)}
+/* Feedback on pointer-down, not release (apple-design §1). */
+.press{cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform 100ms ease-out}
+.press:active{transform:scale(.96)}
+@media (prefers-reduced-motion:reduce){.press{transition:none}}
+</style></head>
+<body><div id="stage"><div id="root"></div></div>
+<script>
+/* Pan / zoom for the standalone canvas. CSS zoom keeps the document scrollable at every level, so scrollbars,
+   drag-to-pan and Ctrl+wheel all work. Skipped inside an iframe (Claude Design supplies its own controls). */
+(function () {
+  if (window.self !== window.top || new URLSearchParams(location.search).get('only')) return;
+  var stage = document.getElementById('stage'), z = 1;
+  var W = function () { return window.__W || 8400; }, H = function () { return window.__H || 17000; };
+  var bar = document.createElement('div'); bar.id = 'zoom';
+  bar.innerHTML = '<button data-z="fit">Fit row</button><button data-z="all">Fit all</button><button data-z="0.5">50%</button><button data-z="1">100%</button><button data-z="-">−</button><span class="pct">100%</span><button data-z="+">+</button>';
+  document.body.appendChild(bar);
+  function set(nz, cx, cy) { /* keep the point under (cx,cy) fixed */
+    nz = Math.max(.1, Math.min(2, nz)); var sx = window.scrollX, sy = window.scrollY;
+    if (cx == null) { cx = innerWidth / 2; cy = innerHeight / 2; }
+    var dx = (sx + cx) / z, dy = (sy + cy) / z; z = nz; stage.style.zoom = z;
+    window.scrollTo(dx * z - cx, dy * z - cy);
+    bar.querySelector('.pct').textContent = Math.round(z * 100) + '%';
+    bar.querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', b.dataset.z === String(z)); });
+  }
+  bar.addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; var v = b.dataset.z;
+    if (v === 'fit') set((innerWidth - 40) / W()); else if (v === 'all') set(Math.min((innerWidth - 40) / W(), (innerHeight - 40) / H())); else if (v === '+') set(z * 1.25); else if (v === '-') set(z / 1.25); else set(+v); });
+  addEventListener('wheel', function (e) { if (!e.ctrlKey) return; e.preventDefault(); set(z * (e.deltaY < 0 ? 1.1 : 1 / 1.1), e.clientX, e.clientY); }, { passive: false });
+  addEventListener('keydown', function (e) { if (!(e.ctrlKey || e.metaKey)) return; if (e.key === '=' || e.key === '+') { e.preventDefault(); set(z * 1.25); } else if (e.key === '-') { e.preventDefault(); set(z / 1.25); } else if (e.key === '0') { e.preventDefault(); set(1); } });
+  /* drag the empty canvas to pan (phones keep their own gestures) */
+  var pan = null;
+  stage.addEventListener('mousedown', function (e) { if (e.button !== 0 || e.target.closest('.frame')) return; pan = { x: e.clientX, y: e.clientY, sx: window.scrollX, sy: window.scrollY }; document.body.classList.add('panning'); e.preventDefault(); });
+  addEventListener('mousemove', function (e) { if (pan) window.scrollTo(pan.sx - (e.clientX - pan.x), pan.sy - (e.clientY - pan.y)); });
+  addEventListener('mouseup', function () { pan = null; document.body.classList.remove('panning'); });
+  set((innerWidth - 40) / W()); /* open on a whole row */
+})();
+</script>
+<script type="text/babel" src="../sutra-mobile/ios-frame.jsx"></script>
+<script type="text/babel" src="./common.jsx"></script>
+<script type="text/babel" src="./themes.jsx"></script>
+<script type="text/babel" src="./screens.jsx"></script>
+<script type="text/babel" src="themes2.jsx"></script>
+<script type="text/babel" src="screens2.jsx"></script>
+<script type="text/babel" src="final.jsx"></script>
+<script type="text/babel" src="web.jsx"></script>
+<script type="text/babel">
+const ORIG =[['Catalogue grid', ScreenGrid], ['Product · customer view', ScreenProductCustomer], ['Product · salesperson view', ScreenProductSales], ['Product · analytics & orders', ScreenAnalytics], ['Scan-to-add pop-up', ScreenScan], ['Carts', ScreenCarts]];
+const V2 = [['Catalogue grid · stepper on every card', ScreenGrid2], ['Product · customer view', ScreenProductCustomer2], ['Product · salesperson view', ScreenProductSales], ['Product · analytics & orders', ScreenAnalytics], ['Scan · recognised-product pop-up', ScreenScan2], ['Carts', ScreenCarts], ['Full-screen viewer · swipe colours, then media', ScreenViewer], ['Cart card · double tap on a cart chip', ScreenCartCard], ['Side menu · all modules', ScreenSideMenu]];
+const FIN = [['Catalogue grid · active cart', ScreenFGrid], ['Catalogue grid · no active cart', ScreenFGridNoCart], ['List view', ScreenFList], ['Listening · orb pressed', ScreenFVoice], ['Filters & sort · save as list', ScreenFFilters], ['Product · customer view', ScreenFProduct], ['Salesperson view · stock & production', ScreenFSales1], ['Salesperson view · recipe & media', ScreenFSales2], ['Salesperson view · analytics & orders', ScreenFSales3], ['Scan · recognised-product pop-up', ScreenFScan], ['Full-screen viewer · view only', ScreenViewer], ['Carts · grouped by design, totals', ScreenFCarts], ['Cart card · double tap on a cart chip', ScreenCartCard], ['Side menu · all modules', ScreenSideMenu], ['Sale orders · cards', ScreenFSalesOrders], ['Sale orders · table in its frame, column filter', ScreenFSalesTable], ['Sale orders · group by island, grouped table', ScreenFSalesGrouped], ['Sale order · opened', ScreenFSalesOrder], ['Analytics · orders vs dispatch', ScreenFSOAnalytics], ['Analytics · designs (SKU)', ScreenFSKUAnalytics], ['Analytics · customers', ScreenFCustAnalytics]];
+const WEB = [['Catalogue · grid, cart pane', WebGridS], ['Catalogue · list view', WebListS], ['Sidebar expanded · collapsible sub-menus', WebSidebarS], ['Listening · orb pressed', WebVoiceS], ['Product · customer view', WebProduct], ['Product · salesperson view', WebSales], ['Carts', WebCarts], ['Sale orders · cards, order preview pane', WebSalesOrders], ['Sale orders · grouped table, column filter, pane collapsed', WebSalesTable], ['Sale order · opened, customer pane', WebSalesOrder], ['Analytics · orders', WebAnalyticsOrders], ['Analytics · designs (SKU)', WebAnalyticsSKU], ['Analytics · customers', WebAnalyticsCust], ['Full-screen viewer', WebViewer]];
+/* ── DRAFTS · past explorations, by module. ── */
+const DRAFTS = [
+  { id: '1a', label: '1a', T: GALLERY, screens: ORIG, title: 'Gallery', sub: 'Original, untouched · ivory editorial · hairlines · Marcellus & Cormorant · maroon as a single line · colour bars instead of dots' },
+  { id: '1b', label: '1b', T: ATELIER, screens: ORIG, title: 'Atelier', sub: 'Original, untouched · espresso boutique · tactile pills · Bodoni Moda & Outfit · photos glow on dark · gold carts' },
+  { id: '1a2', label: '1a′', T: GALLERY2, screens: V2, title: 'Gallery, refined', sub: 'Audit applied · 44px targets and press feedback · one glass dock replaces tray + bar · five labelled tabs · caps only on tags · stepper on every card · viewer, cart card and side menu added' },
+  { id: '1b2', label: '1b′', T: ATELIER2, screens: V2, title: 'Atelier, refined', sub: 'Audit applied · scrim shortened so the hem stays lit, caption on a frosted strip carries the stepper · one radius scale (20 / 14) · glass dock over content · Bodoni never below 17px' },
+  { id: '3a', label: '3a', T: EDITORIAL, screens: V2, title: 'Editorial', sub: 'Ground-up · the design system’s own ivory and espresso, taken seriously · Cormorant for what a customer reads, Jost for the interface · maroon once per screen · search is a field with Sort & filter inside · rounded, glass, quiet', isNew: true },
+  { id: '3b', label: '3b', T: STUDIO, screens: V2, title: 'Studio', sub: 'Ground-up · neutral graphite (cool, not brown), ivory type, Manrope throughout · Sutra gold is the only accent · photos are the only colour · captions on frosted strips · island bar with the scan button raised in the centre', isNew: true },
+];
+/* ── NEW DRAFTS · modules in planning. Same table as Finals; screens are [name, Component] pairs rendered in the final
+   themes (light + dark). When a module is signed off, move its screens into FIN / WEB and reference them from BOARD. ── */
+const NEW_DRAFTS = [
+  /* example shape:
+  { module: 'CRM', note: 'sales CRM · dossier · follow-ups · payments', subs: [
+    { name: 'Sales CRM', flow: 'terminal → dossier → share packet', phone: [['Terminal', ScreenCrmTerminal]], web: [['Terminal', WebCrmTerminal]] },
+  ] }, */
+];
+/* ── FINALS · module → sub-menu → screens in flow order. Indexes point into FIN (phone) and WEB (laptop);
+   ?only=f-9 / fd-9 / w-3 / wd-3 keep working. ── */
+const BOARD = [
+  { module: 'Catalogue', note: 'picture-first grid · product pages · scan · carts · sale orders', subs: [
+    { name: 'Catalogue', flow: 'grid → list → filters → listening → product, customer → salesperson (3) → scan → full-screen viewer', phone: [1, 2, 3, 5, 4, 6, 7, 8, 9, 10, 11], web: [1, 2, 4, 5, 6, 14] },
+    { name: 'Carts', flow: 'carts → cart card over the catalogue', phone: [12, 13], web: [7] },
+    { name: 'Sale orders', flow: 'cards → table → group by → opened order → analytics (orders, designs, customers)', phone: [15, 16, 17, 18, 19, 20, 21], web: [8, 9, 10, 11, 12, 13] },
+  ] },
+  { module: 'App shell', note: 'navigation shared by every module', subs: [
+    { name: 'Navigation', flow: 'phone side menu · web sidebar expanded', phone: [14], web: [3] },
+  ] },
+];
+/* flat lists for ?only= on new drafts: n-<i> / nd-<i> (phone light / dark), nw-<i> / nwd-<i> (web) */
+const ND_PHONE = [], ND_WEB = []; NEW_DRAFTS.forEach(m => m.subs.forEach(s => { s.phone.forEach(e => ND_PHONE.push(e)); s.web.forEach(e => ND_WEB.push(e)); }));
+const ONLY = { f: { T: FINAL, screens: FIN }, fd: { T: FINALD, screens: FIN }, w: { T: FINAL, screens: WEB, web: true }, wd: { T: FINALD, screens: WEB, web: true },
+  n: { T: FINAL, screens: ND_PHONE }, nd: { T: FINALD, screens: ND_PHONE }, nw: { T: FINAL, screens: ND_WEB, web: true }, nwd: { T: FINALD, screens: ND_WEB, web: true } };
+const X0 = 60, GAP = 30, PAD = 24, CAP = 44, SECTION_GAP = 700;
+const geo = r => r.web ? { dx: 1340, per: 3, lh: 900, w: 1280, h: 800 } : { dx: 460, per: 9, lh: 1000, w: 390, h: 844 };
+const Device = ({ web, T, Scr }) => web ? <LaptopDevice width={1280} height={800} dark={T.dark}><Scr T={T} /></LaptopDevice> : <IOSDevice width={390} height={844} dark={T.dark}><Scr T={T} /></IOSDevice>;
+/* table columns: label · phone (3 pairs per line) · web (2 pairs per line) */
+const LBL = { x: X0, w: 300 };
+const PH = { w: 390, h: 844, pair: 390 * 2 + GAP, per: 3, colGap: 44, lh: 844 + CAP + 40 };
+PH.cellW = PAD * 2 + PH.per * PH.pair + (PH.per - 1) * PH.colGap; PH.x = LBL.x + LBL.w + GAP; PH.fx = PH.x + PAD;
+const WB = { w: 1280, h: 800, outer: 1308, pair: 1308 * 2 + GAP, per: 2, colGap: 44, lh: 838 + CAP + 40 };
+WB.cellW = PAD * 2 + WB.per * WB.pair + (WB.per - 1) * WB.colGap; WB.x = PH.x + PH.cellW + GAP; WB.fx = WB.x + PAD;
+const BOARD_RIGHT = WB.x + WB.cellW;
+function Row({ r, y }) {
+  const g = geo(r);
+  return <>
+    <div className="row-label" style={{ top: y - 130 }}><span className={'badge' + (r.isNew ? ' new' : '')}>{r.label}</span>{r.title}<small>{r.sub}</small></div>
+    {r.screens.map(([name, Scr], i) => { const x = X0 + (i % g.per) * g.dx, yy = y + Math.floor(i / g.per) * g.lh; return <React.Fragment key={name}>
+      <div className="cap" style={{ left: x, top: yy - 30, maxWidth: g.dx - 20 }}>{name}</div>
+      <div className="frame" style={{ left: x, top: yy }} id={r.id + '-' + (i + 1)}><Device web={r.web} T={r.T} Scr={Scr} /></div>
+    </React.Fragment>; })}
+  </>;
+}
+const rowH = r => { const g = geo(r); return Math.ceil(r.screens.length / g.per) * g.lh + 100; };
+const YS = DRAFTS.reduce((a, r, i) => { a.push(i ? a[i - 1] + rowH(DRAFTS[i - 1]) : 230); return a; }, []);
+const DRAFTS_END = YS[YS.length - 1] + rowH(DRAFTS[DRAFTS.length - 1]);
+/* light + dark pair of one screen, with a big caption. entry = { name, Scr, idL, idD } */
+function Pair({ web, entry, x, y, n }) {
+  const w = web ? WB.outer : PH.w;
+  return <>
+    <div className="capL" style={{ left: x, top: y - CAP, width: w * 2 + GAP }}><span className="num">{n}</span><span className="name">{entry.name}</span><span className="ld">light · dark</span></div>
+    <div className="frame" style={{ left: x, top: y }} id={entry.idL}><Device web={web} T={FINAL} Scr={entry.Scr} /></div>
+    <div className="frame" style={{ left: x + w + GAP, top: y }} id={entry.idD}><Device web={web} T={FINALD} Scr={entry.Scr} /></div>
+  </>;
+}
+/* resolve a screen reference into an entry: finals use indexes into FIN / WEB, new drafts use [name, Scr] */
+const resolveFinal = (web, idx) => { const [name, Scr] = (web ? WEB : FIN)[idx - 1]; const L = web ? 'w' : 'f'; return { name, Scr, idL: L + '-' + idx, idD: L + 'd-' + idx }; };
+const resolveDraft = (web, e) => { const list = web ? ND_WEB : ND_PHONE; const i = list.indexOf(e) + 1; const L = web ? 'nw' : 'n'; return { name: e[0], Scr: e[1], idL: L + '-' + i, idD: L + 'd-' + i }; };
+function layoutBoard(y0, defs, resolve) {
+  let y = y0; const items = [];
+  items.push({ type: 'head', y }); y += 70;
+  defs.forEach(m => {
+    items.push({ type: 'module', y, name: m.module, note: m.note }); y += 110;
+    m.subs.forEach(s => {
+      const pl = Math.ceil(s.phone.length / PH.per), wl = Math.ceil(s.web.length / WB.per);
+      const h = PAD + CAP + Math.max(pl * PH.lh, wl * WB.lh, PH.lh) - 40 + PAD;
+      items.push({ type: 'sub', y, h, name: s.name, flow: s.flow, module: m.module, np: s.phone.length, nw: s.web.length });
+      const fy = y + PAD + CAP;
+      s.phone.forEach((ref, i) => items.push({ type: 'pair', web: false, entry: resolve(false, ref), n: i + 1, x: PH.fx + (i % PH.per) * (PH.pair + PH.colGap), y: fy + Math.floor(i / PH.per) * PH.lh }));
+      s.web.forEach((ref, i) => items.push({ type: 'pair', web: true, entry: resolve(true, ref), n: i + 1, x: WB.fx + (i % WB.per) * (WB.pair + WB.colGap), y: fy + Math.floor(i / WB.per) * WB.lh }));
+      y += h + 24;
+    });
+    y += 40;
+  });
+  return { items, end: y };
+}
+function Table({ laid }) {
+  const cell = (x, w, y, h, extra) => <div className="cell" style={{ left: x, width: w, top: y, height: h, ...extra }} />;
+  return <>{laid.items.map((it, k) => {
+    if (it.type === 'head') return <React.Fragment key={k}><div className="th" style={{ left: LBL.x, width: LBL.w, top: it.y }}>Module › sub-menu</div><div className="th" style={{ left: PH.x, width: PH.cellW, top: it.y }}>Phone · 390 × 844 · light + dark</div><div className="th" style={{ left: WB.x, width: WB.cellW, top: it.y }}>Web · 1280 × 800 · light + dark</div></React.Fragment>;
+    if (it.type === 'module') return <div key={k} className="module" style={{ top: it.y, width: BOARD_RIGHT - X0 }}><span className="badge new">{it.name[0]}</span>{it.name}<small>{it.note}</small></div>;
+    if (it.type === 'sub') return <React.Fragment key={k}>
+      {cell(LBL.x, LBL.w, it.y, it.h, { background: 'rgba(31,22,19,.05)' })}
+      <div className="lbl" style={{ left: LBL.x, width: LBL.w, top: it.y, height: it.h }}><div className="lbl-mod">{it.module}</div><div className="lbl-sub">{it.name}</div><div className="lbl-flow">{it.flow}</div><div className="lbl-n">{it.np} phone · {it.nw} web</div></div>
+      {cell(PH.x, PH.cellW, it.y, it.h)}
+      {cell(WB.x, WB.cellW, it.y, it.h)}
+    </React.Fragment>;
+    return <Pair key={k} web={it.web} entry={it.entry} n={it.n} x={it.x} y={it.y} />;
+  })}</>;
+}
+/* section positions: Drafts · gap · New drafts · gap · Finals */
+const NEW_TOP = DRAFTS_END + SECTION_GAP;
+const NEW_LAID = NEW_DRAFTS.length ? layoutBoard(NEW_TOP + 260, NEW_DRAFTS, resolveDraft) : { items: [], end: NEW_TOP + 260 + 260 };
+const FINALS_TOP = NEW_LAID.end + SECTION_GAP;
+const LAID = layoutBoard(FINALS_TOP + 260, BOARD, resolveFinal);
+function Canvas() {
+  const q = new URLSearchParams(location.search); const only = q.get('only');
+  if (only) { const [rid, n] = only.split('-'); const r = DRAFTS.find(x => x.id === rid) || ONLY[rid] || DRAFTS[0]; const Scr = (r.screens[(+n || 1) - 1] || r.screens[0])[1]; const g = geo(r);
+    if (q.get('bare') != null) { /* no device frame: the screen fills the viewport */
+      document.getElementById('stage').style.cssText = 'width:100vw;height:100dvh'; document.body.style.background = r.T.dark ? '#000' : r.T.bg; document.documentElement.style.overflow = 'hidden';
+      return <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', paddingTop: 'env(safe-area-inset-top)' }}><Scr T={r.T} /></div>; }
+    document.getElementById('stage').style.cssText = `width:${g.w + 80}px;height:${g.h + 90}px` + (q.get('z') ? ';zoom:' + q.get('z') : ''); document.body.style.background = r.T.dark ? '#0f0b09' : '#D9D0C5';
+    return <div className="frame" style={{ left: 30, top: 30 }}><Device web={r.web} T={r.T} Scr={Scr} /></div>; }
+  React.useEffect(() => { const st = document.getElementById('stage'); st.style.width = (BOARD_RIGHT + 60) + 'px'; st.style.height = (LAID.end + 120) + 'px'; window.__W = BOARD_RIGHT + 60; window.__H = LAID.end + 120; }, []);
+  const W = BOARD_RIGHT - X0;
+  return <>
+    <div className="section" style={{ top: 20, width: W }}><div className="section-title">Drafts</div><div className="section-sub">Past explorations by module. Catalogue: two originals, two audited duplicates, two ground-up directions.</div></div>
+    {DRAFTS.map((r, k) => <Row key={r.id} r={r} y={YS[k]} />)}
+    <div className="band" style={{ top: YS[2] - 175, width: W }}><span>Audited duplicates</span></div>
+    <div className="band" style={{ top: YS[4] - 175, width: W }}><span>New directions</span></div>
+    <div className="section" style={{ top: NEW_TOP, width: W }}><div className="section-title">New drafts</div><div className="section-sub">Modules in planning, drawn in the final design language (light + dark, phone + web). A module moves down to Finals once every screen is signed off.</div></div>
+    {NEW_DRAFTS.length ? <Table laid={NEW_LAID} /> : <div className="empty" style={{ top: NEW_TOP + 200, left: X0, width: W }}>No module in planning right now. The next module’s draft screens will appear here, in the same table as the finals below.</div>}
+    <div className="section" style={{ top: FINALS_TOP, width: W }}><div className="section-title">Finals</div><div className="section-sub">The finished screens. Rows are modules and their sub-menus; columns are phone and web. Screens run in flow order, each as a light + dark pair.</div></div>
+    <Table laid={LAID} />
+  </>;
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<Canvas />);
+</script></body></html>

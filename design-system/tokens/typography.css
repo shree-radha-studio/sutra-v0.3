@@ -1,0 +1,25 @@
+:root{
+--font-display:"Cormorant Garamond","Cormorant",Georgia,"Times New Roman",serif;
+--font-ui:"Jost","Futura","Avenir Next","Helvetica Neue",sans-serif;
+--font-mono:"IBM Plex Mono","SF Mono",Menlo,monospace;
+/* type scale (px) */
+--fs-2xs:10px;--fs-xs:11px;--fs-sm:12.5px;--fs-md:14px;--fs-lg:16px;--fs-xl:18px;
+--fs-2xl:22px;--fs-3xl:28px;--fs-4xl:36px;--fs-5xl:48px;--fs-6xl:64px;
+--lh-tight:1.1;/* @kind other */--lh-snug:1.25;/* @kind other */--lh-normal:1.45;/* @kind other */--lh-loose:1.6;/* @kind other */
+--tracking-caps:.14em;/* @kind other */--tracking-wide:.06em;/* @kind other */--tracking-tight:-.01em;/* @kind other */
+--fw-light:300;/* @kind other */--fw-regular:400;/* @kind other */--fw-medium:500;/* @kind other */--fw-semibold:600;/* @kind other */
+/* semantic text styles */
+--text-display:500 var(--fs-5xl)/var(--lh-tight) var(--font-display);
+--text-h1:500 var(--fs-3xl)/var(--lh-snug) var(--font-display);
+--text-h2:500 var(--fs-2xl)/var(--lh-snug) var(--font-display);
+--text-design-name:400 var(--fs-xl)/var(--lh-snug) var(--font-display);
+--text-price:500 var(--fs-lg)/1 var(--font-display);
+--text-title:500 var(--fs-lg)/var(--lh-snug) var(--font-ui);
+--text-body:400 var(--fs-md)/var(--lh-normal) var(--font-ui);
+--text-small:400 var(--fs-sm)/var(--lh-normal) var(--font-ui);
+--text-label:500 var(--fs-xs)/1 var(--font-ui);
+--text-overline:500 var(--fs-2xs)/1 var(--font-ui);
+--text-code:400 var(--fs-sm)/1 var(--font-mono);
+--text-metric:500 var(--fs-2xl)/1 var(--font-ui);
+--num:"tnum" 1,"lnum" 1;/* @kind other */
+}

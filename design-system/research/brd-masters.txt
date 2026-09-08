@@ -1,0 +1,425 @@
+
+Master Views &amp; Reports — Business Requirements
+Sutra v3 BRD  ·  Sections 2–3 of the ERP  ·  Users: owner, accounts, admin, production manager, salesperson.   As-built September 2026, with every open decision and known defect carried forward.
+1.  Master Views
+Master Views is the read and reporting surface over every master in the business — ten masters in two families, each one a filterable list, a photo-first grid and a 360° dossier. It is the twin of Masters, not a bigger version of it: Masters (/masters) creates records, Master Views (/hub) reports on them, and the two cross-link from every row. On the home launcher it is the tile labelled “Master Views”; in the codebase and every planning document it is the Masters Hub. They are the same module (D-0051).
+The shell has one idea. At the top level the interesting fact about ten masters is how many of each there are and which one you want — so the census IS the navigation. The family switch brackets the entity chips, every chip carries its live count, and there is no invented dashboard above it, because every number the hub shows has to be a real number (D-0031) and at this level the counts are the real numbers.
+1.1  Sub Menus
+1.1.1  The shell — census as navigation
+One sticky bar, one alerts strip, one toolbar, then the list. Full-bleed at lg and above; on phone and tablet the header collapses to the screen title “Master views”.
+Top bar
+Family switch a two-position segmented control — ITEMS | LEDGERS — that literally brackets the entity chips, so the chips read as the contents of the selected family.
+Entity chips one chip per master carrying its live count: Products, Materials, WIP under ITEMS; Customers, Broker agencies, Brokers, Karigars, Transporters, Suppliers, Team under LEDGERS. The count is the label — a chip with no number is a chip nobody trusts.
+Deep link ?e=&lt;entity&gt; is the whole navigation state, so every list is a shareable link. An unknown value opens Products rather than erroring. Default entity is Products; items open as a grid, ledgers open as a list.
+Gating the Team chip appears only if the API says the user may have it. The client never holds a second copy of a gate — it sends one page_size=1 probe per gated entity and shows the chip on 200, hides it on 403, and treats anything else as “probably yours”.
+Alerts strip
+A row of exception counts directly under the bar — the module's only editorial voice. Each chip is a question the business should answer today, and each one deep-links into its own pre-filtered list rather than merely reporting a number.
+Alert
+ | Counts
+ | Lands on
+ | SKUs at or below the low-stock mark
+ | SKUs
+ | ?e=products&amp;low_stock=true
+ | Designs with no photo yet
+ | designs
+ | ?e=products&amp;has_photo=false
+ | Designs the demand engine has never scored
+ | designs
+ | ?e=products&amp;scored=false
+ | Purchase documents not linked to a supplier ledger
+ | documents
+ | ?e=suppliers&amp;include_unlinked=true
+ | Toolbar
+Controls search · Filters ▾ · Views (saved) · Columns (n/m) · list ⇄ grid · density · Export ⇪ · Import ⇩ · an entity-specific extra slot (Bulk enrich on ledgers).
+Search server-side, debounced at 300 ms, with a per-entity placeholder that names the fields it actually searches — “Search design no, name or colour”, “Search customer, city or GSTIN”.
+Filters one sheet, not a row of dropdowns (D-0040), with applied filters echoed back as removable chips. Four filter kinds: chips (optionally multi-select), toggle (with a false value so “No photo yet” is expressible), select, and range. Facet options and their counts come from the server — nothing is hard-coded, so a new city appears without a release.
+Sort ?sort=&lt;key&gt;_asc|&lt;key&gt;_desc. Clicking the active column flips it; a new column starts at its declared default direction. An unknown sort key is a 400, never a silent default.
+Columns a per-entity chooser with an always-shown identity column, the rest optional, and “Reset to default columns”. Selection persists per entity; density persists app-wide.
+Saved views “Set up the filters, sort and columns you want, then save them here to come back to in one tap.” Saving under an existing name replaces that view.
+The URL is the view filters, sort, search and view mode all live in the query string under the same names the API takes, so ?e=customers&amp;city=surat&amp;sort=fy_billing_desc is bookmarkable and pasteable into chat. The writer replaces rather than pushes, does not scroll, and deletes only its own keys so ?e= and ?tab= survive.
+Export means this list one flat params object feeds both the list request and the export, so “Export” can never mean something other than “this list, as shown”.
+Paging
+50 rows a page — enough to fill a 1440px desk screen about one and a half times — with an IntersectionObserver sentinel appending the next page. meta.page.total is mandatory on every hub list; without it the client believes it already has everything and stops after page one. A monotonic request id discards stale responses, and the busy flag is read synchronously because the scroll sentinel can fire twice inside one frame.
+1.1.2  Items — Products
+Design-grain rows that expand to per-colour SKU rows, because a design is what the business talks about and a SKU is what it counts.
+Columns photo · design no · category · price · FG · reserved · free · in production · demand score with sparkline · serials · sold · sold ₹ · launched · tags. Free arrives computed by the server, never as fg_stock − reserved in the browser.
+Filters category · tag (PRIORITY_PRODUCTION, PRIORITY_SALE, SAMPLE_CLEARING, STOP_PRODUCTION, LOW_STOCK_REORDER, AGED_STOCK, RANK_TIER) · badge · has stock · low stock · in production · has photo (false → “No photo yet”) · scored (false → “Never scored”) · price range in ₹.
+Stock-health strip the one chart the module ships — a per-SKU bar showing free against reserved against in production, read at a glance rather than computed by the reader.
+1.1.3  Items — Materials
+Columns material code · group · unit · price · godown qty · last GRN · suppliers · used in · tags.
+Filters unit chips (m / pc / kg) · tag · in stock · imported. There is deliberately no low-stock filter: no reorder level exists for materials yet (U34, open for the owner).
+1.1.4  Items — WIP
+Work in progress by design and colour, sorted by balance so the biggest exposure is first. Rows expand to per-colour and per-karigar detail; there is no dossier by design, because the row already carries everything WIP means.
+Columns design · colour · balance · open jobs · with karigar · received · consumed.
+Filters process chips (options fetched live) · colour · include settled (0).
+1.1.5  Ledgers — Customers
+A worklist, not an address book. Alphabetical is the one order in which nothing is interesting, so the list opens sorted by follow-up due — on exactly the people someone owes a phone call.
+Columns name with follow-up dot and DIRECT badge · Call · city / market · tier · score gauge · engagement · open book pcs · Book ₹ · last order · FY billing · growth Δ% · orders · broker / agency · GSTIN · tags. Ten of fifteen shown by default.
+Filters segment (new / VIP / mid / cold / inactive) · tier · GST category (REGISTER / UN-REGISTER / CONSUMER) · city · state · market · broker · agency · direct · has open book · follow-up due. The five location and broker facets are server-fed with live counts.
+Caveat, stated on the screen growth compares equal windows of app-era invoices only (U21), and the label on every cell says which window. A number the business cannot source is a number the screen must qualify.
+1.1.6  Ledgers — Broker agencies and Brokers
+One panel, one dossier, split by kind — they are the same table, and a second copy would drift on the first fix. The list opens on commission overdue, descending.
+Columns name · Call · brokers# (agency) or agency (broker) · rate · customers · order value · projected · accrued · overdue · paid · last order · city · GSTIN.
+Commission model every order accrues to BOTH the broker and the agency, each at their own rate, with no fallbacks — a missing rate earns nothing rather than inheriting one (D-0054). Lifecycle is PROJECTED → ACCRUED (due 30 days) → PAID. DIRECT accrues nothing and is a first-class stored option, not an empty broker field (D-0064).
+Commission statement a collapsible per-row detail — order, invoice, payment, due date — with FIFO payout allocation shown rather than merely applied (RATIFY-12). Slabs are editable here, in the hub, because this is where the numbers are being looked at; the editor does a full replace.
+1.1.7  Ledgers — Karigars
+Opens on “with them”, descending — the material the business is exposed on.
+Columns name · Call · skills · score · deadlines · QA · open jobs · with them · balance ₹ · capacity/day · last job.
+1.1.8  Ledgers — Transporters
+Columns name · Call · city / state · shipments · “By name only” · parcels · pcs · value · customers · last shipment · GSTIN. Transporters are first-class masters, but the free-text columns on existing documents stay authoritative and uniqueness is on lower(name) only (D-0057).
+1.1.9  Ledgers — Suppliers
+Columns name · Call · city / source · materials · GRNs · purchased ₹ · last purchase · Busy push · GSTIN.
+Unlinked bucket purchases carry a nullable supplier, and unmatched documents sit in an “(unlinked)” bucket that the alerts strip counts. They are never guessed into a supplier (D-0060).
+1.1.10  Ledgers — Team
+The tenth master, and different in kind: who holds which rights, plus everyone's phone number and every device they carry. An administration surface that happens to live in the hub, so it is gated to ADMIN / SUPER_ADMIN / OWNER.
+Columns name · employee no · role · Call · extra rights · denied · devices · photos synced · status · email.
+Copy-create “New from this member” clones a colleague's rights as the starting point for a new joiner.
+Permissions the hub VIEWS effective permissions — role defaults plus grants minus denials — and edits through the existing admin APIs, never a duplicate write path. Individual permissions may GRANT or DENY (D-0070).
+No export, deliberately “Team has no export yet — the list is on screen, and staff records are not a spreadsheet we hand around.”
+1.1.11  Dossiers — the 360° view
+Tier two. A sticky header card, a KPI row, then lazily-mounted tabs that stay alive once opened and sync to ?tab= so any tab is a link.
+Master
+ | Tabs
+ | Product
+ | Overview · Sales · Production · BOM &amp; materials · Stock ledger · Barcodes
+ | Material
+ | Purchases (default) · Consumption · Where-used · Stock ledger
+ | Customer
+ | Overview · Orders &amp; book · Invoices &amp; payments · Shipments · Returns &amp; credit notes · Purchase grid · Growth
+ | Broker agency
+ | Overview · Commission statement · Orders · Customers · Brokers · Ledger
+ | Broker
+ | Overview · Commissions · Orders · Customers · Ledger
+ | Karigar
+ | Overview · Jobs · Ledger · Material with them · Verification
+ | Transporter
+ | Overview · Shipments · Customers
+ | Supplier
+ | Overview · Purchases · Materials · Push status
+ | Team member
+ | Overview · Devices (count in the label) · Actions
+ | WIP
+ | No dossier by design — tier-1 rows expand instead
+ | 1.1.12  Import
+A four-step wizard — Pick the master · Fill the template · Check the file · Write it in — because this is how any ERP takes data in and the business already has spreadsheets.
+Templates a pre-set xlsx per master, downloaded from the wizard: customers, brokers &amp; agencies, suppliers, karigars, transporters, products &amp; SKUs, materials, barcodes.
+Dry run by default the upload previews creates, updates and a per-row, per-field error list before anything is written. Commit is a second, deliberate act, and is limited to ADMIN / SUPER_ADMIN / OWNER (D-0065).
+1.1.13  Export
+Every list exports to xlsx as shown — same filters, same sort, same columns — and is open to every role that can open the hub, with money columns omitted per column for anyone without the money right. Team is the single exception and says so.
+1.1.14  GST enrichment
+Fetches a ledger's registered particulars from a GSTIN lookup service and shows a diff of fetched against current before anything is applied.
+Overwrite friction if GST details already exist the answer is an error plus a five-second press-and-hold to force the overwrite. Bulk enrich is a separate button with its own warnings popup and ONE ten-second hold, and carries a real force flag defaulting to false (D-0071).
+Rules the connector is pluggable and scraping the government portal is banned (D-0063). Error vocabulary is explicit: GST already present, lookup offline, GSTIN invalid, GSTIN not found.
+1.1.15  Barcodes
+Two grains. SKU barcodes may scan many times into many parcels; PIECE barcodes are globally unique and deduped. The SKU guard chain is three specific, loud errors rather than one generic refusal: is the serial known, is that SKU actually in stock, and is it eligible for THIS parcel's customer against the global order book (D-0061).
+Mint the product dossier browses serials and mints PIECE serials in batches of up to 500 with a print payload, restricted to accounts and admin roles.
+1.1.16  Ledger interconnects — the gaddi
+Ledgers that bill or ship for one another are linked, and the links are visible in the hub. The invoice bill-to and the shipment ship-to selectors offer the ledgers previously interconnected to that order's customer, plus “add new”. What lands on the document is a SNAPSHOT, not a join, so re-pointing a link never rewrites a printed invoice (D-0062).
+1.2  Cross-cutting rules
+Read surface, two exceptions the hub reports; /masters creates. The two deliberate write exceptions are commission slab editing and import commit, because that is where the numbers are being looked at.
+Every number is live-derived no hub-side denormalised copies and no hub-owned caches of stock. Freshness is refetch on focus and a manual refresh. The one persisted exception is the design score, which is engine output rather than a copy of a ledger (D-0053).
+Money is omitted, not hidden a user without the money right does not receive rupee figures in the payload at all — they are absent server-side, not CSS-hidden. The cell distinguishes “hidden for your role” from “not computed yet” (D-0052).
+Server authority sort, filter and search are server parameters; pagination is real and reports its total; there is no client-side aggregation anywhere. This module is the reference implementation of that rule for the whole app.
+One gate, not two the API decides access; the client asks and renders the answer. A widened server role must never wait for a web release to take effect.
+Photo-first product rows and the grid carry the real photograph at the tier that matches the render size, straight from the CDN.
+Touch floor 44px minimum targets, with a compact ~32px row available only when the user explicitly chooses it AND the device has a fine pointer (D-0074).
+Roles ADMIN, SUPER_ADMIN, OWNER, ACCOUNTS_ADMIN, PRODUCTION_MANAGER and SALESPERSON open the hub. Salespeople are deliberately in — a salesperson who cannot look up a customer's open book is a salesperson who phones the office — they simply never see money. Commissions, slab edits, import commit, GST overwrite and Team are narrower still.
+2.  Reports
+Reports is one screen and one flow: choose which products, choose which columns, generate a photo-first table, export the whole result. It is a read layer plus a builder — not new machinery, and deliberately not a set of fixed report screens. The old “product report / stock report / customer report” are seeded templates of this one builder.
+This section separates what the owner actually logged from what engineering inferred in his absence, because five of the six sub-questions the module was built on are still formally open and only he can close them.
+2.1  What the owner logged — the requirements of record
+The founding ask (19 July 2026)
+Recorded verbatim at the head of the reports module plan: “hum image-based reporting chahte hain apne system se — user ek baar mein products select kare, columns choose kare (image, colour, orders in a date range, …), generate kare aur pura export kar sake.”
+That one sentence carries six requirements:
+#
+ | Owner requirement
+ | Status
+ | 1
+ | Image-based — photographs are the point, not decoration
+ | Built
+ | 2
+ | One sitting, one screen — select, choose, generate, export without leaving
+ | Built
+ | 3
+ | The user selects the products; the row scope is a choice, not a fixed report
+ | Built (all / filter / photo multi-select)
+ | 4
+ | The user chooses columns — image, colour, orders in a date range, …
+ | Built (28 columns, 6 groups)
+ | 5
+ | Generate as an explicit act
+ | Built
+ | 6
+ | “pura export” — export the WHOLE result, never the visible page
+ | Built, but capped at 5,000 rows
+ | The refinement — a builder, not reports
+The owner reshaped the original ask from “reporting” into a report BUILDER: one flow — select products (all / filter / photo multi-select) → choose columns from a server-side registry → Generate a photo-first table → export the full result → save it as a template for one-click repeats. This is the decision that removed fixed report screens from the design.
+The owner's acceptance test
+Written down twice, near-identically, and the closest thing to a signed acceptance criterion: the owner, in one sitting, picks 30 designs from the photo grid, ticks image · colour · orders-got (this month) · free stock · top buyer, hits Generate, the photo table renders, Export xlsx opens in Excel WITH PICTURES IN THE CELLS, he saves it as “Monthly line review” and re-runs it next month in one click — and every number matches the module it came from.
+Carry this into v3 unchanged. It pins six things at once: photo-grid multi-select, those five columns, real pictures inside Excel cells, save-as-template, one-click re-run, and reconciliation to the source module.
+Live browser feedback (5 August 2026)
+No “Load more” button manual paging did not scale to a 4,010-row all-products scope. Replaced with an IntersectionObserver sentinel that auto-loads on scroll. Infinite scroll is the owner's stated preference, not a default.
+Reports must have a home tile the module was URL-reachable only, which was unacceptable. A home-screen entry point was added for OWNER, ADMIN, SUPER_ADMIN and ACCOUNTS_ADMIN.
+The reports filter sheet is the house pattern the owner's separate catalogue complaint was satisfied by copying this module's Filter-scope sheet — one “Filters ▾” trigger opening everything together, rather than a permanent tab strip plus separate Filter and Sort buttons (D-0040).
+The one owner ruling that reaches the reports UI
+On individual permissions the owner ruled, quoted: “role default permissions can be revoked for particular employee, yes.” That is why the money right on the report builder now honours a per-user DENY as well as a grant (D-0070).
+2.2  Sub Menus
+2.2.1  Scope — which products
+Three tabs All products · Filter scope · Manual pick. Choosing filter or manual opens its sheet immediately rather than making the user hunt for a second control.
+Filter scope category pills · tag chips (Top 30, Hot, Delhi, UP, MH, Zariwork, Priority Sale, Discounted, Low Stock) · in-production checkbox · ₹ min/max · Clear filters. The trigger chip shows a live count. Server-side this reuses the catalogue's own filter builder verbatim, so “filter scope” means exactly what the catalogue grid means.
+Manual pick the photo grid the owner asked for — three columns, tap to tick, ringed and check-badged when picked, debounced search, and a footer reading “Done — n picked”.
+2.2.2  Columns
+A server-side registry of 28 columns in six groups, so a new column ships with zero frontend release. The picker is grouped; the thumbnail column is unconditional and therefore hidden from the picker.
+Group
+ | Columns
+ | Identity
+ | Image · Design No · Name · Category · Colour · Price
+ | Orders (date-filtered)
+ | Qty Ordered · Qty Dispatched · Qty Pending · Revenue · Order Count · Last Order Date
+ | Stock
+ | FG Stock · Reserved · Free Stock · WIP Qty
+ | Production
+ | In Production Qty · Nearest Due Date · Karigar(s) · Blocked At
+ | Customers
+ | Distinct Buyers · Top Buyer · New Buyers · Repeat Buyers
+ | Tags
+ | Velocity Score · Rank Tier · Flags · Aged Pcs · Oldest Aged Lot (days)
+ | First visit opens on design no · colour · price · qty ordered · free stock, trimmed to what the role may actually see.
+2.2.3  Date range
+Today · 7 days · 30 days · Custom, defaulting to rolling 30 days. Custom reveals two date inputs. Whenever an orders-group column is selected the screen states its own limitation: “Orders columns cover the app era only — pre-app Busy sales aren't included yet.”
+2.2.4  Generate and the result table
+Generate a full-width button, disabled until at least one column, a non-empty scope and both dates are present, with a specific message for each of the three failures rather than a dead button.
+Photo column sticky to the left, always present, never toggleable — the module is image-based reporting, so the picture is structural.
+Row grain design + colour. A multi-colour design collapses to one row with a “▸ N colours” expander in the colour cell, opening per-colour sub-rows each with its own thumbnail. Collapsed rollups sum quantities but never identity columns — that rule exists because a two-colour design once showed its price as ₹17,990 instead of ₹8,995.
+Sort every header is a button, toggling ascending and descending with an arrow, and re-running the query server-side from page one.
+Infinite scroll a sentinel 600px ahead of the fold, with a footer reading “n of N rows” and “All N rows loaded.” at the end.
+Shareable the whole builder state lives in the URL, and a link carrying columns auto-generates on arrival.
+2.2.5  Templates
+A scrolling chip rail above the builder. Seeded templates render plain; personal ones carry a star and a delete affordance. Applying a chip restores the complete builder state — scope, filters, columns, range, sort — and generates immediately, which is the owner's “one click” requirement. A template stores a generate request verbatim, so applying one is replaying that request.
+Seeded Stock health · Aged pool · Season bestsellers · Customer purchases. Every one of them asks for the image column first.
+2.2.6  Export
+Always the full result never the visible page — the owner's “pura export”.
+xlsx column A is always Image and carries REAL embedded pictures, auto-fitted, with row height and column widths set for them. Photos are fetched concurrently at the icon tier and re-encoded; a missing photo leaves the cell blank rather than failing the export. Numbers land as real numbers so Excel can sum and sort them.
+PDF landscape A4, letterhead, a grey header row repeated on every page, minimum column widths. It contains no photographs at all — a real divergence from “image-based reporting” that v3 should close or consciously accept.
+Cap 5,000 rows, with the message “scope too large to export — narrow the filters first”. The owner's own all-products scope is around 4,010 designs, so the cap sits uncomfortably close to his primary use case, and the planned async-job fallback was never built.
+2.3  Cross-cutting rules
+Money is a live config row, not code the right to see rupees is a permission row that an admin can grant or revoke without a redeploy (D-0041). Revenue is the only permission-gated column in the registry.
+Gated columns are absent, not hidden a role without the money right never receives the column in its registry or its payload, so there is no 403 and nothing to un-hide in the browser.
+Effective rights role defaults, plus individual grants, minus individual denials — the owner's own ruling, and it now flows through to report columns.
+Never invent a business rule where a definition was missing the module either shipped a reversible, flagged placeholder or dropped the feature. The “Season” date preset was dropped outright because no season boundary is defined anywhere.
+Photo-first every row carries image references regardless of which columns were chosen.
+Desktop-first and responsive — this is a screen someone works at, not one they glance at.
+2.4  Still open — these need the owner's decision
+The module was built ahead of formal sign-off, against its own stated placeholders. Five of the six original sub-questions are still open, and each currently has a guess in production.
+Question
+ | What is running now (the placeholder)
+ | Is the launch column catalogue right — which of the 28 columns earn their place?
+ | All six groups shipped as tabled; never confirmed or trimmed
+ | What is the default date range?
+ | Rolling 30 days
+ | Must pre-app Busy-era sales appear in order columns?
+ | App-era only, with an on-screen note. Blocked on line-level history from Busy
+ | Export priority — xlsx or PDF first?
+ | xlsx first
+ | Team-shared templates at launch, or personal only?
+ | Personal plus seeded. No shared column exists in the schema
+ | What is a “Season”?
+ | Feature dropped. Not tracked in any open-question register — it needs one
+ | Who should see the Reports home tile?
+ | OWNER / ADMIN / SUPER_ADMIN / ACCOUNTS_ADMIN, explicitly flagged as a reversible placeholder pending a formal pass that never happened
+ | 2.5  Known defects to carry into v3
+Defect
+ | Effect
+ | The image column exports as raw text
+ | Selecting the image column writes a Go slice such as [https://… https://…] into a cell. All four seeded templates request it first, so the owner's most likely path — tap a seeded chip, Export xlsx — produces a picture column PLUS a junk-text column
+ | Velocity-score sort does nothing
+ | The comparator has no float64 case, so sorting by velocity score silently leaves the order untouched
+ | Date presets shift a day between 00:00 and 05:29 IST
+ | The range is computed in UTC, so “Today” returns yesterday early in the morning. The server is naive-UTC too
+ | Infinite scroll has no stale-response guard
+ | A sort or scope change racing a page append blindly appends whichever response lands last. Dispatch has the guard; reports does not
+ | No route-level role gate
+ | Any authenticated role — including KARIGAR, who is external — may call generate and read the customers column group, which is the customer book. There is no home tile for them, but the URL works. This is the highest-severity item on this page
+ | 2.6  Asked for but never built
+Item
+ | Note
+ | WhatsApp share packet
+ | Part of the owner's original goal sentence. Needs a row-selection UI on the result table, which was never built
+ | Row selection on the result table
+ | Prerequisite for the share packet
+ | FIFO age (days) and days-of-cover columns
+ | Tabled in the plan, deferred, never resumed
+ | Scope by customer or by karigar
+ | “everything RL Fashion bought” — same machinery, never wired
+ | “As-of-now” labelling on identity and stock column headers
+ | The plan required headers to say so; only the app-era note exists
+ | Async-job fallback for large exports
+ | Never built; the 5,000-row cap stands in for it
+ | Shared chips reused in the result table
+ | Rank tier renders as plain text and velocity score as a plain number rather than the existing tier chip and score pill
+ | 3.  The v3 plan sheet
+Everything below is actionable. The backlog is ordered by what it costs the business to leave it as it is, not by what is easiest to build.
+3.1  Build backlog
+#
+ | Module
+ | Item
+ | Why it matters
+ | Size
+ | 1
+ | Reports
+ | Put a role gate on the reports routes
+ | KARIGAR — an external worker — can read the customer book by typing the URL. Default-deny, then allowlist
+ | S
+ | 2
+ | Reports
+ | Fix the image column in exports
+ | The owner's most likely path (seeded chip → Export xlsx) produces a junk-text column beside the picture column
+ | S
+ | 3
+ | Reports
+ | Move date handling to IST at the service layer
+ | “Today” returns yesterday before 05:30. Same class of bug as elsewhere in the app — fix once, centrally
+ | M
+ | 4
+ | Both
+ | One shared stale-response guard for infinite scroll
+ | Same race in five or more places. Master Views already has the pattern; reports and catalogue do not
+ | M
+ | 5
+ | Reports
+ | Add float64 to the sort comparator
+ | Sorting by velocity score is currently a silent no-op
+ | S
+ | 6
+ | Master Views
+ | A photo push on designs
+ | 104 designs have no photograph. A photo-first ERP whose product grid is grey rectangles is not yet the product. Make the alert count open a bulk upload queue
+ | M
+ | 7
+ | Reports
+ | Photographs in the PDF export
+ | An image-based reporting module whose print output is text-only
+ | M
+ | 8
+ | Reports
+ | Row selection plus the WhatsApp share packet
+ | Part of the owner's original goal sentence; never built
+ | M
+ | 9
+ | Reports
+ | Raise or remove the 5,000-row export cap
+ | The all-products scope is ~4,010 designs — the cap sits on top of the primary use case
+ | M
+ | 10
+ | Master Views
+ | Fix the destructive ledger-link upsert
+ | Registering a bill-to silently destroys an existing ship-to for any caller that does not work around it
+ | S
+ | 11
+ | Master Views
+ | Decide the grid view for ledgers
+ | On the six ledger masters the grid repeats four fields the table shows better. Either give it a reason to exist or drop it for ledgers
+ | M
+ | 12
+ | Master Views
+ | Rehearse hub queries at real scale
+ | Products and customers aggregate across the whole filtered set before paginating. Fine on 118 rows; a full scan per keystroke at ~3,000 ledgers
+ | L
+ | 13
+ | Reports
+ | Scope by customer and by karigar
+ | “Everything RL Fashion bought.” Same machinery, never wired
+ | M
+ | 14
+ | Reports
+ | Team-shared templates
+ | Open question (f); no shared column exists
+ | M
+ | 15
+ | Both
+ | Default sorts on the remaining ledger lists
+ | Suppliers, transporters and team still open alphabetically — the one order in which nothing is interesting
+ | S
+ | 3.2  Decisions that carry into v3
+ID
+ | Decision
+ | D-0051
+ | Master Views is a second module, not a bigger Masters. /masters creates, /hub reports
+ | D-0052
+ | Hub role gate; money omitted server-side, not hidden in the UI
+ | D-0053
+ | Every hub number is live-derived on read. No hub-side caches. Design score is the one persisted exception, because it is engine output
+ | D-0054
+ | Commission accrues to broker AND agency, each at their own rate, with no fallbacks
+ | D-0057
+ | Transporters are first-class; existing free-text columns stay authoritative
+ | D-0060
+ | Purchases carry a nullable supplier; unmatched documents stay unlinked, never guessed
+ | D-0061
+ | Barcode grain v2 — SKU multi-scan with a three-step guard chain; PIECE globally deduped
+ | D-0062
+ | Ledger interconnects; invoice bill-to and shipment ship-to are snapshots, not joins
+ | D-0063
+ | GST enrichment is a pluggable connector. Scraping the government portal is banned
+ | D-0064
+ | DIRECT (no broker) is a first-class stored option
+ | D-0065
+ | Per-master xlsx templates, dry-run-by-default import, filtered export
+ | D-0070
+ | Individual permissions may GRANT or DENY. Effective = role ∪ grants − denials
+ | D-0074
+ | Compact ~32px rows need the user's explicit choice AND a fine pointer; 44px on touch
+ | D-0040
+ | One Filters ▾ sheet, not a tab strip plus separate buttons — the reports pattern
+ | D-0041
+ | Report revenue visibility is a live config row, not a code constant
+ | D-0042
+ | Two reversible placeholders: the blocked-at-process proxy, and new-vs-repeat buyer
+ | D-0031
+ | No fake numbers. A dead backend shows an error, never a fixture
+ | 3.3  Open questions the owner still has to answer
+Ref
+ | Question
+ | Blocks
+ | RATIFY-1
+ | What is broker commission earned on — order value, invoiced value, or money actually received? And does a credit note claw it back?
+ | Commission correctness
+ | RATIFY-3
+ | Who approves a commission payout?
+ | Payout flow
+ | U31
+ | Which GSTIN lookup service do we buy, and who holds the key? Roughly ₹1,200–1,500 one-time for ~3,000 ledgers
+ | GST enrichment going live
+ | U33
+ | HSN code and GST rate per design — per design, per category, or one house default with exceptions? The columns exist and are empty
+ | Tax on invoices
+ | U34
+ | What counts as low stock for a MATERIAL? No reorder level exists
+ | The materials low-stock filter
+ | U30 / U32
+ | Which order does a payment settle, and whose ledger is the party when a bill goes to a branch or agency?
+ | Auto-accrual; gaddi invoicing
+ | U27 (a,c,d,e,f)
+ | The five report-builder questions in §2.4 — column catalogue, default range, Busy-era sales, export priority, shared templates
+ | Five placeholders currently running in production
+ | —
+ | What is a “Season”? The preset was dropped for want of a boundary and is not tracked anywhere
+ | The Season date preset
+ | U21
+ | Pre-app sales history from Busy at line level
+ | Every growth figure and every orders column
+ | 3.4  API surface
+Master Views
+Shell GET /hub/summary (counts + alerts) · GET /hub/:entity/facets
+Items GET /hub/products · /hub/products/:designNo plus sales, production, stock-ledger, barcodes · /hub/materials · /hub/materials/:code plus purchases, consumption, where-used, stock-ledger · /hub/wip
+Ledgers GET /hub/{customers, agencies, brokers, karigars, transporters, suppliers, team} and their dossier sub-resources
+Commissions GET/PUT /hub/brokers/:id/slabs · GET /hub/brokers|agencies/:id/commissions · POST /hub/brokers/:id/reprice · POST /hub/brokers/:id/payout · POST /hub/orders/:id/payment-received
+Data in and out GET /hub/import/templates/:entity · POST /hub/import/:entity?dry_run= · POST /hub/export/:entity · GST enrich (single, bulk, scope)
+Other ledger-links CRUD · GET /hub/barcodes · POST /hub/barcodes/mint · /hub/team and POST /me/device
+Contract every list takes search, sort, page, page_size plus its own filters, and MUST return meta.page.total — without it paging stops after page one.
+Reports
+GET /reports/columns · POST /reports/generate · POST /reports/export · GET/POST/DELETE /reports/templates. Row grain is design+colour; the design-level rollup is a frontend concern.
+3.5  Non-goals
+No charts or dashboard builder inside Reports. No free-form SQL or cross-entity joins beyond the column registry. No hub-side denormalised copies of stock. No second copy of any permission gate in the browser. No fixed report screens — everything is a template of the one builder.
+Provenance
+Master Views is documented from the masters-hub plan and session reports, the migrations, the shipped code, and a live walk of /hub on the dev stack. Reports is documented from the reports module plan, the execution plan, the handover archive, the decisions and open-question registers, the 8 August review sheet, and a live walk of /reports. Where a session report and a plan disagree, the report is the truth.

@@ -1,0 +1,7 @@
+/* Minimal resets so specimens/kits render on the sand canvas. Consumers may override. */
+html{background:var(--bg-page);color:var(--text-primary);font:var(--text-body);-webkit-font-smoothing:antialiased;font-feature-settings:var(--num)}
+body{margin:0;background:var(--bg-page);color:var(--text-primary);font:var(--text-body)}
+a{color:var(--text-link);text-decoration:none;text-underline-offset:3px}a:hover{color:var(--text-link-hover);text-decoration:underline}
+*,*::before,*::after{box-sizing:border-box}
+button,input,select,textarea{font-family:inherit}
+::selection{background:var(--brand-200);color:var(--ink-900)}
