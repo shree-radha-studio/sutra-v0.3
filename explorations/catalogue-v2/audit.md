@@ -152,7 +152,7 @@ sub-suite), so the header is one bar: path + head, module menu, then the right c
 ## Dispatch drafts (8 Sep) — `mod-dispatch.jsx`, `mod-dispatch-web.jsx`, plan in `plans/dispatch.md`
 
 Built from the Dispatch section of the BRD, the dispatch BRD, the v2 screen overview, the owner's answers of 8 Sep and
-the chips guideline §3E. 26 phone and 19 web screens in the New drafts table, light and dark. The web view is the
+the chips guideline §3E. 26 phone and 19 web screens, light and dark, on the module page `board.html?m=dispatch` (registered from the end of mod-dispatch-web.jsx since the 9 Sep board restructure; ids n-1…26, nw-1…23). The web view is the
 primary terminal and every web screen has its own module pane (`RightPane`), separate from the global search pane.
 
 What the drafts decide (owner-confirmed unless marked):

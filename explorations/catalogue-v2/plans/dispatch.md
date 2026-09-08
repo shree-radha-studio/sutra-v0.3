@@ -386,7 +386,11 @@ Waiting on floor · With karigar · Aged · Next process ready · Stuck. Return 
 Stock on approval · Approved · Recent.
 
 Revised counts: 7 sub-menus · 26 phone screens · 19 web screens. Files: `mod-dispatch.jsx` (shared components and
-phone) and `mod-dispatch-web.jsx` (web), registered in `NEW_DRAFTS` as module "Dispatch".
+phone) and `mod-dispatch-web.jsx` (web). Since the board restructure of 9 Sep the module registers itself from the
+end of `mod-dispatch-web.jsx` (`window.NEW_DRAFT_MODULES.push({...})`) and is listed in `modules.js`; it opens on its
+own page `board.html?m=dispatch`. Single frames: `board.html?m=dispatch&only=n-1…26` (phone light), `nd-` (phone
+dark), `nw-1…23` / `nwd-` (web; the 19 Dispatch screens come first, the four "on the approved bar" screens from
+mod-topbar2.jsx after). Never edit index.html or board.html to register a module.
 
 ## 5. Open questions (answered above, kept for the record)
 
