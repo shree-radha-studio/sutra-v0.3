@@ -1,0 +1,13 @@
+diff --git a/explorations/catalogue-v2/mod-crm-more.jsx b/explorations/catalogue-v2/mod-crm-more.jsx
+index 8308e69..de7f2b4 100644
+--- a/explorations/catalogue-v2/mod-crm-more.jsx
++++ b/explorations/catalogue-v2/mod-crm-more.jsx
+@@ -147,7 +147,7 @@ function LogPaymentBody({ T, phone }) {
+   const bills = CRM_BILLS.filter(b => b.c === 'c3');
+   return <div>
+     <FRow T={T} label="Amount received" top={4}><Fld T={T} value="₹ 39,955" w={140} /><Meta T={T}>of ₹1,19,235 open</Meta></FRow>
+-    <FRow T={T} label="On"><Fld T={T} value="05/09/26" icon="calendar" w={130} /><Seg T={T} items={['NEFT', 'UPI', 'Cheque', 'Cash']} on="NEFT" small /></FRow>
++    <FRow T={T} label="On"><Fld T={T} value="05/09/26" icon="calendar" w={130} /><Seg T={T} items={['Cash', 'UPI', 'Cheque', 'Bank']} on="Bank" small /></FRow>
+     <FRow T={T} label="Reference"><Fld T={T} value="UTR 6231…9" w={160} /><Fld T={T} ph="Bank · HDFC current" caret /></FRow>
+     <Sect T={T} style={{ margin: '12px 0 4px' }} right={<Seg T={T} items={['Oldest first', 'Pick bills', 'On account']} on="Pick bills" small />}>Allocate to bills</Sect>
+     <div style={{ borderRadius: 12, border: `1px solid ${T.line}`, background: T.surface2, padding: '0 10px' }}>{bills.map((b, i) => <div key={b.no} style={{ borderTop: i ? `1px solid ${T.line}` : 0 }}><Check T={T} on={i === 0} sub={money(b.amt)}><span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}><Mono T={T} size={11.5}>{b.no}</Mono><Pill T={T} small tone={b.stage >= 3 ? 'danger' : 'warn'}>{PAY_STAGES[b.stage][0]}</Pill><Meta T={T}>{b.over} d</Meta></span></Check></div>)}</div>

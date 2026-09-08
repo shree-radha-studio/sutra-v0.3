@@ -1,0 +1,90 @@
+Sutra CRM · Payments · Log payment sheet — verification
+=========================================================
+
+Context
+-------
+Investigation found that a complete "Log payment" phone sheet (ScreenCrPayLog, body
+LogPaymentBody in explorations/catalogue-v2/mod-crm-more.jsx) and its web counterpart
+(WebCrPayLog) already existed in the repo, committed as part of the initial CRM build
+(commit 068dd5b) and documented in explorations/catalogue-v2/plans/crm.md §2.3 (P7)
+and §8. It already covers every element asked for:
+  - picks a bill: "Allocate to bills" checklist (Oldest first / Pick bills / On account)
+  - amount: "Amount received" field
+  - mode: segmented control Cash / UPI / Cheque / bank-transfer (labelled "NEFT", the
+    same term already used elsewhere on the board for bank-transfer receipts, e.g.
+    mod-crm-more.jsx:250 "05/08/26 · NEFT")
+  - a reference number: "Reference" field (UTR ...) plus the paying bank
+  - a note: "Note" field
+  - confirms: primary footer button "Log ₹39,955"
+  - drawn light and dark: automatic via the shared T (FINAL/FINALD) infra
+  - already registered on the CRM board page, in the Payments flow, after the bill sheet
+
+The one real gap against the ask ("put it ... after the bill sheet"): the phone
+registration order had Snooze between the bill sheet and Log payment
+(bill sheet -> snooze -> log payment -> escalate). This also disagreed with the
+module's own plan doc, which lists the bill-sheet actions as "Log payment, Snooze,
+Escalate" in that order. Fixed by moving the "Payments · log payment" phone
+registration to immediately follow "Payments · bill sheet", ahead of snooze, in
+explorations/catalogue-v2/mod-crm-phone.jsx (one line, the CRM module registration
+IIFE). The web array (which has no separate "bill sheet" frame — bills are shown
+inline in the pane) was left as-is; only the phone flow was in scope.
+
+Frame ids after the edit (board.html?m=crm, New drafts view):
+  Payments · bill sheet     -> n-27 / nd-27          (unchanged)
+  Payments · log payment    -> n-28 / nd-28  (phone)  (was n-29/nd-29 before the reorder)
+  Payments · snooze         -> n-29 / nd-29           (was n-28/nd-28 before the reorder)
+  Payments · escalate       -> n-30 / nd-30           (unchanged)
+  Payments · log payment    -> nw-27 / nwd-27 (web)   (unchanged, web order untouched)
+
+Verification commands
+----------------------
+1) bash .claude/skills/sutra-mockups/scripts/board-check.sh crm
+   page   http://127.0.0.1:9938/explorations/catalogue-v2/board.html?m=crm
+   title  Sutra . CRM . drafts . (mounted)
+   frames 202 (light + dark pairs x 2)
+   console clean
+
+   Run again after the reorder edit — same result: 202 frames, console clean.
+   (An earlier run before any edit also reported 202 frames, console clean, confirming
+   the pre-existing screen mounted correctly with no console errors from the start.)
+
+2) bash .claude/skills/sutra-mockups/scripts/board-check.sh crm n-28 nd-28 nw-27 nwd-27
+   frame  n-28   -> .board-check/crm-n-28.png    (CRM . n-28 . Payments . log payment)
+   frame  nd-28  -> .board-check/crm-nd-28.png   (CRM . nd-28 . Payments . log payment)
+   frame  nw-27  -> .board-check/crm-nw-27.png   (CRM . nw-27 . Payments . log payment)
+   frame  nwd-27 -> .board-check/crm-nwd-27.png  (CRM . nwd-27 . Payments . log payment)
+   (n-28's first render attempt on a cold profile hit a flaky network wait fetching
+   React/Babel from unpkg.com and timed out with no screenshot ["page did not mount"];
+   a plain retry on a fresh profile succeeded. nd-28, nw-27 and nwd-27 all rendered
+   clean on the first attempt. This is CDN/network flakiness in the verification
+   harness, not a defect in the screen — the retry's DOM, console and screenshot all
+   came back clean.)
+
+Screenshot review (opened every .png)
+--------------------------------------
+crm-n-28.png   (phone, light)  — Log payment . Ambika. Amount, On/mode chips (NEFT
+                                  UPI Cheque Cash), Reference + bank field, Allocate to
+                                  bills (3 rows, SI-2240 checked), info strip, Note,
+                                  footer "Log Rs 39,955". No clipping, sand/espresso
+                                  palette correct, sheet grabber and safe areas intact.
+crm-nd-28.png  (phone, dark)   — same layout, dark palette, all text legible, chip
+                                  contrast correct, no clipping.
+crm-nw-27.png  (web, light)    — same sheet as a centred web modal (640w) over the
+                                  Payments pane; Cancel + "Log Rs 39,955" in the footer,
+                                  "receipt voucher -> Busy on save" helper text; clean.
+crm-nwd-27.png (web, dark)     — same, dark palette; clean.
+
+No defects found: no clipped captions, no tray covering content, correct theme
+colours in both modes, no empty pane, no string reading wrong.
+
+Files changed
+-------------
+explorations/catalogue-v2/mod-crm-phone.jsx — 1 line (the CRM registration IIFE):
+reordered the Payments phone array so "Payments · log payment" follows
+"Payments · bill sheet" directly (ahead of snooze), and updated the sub's "flow"
+description string to match. See changes.diff.
+
+plans/crm.md and finals.jsx were not touched: the plan doc's own description of the
+bill-sheet actions (Log payment, Snooze, Escalate) already matched the corrected
+order, and CRM has no Finals yet (all 202 frames are New drafts) so there is nothing
+to sign off.

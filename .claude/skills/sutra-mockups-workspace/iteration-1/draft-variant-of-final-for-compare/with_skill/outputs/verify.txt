@@ -1,0 +1,6 @@
+page   http://127.0.0.1:22767/explorations/catalogue-v2/board.html?m=catalogue
+title  Sutra · Catalogue · drafts · 7936ms
+frames 34 (light + dark pairs × 2)
+console clean
+frame  nw-5 → .board-check/catalogue-nw-5.png  (Catalogue · nw-5 · Sale order · opened, customer pane collapsed, lines as table)
+frame  nwd-5 → .board-check/catalogue-nwd-5.png  (Catalogue · nwd-5 · Sale order · opened, customer pane collapsed, lines as table)

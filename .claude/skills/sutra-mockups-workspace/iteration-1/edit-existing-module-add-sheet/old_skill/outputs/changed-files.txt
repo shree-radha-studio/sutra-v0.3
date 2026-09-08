@@ -1,0 +1,6 @@
+=== git status --short ===
+ M explorations/catalogue-v2/mod-crm-more.jsx
+
+=== git diff HEAD --stat ===
+ explorations/catalogue-v2/mod-crm-more.jsx | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)

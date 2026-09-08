@@ -1,0 +1,53 @@
+diff --git a/explorations/catalogue-v2/mod-appshell.jsx b/explorations/catalogue-v2/mod-appshell.jsx
+index 5d00889..27f5cfc 100644
+--- a/explorations/catalogue-v2/mod-appshell.jsx
++++ b/explorations/catalogue-v2/mod-appshell.jsx
+@@ -262,13 +262,46 @@ function WebReturnsTable({ T }) {
+   </WebShell2>;
+ }
+ 
+-Object.assign(window, { WebHeader2, SubBar, CAT_SUBS, WebShell2, RETURNS_F, SOTabs2, SOWebHead2, WebSO2, WebCarts2, WebAnalytics2, WebSidebar2, SearchPane, WebSearch1, WebSearch2, SOTable2, SO_COLS2, COL_GROUPS, ColumnChooser, WebSalesTableFull, WebSalesColumns, RetCard, SOHeader2, ScreenFReturns, ScreenFReturnsTable, WebReturns, WebReturnsTable });
++/* ── 10. Opened order, compared: the signed-off "Sale order · opened, customer pane" (WebSalesOrder in web.jsx) with
++   the right customer pane collapsed and the order lines redrawn as a full-width table instead of the pane's photo
++   card list. A draft variant only, for the compare view — never edits the final. 9 Sep 2026. ── */
++function orderLineRows(lines) { const rows = []; lines.forEach(l => l.cols.forEach(([colour, qty]) => rows.push({ d: l.d, colour, qty, amount: qty * l.d.price }))); return rows; }
++const OLT_COLS = [['Design', 300], ['Colour', 150], ['Qty', 70], ['Rate', 100], ['Amount', 120]];
++function OrderLinesTable({ T, o, lines }) {
++  const rows = orderLineRows(lines);
++  return <div style={{ borderRadius: 18, background: T.surface, border: `1px solid ${T.line}`, overflow: 'hidden' }}>
++    <div style={{ display: 'flex' }}>{OLT_COLS.map(([c, w], i) => <div key={c} style={{ flex: `${w} 0 0`, minWidth: w, boxSizing: 'border-box', padding: '9px 10px', borderRight: i < OLT_COLS.length - 1 ? `1px solid ${T.line}` : 0, borderBottom: `1px solid ${T.line2}`, background: T.surface2, fontSize: 11, fontWeight: 600, color: T.ink2, textAlign: i >= 2 ? 'right' : 'left' }}>{c}</div>)}</div>
++    {rows.map((r, i) => <div key={r.d.code + r.colour} style={{ display: 'flex', background: i % 2 ? T.bg2 : 'transparent' }}>
++      <div style={{ flex: `${OLT_COLS[0][1]} 0 0`, minWidth: OLT_COLS[0][1], boxSizing: 'border-box', padding: '8px 10px', borderRight: `1px solid ${T.line}`, borderBottom: `1px solid ${T.line}`, display: 'flex', alignItems: 'center', gap: 10 }}>
++        <div style={{ width: 32, height: 40, borderRadius: 6, overflow: 'hidden', background: T.photoBg, flex: 'none' }}>{r.d.src && <img src={r.d.src} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />}</div>
++        <span style={{ minWidth: 0 }}><div style={{ fontFamily: T.fontDisplay, fontSize: 16, fontWeight: 600, color: T.ink, lineHeight: 1 }}>{r.d.code}</div><div style={{ fontSize: 11, color: T.ink3, marginTop: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.d.cat} · {r.d.name}</div></span>
++      </div>
++      <div style={{ flex: `${OLT_COLS[1][1]} 0 0`, minWidth: OLT_COLS[1][1], boxSizing: 'border-box', padding: '8px 10px', borderRight: `1px solid ${T.line}`, borderBottom: `1px solid ${T.line}`, display: 'flex', alignItems: 'center', gap: 8, fontSize: 12.5, color: T.ink2 }}><span style={{ width: 4, height: 14, borderRadius: 2, background: XD.cols[r.colour] }} />{r.colour}</div>
++      <div style={{ flex: `${OLT_COLS[2][1]} 0 0`, minWidth: OLT_COLS[2][1], boxSizing: 'border-box', padding: '8px 10px', borderRight: `1px solid ${T.line}`, borderBottom: `1px solid ${T.line}`, textAlign: 'right', fontSize: 12.5, color: T.ink2, fontVariantNumeric: 'tabular-nums' }}>{r.qty}</div>
++      <div style={{ flex: `${OLT_COLS[3][1]} 0 0`, minWidth: OLT_COLS[3][1], boxSizing: 'border-box', padding: '8px 10px', borderRight: `1px solid ${T.line}`, borderBottom: `1px solid ${T.line}`, textAlign: 'right', fontSize: 12.5, color: T.ink2, fontVariantNumeric: 'tabular-nums' }}>{money(r.d.price)}</div>
++      <div style={{ flex: `${OLT_COLS[4][1]} 0 0`, minWidth: OLT_COLS[4][1], boxSizing: 'border-box', padding: '8px 10px', borderBottom: `1px solid ${T.line}`, textAlign: 'right', fontSize: 12.5, color: T.ink, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{money(r.amount)}</div>
++    </div>)}
++    <div style={{ borderTop: `1px solid ${T.line2}`, padding: '10px 14px', display: 'flex', alignItems: 'baseline', gap: 10 }}><span style={{ fontSize: 12, color: T.ink3 }}>{o.pcs} pcs · {o.designs} designs · GST extra</span><span style={{ flex: 1 }} /><span style={{ fontFamily: T.fontSerif, fontSize: 22, fontWeight: 600, color: T.ink }}>{money(o.bill)}</span></div>
++  </div>;
++}
++function WebSalesOrderCollapsed({ T }) {
++  const o = ORDERS_F[0];
++  return <WebShell T={T} title={o.no} crumb={`Catalogue · Sale orders · Raised · ${o.no}`} tab={`${o.no} · ${o.c.name}`} headerRight={<><Hit T={T} icon="printer" size={40} iconSize={18} style={{ background: T.chipBg }} /><Hit T={T} icon="share-2" size={40} iconSize={18} style={{ background: T.chipBg }} /><T.Btn kind="secondary" small style={{ height: 38 }}>Edit</T.Btn><T.Btn icon="check" style={{ height: 38, padding: '0 16px' }}>Approve</T.Btn></>} paneTitle="Customer" paneCollapsed pane={<span />}>
++    <div style={{ padding: '18px 24px' }}>
++      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}><StatusPill T={T} s={o.status} /><span style={{ fontSize: 12.5, color: T.ink3 }}>raised by Rohan Mehta · in-cabin · awaiting approval</span><span style={{ flex: 1 }} /><span style={{ fontSize: 12.5, color: T.ink3 }}>due 20 d · transport {o.c.transport}</span></div>
++      <div style={{ marginTop: 12 }}><OrderLinesTable T={T} o={o} lines={ORDER_LINES()} /></div>
++    </div>
++  </WebShell>;
++}
++
++Object.assign(window, { WebHeader2, SubBar, CAT_SUBS, WebShell2, RETURNS_F, SOTabs2, SOWebHead2, WebSO2, WebCarts2, WebAnalytics2, WebSidebar2, SearchPane, WebSearch1, WebSearch2, SOTable2, SO_COLS2, COL_GROUPS, ColumnChooser, WebSalesTableFull, WebSalesColumns, RetCard, SOHeader2, ScreenFReturns, ScreenFReturnsTable, WebReturns, WebReturnsTable, OrderLinesTable, WebSalesOrderCollapsed });
+ 
+ /* Board registration moved here from index.html on 9 Sep 2026 (the board is one page per module; see modules.js). */
+ (window.NEW_DRAFT_MODULES = window.NEW_DRAFT_MODULES || []).push({ module: 'App shell · search pane', note: 'a right-side search pane dropping from the header field (8 Sep). The tab strip, header v2, sub-menu buttons, rail and sidebar were approved on 8 Sep and now live in the finals', subs: [
+     { name: 'Search pane', flow: 'field focused → scope buttons, recents, habits → typing shows matches by section with the filter & sort chooser', phone: [], web: [['Search · stage 1 · scope, recent, for you', WebSearch1], ['Search · stage 2 · matches by section, filter & sort chooser', WebSearch2]] },
+ ] });
+-(window.NEW_DRAFT_MODULES = window.NEW_DRAFT_MODULES || []).push({ module: 'Catalogue · sale orders', note: 'full-width table without group-by · grouped column chooser · Returns tab (8 Sep)', subs: [
++(window.NEW_DRAFT_MODULES = window.NEW_DRAFT_MODULES || []).push({ module: 'Catalogue · sale orders', note: 'full-width table without group-by · grouped column chooser · Returns tab (8 Sep) · opened order compared with the customer pane collapsed and lines as a full-width table (9 Sep)', subs: [
+     { name: 'Table', flow: 'full table, no group-by → column chooser open', phone: [], web: [['Sale orders · full table, no group-by', WebSalesTableFull], ['Sale orders · column chooser, grouped', WebSalesColumns]] },
+     { name: 'Returns', flow: 'returns tab as cards → as a table', phone: [['Returns · cards', ScreenFReturns], ['Returns · table', ScreenFReturnsTable]], web: [['Returns · cards, credit note pane', WebReturns], ['Returns · table', WebReturnsTable]] },
++    { name: 'Opened order · compare', flow: 'alternative to the signed-off pane layout — customer pane collapsed, order lines as a full-width table', phone: [], web: [['Sale order · opened, customer pane collapsed, lines as table', WebSalesOrderCollapsed]] },
+ ] });

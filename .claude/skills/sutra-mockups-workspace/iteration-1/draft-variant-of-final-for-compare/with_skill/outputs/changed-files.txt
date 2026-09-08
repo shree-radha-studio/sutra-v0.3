@@ -1,0 +1,6 @@
+=== git diff HEAD --stat ===
+ explorations/catalogue-v2/mod-appshell.jsx | 37 ++++++++++++++++++++++++++++--
+ 1 file changed, 35 insertions(+), 2 deletions(-)
+
+=== git status --short ===
+ M explorations/catalogue-v2/mod-appshell.jsx

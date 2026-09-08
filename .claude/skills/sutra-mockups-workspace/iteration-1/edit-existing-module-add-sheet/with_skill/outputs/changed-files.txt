@@ -1,0 +1,6 @@
+git diff HEAD --stat (after commit 9db1c84):
+ explorations/catalogue-v2/mod-crm-phone.jsx | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+git status --short (working tree, post-commit):
+(clean — the change was committed locally, per eval instructions, instead of running tools/sync.sh)
