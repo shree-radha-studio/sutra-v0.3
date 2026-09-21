@@ -36,9 +36,11 @@ You are adding to one shared design board that four people draw on at once. The 
 
 ```bash
 bash .claude/skills/sutra-mockups/scripts/board-check.sh <id> n-3 nwd-7   # mount time, frame count, console errors, screenshots
+bash .claude/skills/sutra-mockups/scripts/contact-sheet.sh <id> <sub>      # every frame of a sub-menu on one PNG; no <sub> = the module, one PNG per sub-menu
+bash .claude/skills/sutra-mockups/scripts/contact-sheet.sh                  # sampler: one phone + web pair per module, for a change to shared chrome or tokens
 ```
 
-Open every screenshot you asked for and look: clipped captions, a tray covering content, wrong theme colours, an empty pane, a string that reads wrong. Fix, re-run. Only the script's output counts as verification; the in-app browser pane times out on the board, and ad-hoc html pages are not made.
+Open every screenshot you asked for and look: clipped captions, a tray covering content, wrong theme colours, an empty pane, a string that reads wrong. Fix, re-run. A change to `final.jsx`, `web.jsx` or the tokens touches every screen, so it is verified on the sampler, not on one frame. Only the script's output counts as verification; the in-app browser pane times out on the board, and ad-hoc html pages are not made.
 
 Then update `plans/<id>.md` (what changed, open questions), run `bash tools/sync.sh "<Module> · <what changed>"`, and tell the owner the page (`board.html?m=<id>`), the frame ids to look at, and the decisions waiting on them. If they asked for the Claude Design drop, `bash tools/package-explorations.sh` rebuilds it.
 

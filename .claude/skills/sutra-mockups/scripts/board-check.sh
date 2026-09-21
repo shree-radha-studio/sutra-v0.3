@@ -10,9 +10,10 @@ MOD="${1:?module id, e.g. crm}"; shift || true
 OUT="$ROOT/.board-check"; mkdir -p "$OUT"
 
 find_browser() {
-  for c in "$PROGRAMFILES/Google/Chrome/Application/chrome.exe" "/c/Program Files/Google/Chrome/Application/chrome.exe" \
+  for c in "${PROGRAMFILES:-}/Google/Chrome/Application/chrome.exe" "/c/Program Files/Google/Chrome/Application/chrome.exe" \
            "/c/Program Files (x86)/Google/Chrome/Application/chrome.exe" "/c/Program Files (x86)/Microsoft/Edge/Application/msedge.exe" \
-           "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" google-chrome chromium chromium-browser microsoft-edge; do
+           "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" "${PLAYWRIGHT_BROWSERS_PATH:-/opt/pw-browsers}/chromium" \
+           google-chrome chromium chromium-browser microsoft-edge; do
     if [[ -x "$c" ]] || command -v "$c" >/dev/null 2>&1; then echo "$c"; return; fi
   done
 }

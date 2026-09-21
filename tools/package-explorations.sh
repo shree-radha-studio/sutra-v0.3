@@ -6,7 +6,7 @@ P="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SRC="$P/design-system/ui_kits/catalogue-explorations"; V2="$P/explorations/catalogue-v2"; OUT="$V2/for-claude-design/catalogue-explorations"
 rm -rf "$V2/for-claude-design"; mkdir -p "$OUT"
 cp "$SRC/common.jsx" "$SRC/themes.jsx" "$SRC/screens.jsx" "$OUT/"
-cp "$V2/themes2.jsx" "$V2/screens2.jsx" "$V2/final.jsx" "$V2/web.jsx" "$V2"/mod-*.jsx "$V2/finals.jsx" "$V2/board.jsx" "$V2/board.css" "$V2/board-pan.js" "$V2/modules.js" "$V2/audit.md" "$OUT/"; [[ -d "$V2/assets" ]] && cp -r "$V2/assets" "$OUT/"; cp "$V2/README.claude-design.md" "$OUT/" 2>/dev/null || true
+cp "$V2/themes2.jsx" "$V2/screens2.jsx" "$V2/final.jsx" "$V2/web.jsx" "$V2"/mod-*.jsx "$V2/finals.jsx" "$V2/board.jsx" "$V2/board.css" "$V2/board-pan.js" "$V2/modules.js" "$V2/audit.md" "$OUT/"; [[ -d "$V2/assets" ]] && cp -r "$V2/assets" "$OUT/"; cp -r "$V2/vendor" "$OUT/"; cp "$V2/README.claude-design.md" "$OUT/" 2>/dev/null || true
 [[ -f "$OUT/README.claude-design.md" ]] && mv "$OUT/README.claude-design.md" "$OUT/README.md"
 fix_paths() { python "$P/tools/fix-paths.py" "$1" "$2"; } # $1 = source html, $2 = destination
 fix_paths "$V2/index.html" "$OUT/index.html"
