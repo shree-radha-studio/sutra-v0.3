@@ -1,0 +1,56 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Sutra · contact sheet</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- CONTACT SHEET · every frame of a module small, on one scrolling page, for bulk review and for checking that a
+     formatting change landed everywhere. Same files as board.html?m=<id>, a different renderer (sheet.jsx).
+       sheet.html?m=crm                 every frame of the module, light + dark pairs, grouped by sub-menu
+       sheet.html?m=crm&sub=payments    one sub-menu (name match, case-insensitive)
+       sheet.html?m=crm&ids=n-3,nwd-7   the listed frames, ids as on board.html?m=crm
+       sheet.html?m=all&sample=1        the sampler: the first phone and web pair of every module (sample=2 for two)
+       &s=0.4  scale (default 0.4)   &v=finals  finals instead of drafts   &dev  React development build
+     Headless: bash .claude/skills/sutra-mockups/scripts/contact-sheet.sh (writes .board-check/sheet-*.png). -->
+<link rel="stylesheet" href="../../design-system/styles.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Jost:wght@400;500&display=swap">
+<link rel="stylesheet" href="board.css">
+<style>
+html,body{background:#D9D0C5;color:#1F1613;font-family:"Jost",sans-serif}
+#root{padding:28px 40px 60px}
+.sh-head{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;padding-bottom:14px;border-bottom:2px solid rgba(31,22,19,.35)}
+.sh-head h1{font-family:"Marcellus",serif;font-weight:400;font-size:30px;letter-spacing:.04em;text-transform:uppercase;margin:0;line-height:1}
+.sh-head .n{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#8C7B71}
+.sh-head .d{margin-left:auto;font-size:13px;color:#5E4F47}
+.sh-band{display:flex;align-items:baseline;gap:16px;margin:26px 0 10px;padding-top:12px;border-top:1px dashed rgba(31,22,19,.25)}
+.sh-band b{font-family:"Marcellus",serif;font-weight:400;font-size:20px;letter-spacing:.02em}
+.sh-band .mod{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#8C7B71}
+.sh-band .flow{font-size:12.5px;color:#5E4F47;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:900px}
+.sh-band .cnt{margin-left:auto;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#8C7B71;white-space:nowrap}
+.sh-row{display:flex;flex-wrap:wrap;gap:22px 18px;align-items:flex-start}
+.sh-row+.sh-row{margin-top:22px}
+.sh-pair{display:flex;flex-direction:column;gap:6px}
+.sh-cap{display:flex;align-items:baseline;gap:8px;font-size:12px;color:#3E2F28;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sh-cap code{font-family:"DM Mono",ui-monospace,monospace;font-size:11px;padding:1px 6px;border-radius:6px;background:#1F1613;color:#F7F2EB}
+.sh-cap .ld{margin-left:auto;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#8C7B71}
+.sh-devs{display:flex;gap:12px}
+.sh-dev{position:relative}
+.sh-empty{margin:40px 0;padding:28px 32px;border:2px dashed rgba(31,22,19,.28);border-radius:20px;font-size:16px;color:#5E4F47;max-width:900px}
+</style>
+<script>/* React: production build by default; ?dev for readable errors. Vendored in vendor/ (see vendor/README.md). */
+(function () { var dev = new URLSearchParams(location.search).has('dev'), f = dev ? 'development' : 'production.min';
+  document.write('<script src="vendor/react.' + f + '.js"><\/script><script src="vendor/react-dom.' + f + '.js"><\/script>'); })();</script>
+<script src="vendor/babel.min.js"></script>
+<script src="vendor/lucide.min.js"></script>
+<script src="../../design-system/ui_kits/data.js"></script>
+<script>/* data.js resolves assets relative to design-system/ui_kits/<kit>/; re-point them from here. */
+(function(){var D=window.SUTRA_DATA,o=D.A,n='../../design-system/assets/';D.A=n;D.designs.forEach(function(d){if(d.src)d.src=d.src.replace(o,n)});})();</script>
+<script src="modules.js"></script>
+<script>/* same loader as board.html: base + the chosen module's files, then finals and the sheet renderer */
+(function () {
+  var q = new URLSearchParams(location.search), m = q.get('m') || 'all', M = window.SUTRA_MODULES;
+  var mods = m === 'all' ? M.modules : M.modules.filter(function (x) { return x.id === m; });
+  if (!mods.length) { document.write('<p style="font:16px Jost,sans-serif;padding:40px">No module "' + m + '" in modules.js. Known: ' + M.modules.map(function (x) { return x.id; }).join(', ') + ' · <a href="index.html">hub</a></p>'); return; }
+  var files = M.base.slice(); mods.forEach(function (x) { x.files.forEach(function (f) { if (files.indexOf(f) < 0) files.push(f); }); });
+  files.push('finals.jsx', 'sheet.jsx');
+  files.forEach(function (f) { document.write('<script type="text/babel" src="' + f + '"><\/script>'); });
+})();
+</script>
+</head>
+<body><div id="root"></div></body></html>

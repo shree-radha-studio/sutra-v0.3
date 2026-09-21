@@ -5,6 +5,7 @@
 - `index.html` — the hub: one card per module, plus the whole board and the drafts archive.
 - `board.html?m=<id>` — a module's page. Three views: `&v=drafts` (New drafts, the default while a module is in planning), `&v=finals`, `&v=compare` (both tables side by side at the same height, to check a draft against the signed-off screen). Frames render lazily as you pan; the page opens zoomed to the phone column (Fit row / Fit all in the zoom bar).
 - `board.html?m=all` — every module on one page. Slow to compile; for the overview only.
+- `sheet.html?m=<id>` — the contact sheet: every frame of a module small on one scrolling page, light + dark pairs by sub-menu, for bulk review and for checking that a formatting change landed everywhere. `&sub=<name>` one sub-menu, `&ids=n-3,nwd-7` chosen frames, `?m=all&sample=1` the sampler (one phone + web pair per module, finals where they exist), `&s=0.4` scale. Headless PNGs: `bash .claude/skills/sutra-mockups/scripts/contact-sheet.sh [<id> [<sub> | <ids…>]]`.
 - `drafts-archive.html` — the six Catalogue explorations that preceded the final language (1a Gallery, 1b Atelier, 1a′, 1b′, 3a Editorial, 3b Studio). History; nobody edits these.
 - `modules.js` — the manifest: `base` (files every page loads) and one line per module (`id`, `name`, `note`, `names`, `files`).
 - `finals.jsx` — `FIN` (phone) and `WEB` (laptop) screen lists and `BOARD` (module → sub-menu → indexes, each entry with the module `id`).
