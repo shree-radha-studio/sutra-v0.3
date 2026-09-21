@@ -60,6 +60,7 @@ open(dst, 'w', encoding='utf-8', newline='\n').write(s)
 PY
 }
 page "$V2/sheet.html" "$OUT/index.html" 1
+sed -i 's#<title>Sutra · contact sheet</title>#<title>Sutra design board</title>#' "$OUT/index.html"
 page "$V2/board.html" "$OUT/board.html" 0
 page "$V2/drafts-archive.html" "$OUT/drafts-archive.html" 0
 page "$V2/index.html" "$OUT/hub.html" 0
