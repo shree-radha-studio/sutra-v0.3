@@ -1,6 +1,6 @@
 # The board · reference
 
-Everything lives in `explorations/catalogue-v2/`. Serve the repository root over http; never open files with `file://`.
+Everything lives in `explorations/catalogue-v2/`. Serve the repository root over http; never open files with `file://`. The runtime (React, Babel, Lucide) is vendored in `vendor/`, so no CDN is needed; `vendor/` is renderer territory, not touched by module work.
 
 ## Pages
 

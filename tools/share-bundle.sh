@@ -11,7 +11,7 @@ bash "$P/tools/package-explorations.sh" >/dev/null
 rm -rf "$OUT"; mkdir -p "$B/ui_kits/sutra-mobile" "$B/ui_kits/catalogue-explorations"
 cp "$DS/styles.css" "$B/"; cp -r "$DS/tokens" "$B/tokens"; cp -r "$DS/assets" "$B/assets"
 cp "$DS/ui_kits/data.js" "$B/ui_kits/"; cp "$DS/ui_kits/sutra-mobile/ios-frame.jsx" "$B/ui_kits/sutra-mobile/"
-cp "$PKG"/* "$B/ui_kits/catalogue-explorations/"
+cp -r "$PKG"/* "$B/ui_kits/catalogue-explorations/"
 cp "$P/explorations/catalogue-v2/phone.html" "$B/ui_kits/catalogue-explorations/"
 cp "$P/design/SUTRA-DESIGN-SCHEMA.md" "$B/DESIGN-SCHEMA.md"; cp "$P/design/tokens-final.css" "$B/tokens/final.css"
 cat > "$B/README.md" <<'EOF'
@@ -23,7 +23,7 @@ Open `ui_kits/catalogue-explorations/index.html` over http (the screens are JSX 
     python -m http.server 8000
     # then open http://localhost:8000/ui_kits/catalogue-explorations/index.html
 
-Any static server works (`npx serve .` too). Internet is needed once for fonts and React from CDNs.
+Any static server works (`npx serve .` too). React, Babel and Lucide are bundled in `ui_kits/catalogue-explorations/vendor/`; internet is needed only for the Google Fonts.
 
 - Board: Drafts (explorations) → New drafts (modules in planning) → Finals (table by module and sub-menu, light + dark pairs, phone and web).
 - Single screens: `index.html?only=f-1` (phone, light), `fd-1` (dark), `w-1` / `wd-1` (web). Add `&bare` for a frameless render on a phone.
