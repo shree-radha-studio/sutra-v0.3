@@ -1,5 +1,7 @@
 # generated bundle for the Claude Design project (rebuild with tools/package-explorations.sh)
 explorations/catalogue-v2/for-claude-design/
+# generated bundle for the Claude Artifact review copy (rebuild with tools/artifact-bundle.sh)
+explorations/catalogue-v2/for-artifact/
 # per-session scratch pages used for screenshots
 explorations/catalogue-v2/_verify.html
 explorations/catalogue-v2/crm-[pw]*.html

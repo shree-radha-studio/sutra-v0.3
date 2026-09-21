@@ -32,6 +32,31 @@ html,body{background:#D9D0C5;color:#1F1613;font-family:"Jost",sans-serif}
 .sh-devs{display:flex;gap:12px}
 .sh-dev{position:relative}
 .sh-empty{margin:40px 0;padding:28px 32px;border:2px dashed rgba(31,22,19,.28);border-radius:20px;font-size:16px;color:#5E4F47;max-width:900px}
+/* the bar: module, sub-menu, drafts / finals, theme and scale, sticky at the top */
+.sh-bar{position:sticky;top:0;z-index:50;margin:-28px -40px 22px;padding:10px 40px 8px;background:rgba(217,208,197,.92);backdrop-filter:blur(10px);border-bottom:1px solid rgba(31,22,19,.18)}
+.sh-bar-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.sh-bar-row.subs{margin-top:6px}
+.sh-chip{height:32px;padding:0 14px;border:1.5px solid rgba(31,22,19,.28);border-radius:999px;background:transparent;color:#1F1613;font:500 13.5px/1 "Jost",sans-serif;cursor:pointer;white-space:nowrap}
+.sh-chip.small{height:26px;padding:0 10px;font-size:12px;font-weight:400}
+.sh-chip i{font-style:normal;opacity:.5;margin-left:3px}
+.sh-chip:hover{background:rgba(255,255,255,.4)}
+.sh-chip.on{background:#1F1613;color:#F7F2EB;border-color:#1F1613}
+.sh-chip:focus-visible{outline:2px solid #5A1F27;outline-offset:2px}
+.sh-sep{width:1px;height:20px;background:rgba(31,22,19,.25);margin:0 6px}
+.sh-n{margin-left:auto;font-size:12px;color:#5E4F47;white-space:nowrap}
+.sh-n a{color:#5A1F27}
+.sh-dev.press{cursor:zoom-in}
+/* one frame large */
+.sh-lb{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px 24px;background:rgba(31,22,19,.86);backdrop-filter:blur(14px)}
+.sh-lb-bar{display:flex;align-items:center;gap:10px;width:min(100%,1308px);color:#F7F2EB;font-size:13px}
+.sh-lb-bar code{font-family:"DM Mono",ui-monospace,monospace;font-size:12px;padding:2px 8px;border-radius:6px;background:#F7F2EB;color:#1F1613}
+.sh-lb-bar .nm{font-size:15px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sh-lb-bar .hint{margin-left:auto;opacity:.6;white-space:nowrap}
+.sh-lb-bar .sh-chip{border-color:rgba(247,242,235,.4);color:#F7F2EB}
+.sh-lb-bar .sh-chip.on{background:#F7F2EB;color:#1F1613;border-color:#F7F2EB}
+.sh-x{width:32px;height:32px;border:0;border-radius:50%;background:rgba(247,242,235,.15);color:#F7F2EB;font-size:22px;line-height:1;cursor:pointer}
+.sh-lb-frame{flex:none}
+@media (prefers-reduced-motion:reduce){.sh-chip{transition:none}}
 </style>
 <script>/* React: production build by default; ?dev for readable errors. Vendored in vendor/ (see vendor/README.md). */
 (function () { var dev = new URLSearchParams(location.search).has('dev'), f = dev ? 'development' : 'production.min';

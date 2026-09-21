@@ -37,7 +37,7 @@ render() { local shot=(); [[ -n "$3" ]] && shot=(--screenshot="$3")
     --virtual-time-budget=30000 "${shot[@]}" --dump-dom "$1" > "$4" 2>/dev/null; }
 attr() { grep -o "data-$2=\"[^\"]*\"" "$1" | head -1 | sed 's/^[^"]*"//; s/"$//'; }
 # one sheet: $1 query, $2 file stem. Pass 1 measures the page, pass 2 shoots it at that height.
-sheet() { local url="$BASE?$1&s=$S$VIEW" dom="$OUT/$2.html" png="$OUT/$2.png"
+sheet() { local url="$BASE?$1&s=$S$VIEW&ui=0" dom="$OUT/$2.html" png="$OUT/$2.png"
   render "$url" "$W,1000" "" "$dom"
   local h n; h="$(attr "$dom" h)"; n="$(attr "$dom" frames)"
   if [[ -z "$h" ]]; then echo "sheet  $2: the page did not mount ($url&dev in a browser for the error)"; return 1; fi
@@ -50,7 +50,7 @@ elif [[ $# -gt 0 && "$1" == *-* ]]; then IDS="$(IFS=,; echo "$*")"; sheet "m=$MO
 elif [[ $# -gt 0 ]]; then sheet "m=$MOD&sub=$1" "sheet-$MOD-$(echo "$1" | tr 'A-Z ' 'a-z-')"
 else
   # whole module: measure first; split by sub-menu when one page would be cut
-  dom="$OUT/sheet-$MOD.html"; render "$BASE?m=$MOD&s=$S$VIEW" "$W,1000" "" "$dom"
+  dom="$OUT/sheet-$MOD.html"; render "$BASE?m=$MOD&s=$S$VIEW&ui=0" "$W,1000" "" "$dom"
   h="$(attr "$dom" h)"; subs="$(attr "$dom" subs)"
   if [[ -z "$h" ]]; then echo "sheet  $MOD: the page did not mount (sheet.html?m=$MOD&dev in a browser for the error)"; exit 1; fi
   if [[ "$h" -le "$MAXH" ]]; then sheet "m=$MOD" "sheet-$MOD"
