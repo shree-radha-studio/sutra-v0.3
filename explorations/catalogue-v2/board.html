@@ -24,7 +24,7 @@
 (function () {
   var q = new URLSearchParams(location.search), m = q.get('m') || 'all', M = window.SUTRA_MODULES;
   var mods = m === 'all' ? M.modules : M.modules.filter(function (x) { return x.id === m; });
-  if (!mods.length) { document.write('<p style="font:16px Jost,sans-serif;padding:40px">No module "' + m + '" in modules.js. Known: ' + M.modules.map(function (x) { return x.id; }).join(', ') + ' · <a href="index.html">hub</a></p>'); return; }
+  if (!mods.length) { document.write('<p style="font:16px Jost,sans-serif;padding:40px">No module "' + m + '" in modules.js. Known: ' + M.modules.map(function (x) { return x.id; }).join(', ') + ' · <a href="hub.html">hub</a></p>'); return; }
   var files = M.base.slice(); mods.forEach(function (x) { x.files.forEach(function (f) { if (files.indexOf(f) < 0) files.push(f); }); });
   files.push('finals.jsx', 'board.jsx');
   files.forEach(function (f) { document.write('<script type="text/babel" src="' + f + '"><\/script>'); });

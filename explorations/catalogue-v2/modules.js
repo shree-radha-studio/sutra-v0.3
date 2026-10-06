@@ -13,7 +13,7 @@
 
    Adding a module: create mod-<id>.jsx (+ mod-<id>-web.jsx), register from its END with
    (window.NEW_DRAFT_MODULES = window.NEW_DRAFT_MODULES || []).push({ module: '<Name>', note, subs: [...] }),
-   then add one line below. Open board.html?m=<id>. Never edit index.html or board.html. */
+   then add one line below. Open board.html?m=<id>. Never edit index.html, hub.html or board.html. */
 window.SUTRA_MODULES = {
   base: [
     '../../design-system/ui_kits/sutra-mobile/ios-frame.jsx',

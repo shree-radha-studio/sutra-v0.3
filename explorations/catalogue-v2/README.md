@@ -2,14 +2,16 @@
 
 **One page per module** (since 9 Sep 2026; before that one file held every frame and stopped loading).
 
-- `index.html` — the hub: one card per module, plus the whole board and the drafts archive.
 - `board.html?m=<id>` — a module's page. Three views: `&v=drafts` (New drafts, the default while a module is in planning), `&v=finals`, `&v=compare` (both tables side by side at the same height, to check a draft against the signed-off screen). Frames render lazily as you pan; the page opens zoomed to the phone column (Fit row / Fit all in the zoom bar).
 - `board.html?m=all` — every module on one page. Slow to compile; for the overview only.
-- `sheet.html?m=<id>` — the contact sheet: every frame of a module small on one scrolling page, light + dark pairs by sub-menu, for bulk review and for checking that a formatting change landed everywhere. `&sub=<name>` one sub-menu, `&ids=n-3,nwd-7` chosen frames, `?m=all&sample=1` the sampler (one phone + web pair per module, finals where they exist), `&s=0.4` scale. Headless PNGs: `bash .claude/skills/sutra-mockups/scripts/contact-sheet.sh [<id> [<sub> | <ids…>]]`.
+- `index.html` — the **contact sheet**, the landing page (same layout as the claude.ai artifact copy): a bar for module, sub-menu, New drafts / Finals, theme and scale; a click opens a frame large. `index.html?m=<id>` opens one module: every frame of a module small on one scrolling page, light + dark pairs by sub-menu, for bulk review and for checking that a formatting change landed everywhere. `&sub=<name>` one sub-menu, `&ids=n-3,nwd-7` chosen frames, `?m=all&sample=1` the sampler (one phone + web pair per module, finals where they exist), `&s=0.4` scale. Headless PNGs: `bash .claude/skills/sutra-mockups/scripts/contact-sheet.sh [<id> [<sub> | <ids…>]]`.
+- `hub.html` — the hub: one card per module, plus the whole board and the drafts archive.
 - `drafts-archive.html` — the six Catalogue explorations that preceded the final language (1a Gallery, 1b Atelier, 1a′, 1b′, 3a Editorial, 3b Studio). History; nobody edits these.
 - `modules.js` — the manifest: `base` (files every page loads) and one line per module (`id`, `name`, `note`, `names`, `files`).
 - `finals.jsx` — `FIN` (phone) and `WEB` (laptop) screen lists and `BOARD` (module → sub-menu → indexes, each entry with the module `id`).
-- `board.jsx` / `board.css` / `board-pan.js` — the renderer, its styles and the pan/zoom bar. Module work never edits these.
+- `board.jsx` / `board.css` / `board-pan.js` — the renderer, its styles and the pan/zoom bar. Module work never edits these, nor `index.html`, `hub.html` or `sheet.jsx`.
+
+**The repository is the only board.** The claude.ai artifact copy (published 21 Sep 2026) is frozen as a snapshot and no longer republished; every change is made here (owner, 6 Oct 2026). `tools/artifact-bundle.sh` stays for the day a fresh copy is wanted.
 
 Single frames: `board.html?m=<id>&only=<fid>&z=0.8`. Ids `n-<i>` / `nd-<i>` (draft phone light / dark) and `nw-<i>` / `nwd-<i>` (draft web) count within the module page; `f-<i>` / `fd-<i>` / `w-<i>` / `wd-<i>` are the finals and never change. `&bare` drops the device frame; `&dev` loads the React development build (readable errors); `&lazy=0` renders every frame at once.
 

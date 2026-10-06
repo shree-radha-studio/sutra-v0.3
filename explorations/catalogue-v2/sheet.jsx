@@ -1,4 +1,4 @@
-/* CONTACT SHEET RENDERER · sheet.html. Reads the same registrations as board.jsx (window.SUTRA_MODULES,
+/* CONTACT SHEET RENDERER · index.html. Reads the same registrations as board.jsx (window.SUTRA_MODULES,
    window.NEW_DRAFT_MODULES, FIN / WEB / BOARD) and lays every frame out small on one scrolling page: a band per
    sub-menu, phone pairs then web pairs, each pair light + dark under one caption carrying the frame id exactly as it
    reads on board.html?m=<id>. Nothing is lazy: every frame mounts, which is what a one-shot headless render wants.
@@ -114,7 +114,8 @@ function ContactSheet() {
   const [s, setS] = useState(S0);
   const [theme, setTheme] = useState('both');
   const [focus, setFocus] = useState(null);
-  const stat = useMemo(() => UI ? null : staticGroups(), []);
+  // &ids= and &sample= are fixed pages; &ui=0 alone only hides the bar and keeps the module's sub-menu groups
+  const stat = useMemo(() => IDS.length || SAMPLE ? staticGroups() : null, []);
   const groups = useMemo(() => stat ? stat.groups : liveGroups(mod, sub, v), [stat, mod, sub, v]);
   const M = mod === 'all' ? null : byId(mod);
   const title = stat ? stat.title : (M ? M.mod.name : 'Whole board');
@@ -144,7 +145,7 @@ function ContactSheet() {
       {subs.length > 1 && <div className="sh-bar-row subs"><Chip small on={!sub} onClick={() => setSub('')}>All</Chip>{subs.map(x => <Chip key={x.name} small on={sub === x.name} onClick={() => setSub(x.name)}>{x.name} <i>{(x.phone.length + x.web.length) * 2}</i></Chip>)}</div>}
     </div>}
     <div className="sh-head"><h1>{title}</h1><span className="n">contact sheet · {count} frames · scale {s}</span><span className="d">{date}</span></div>
-    {!groups.length && <div className="sh-empty">Nothing to show. For a module: sheet.html?m=&lt;id&gt; (ids in modules.js: {SUTRA_MODULES.modules.map(m => m.id).join(', ')}). Sampler: sheet.html?m=all&amp;sample=1.</div>}
+    {!groups.length && <div className="sh-empty">Nothing to show. For a module: index.html?m=&lt;id&gt; (ids in modules.js: {SUTRA_MODULES.modules.map(m => m.id).join(', ')}). Sampler: index.html?m=all&amp;sample=1.</div>}
     {groups.map((g, k) => <section key={k}>
       <div className="sh-band"><span className="mod">{g.module}</span><b>{g.name}</b><span className="flow">{g.flow}</span><span className="cnt">{g.phone.length} phone · {g.web.length} web</span></div>
       <div className="sh-row">{g.phone.map((e, i) => <Cell key={'p' + i} e={e} single={g.single} s={s} theme={theme} onOpen={open} />)}{g.web.map((e, i) => <Cell key={'w' + i} e={e} single={g.single} s={s} theme={theme} onOpen={open} />)}</div>

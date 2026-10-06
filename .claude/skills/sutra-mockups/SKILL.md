@@ -42,8 +42,8 @@ bash .claude/skills/sutra-mockups/scripts/contact-sheet.sh                  # sa
 
 Open every screenshot you asked for and look: clipped captions, a tray covering content, wrong theme colours, an empty pane, a string that reads wrong. Fix, re-run. A change to `final.jsx`, `web.jsx` or the tokens touches every screen, so it is verified on the sampler, not on one frame. Only the script's output counts as verification; the in-app browser pane times out on the board, and ad-hoc html pages are not made.
 
-Then update `plans/<id>.md` (what changed, open questions), run `bash tools/sync.sh "<Module> · <what changed>"`, and tell the owner the page (`board.html?m=<id>`), the frame ids to look at, and the decisions waiting on them. If they asked for the Claude Design drop, `bash tools/package-explorations.sh` rebuilds it.
+Then update `plans/<id>.md` (what changed, open questions), run `bash tools/sync.sh "<Module> · <what changed>"`, and tell the owner the page (`index.html?m=<id>` to review, `board.html?m=<id>` for the canvas), the frame ids to look at, and the decisions waiting on them. If they asked for the Claude Design drop, `bash tools/package-explorations.sh` rebuilds it.
 
 ## Shared files, so the team does not collide
 
-Yours: `mod-<id>*.jsx`, `plans/<id>.md`, `assets/<id>/`. One appended line in `modules.js`. Appends in `finals.jsx` only at sign-off. Never `index.html`, `board.html`, `board.jsx`, `board.css`, other modules' files. Full mechanics, ids, views and the registration shape: `references/board.md`.
+Yours: `mod-<id>*.jsx`, `plans/<id>.md`, `assets/<id>/`. One appended line in `modules.js`. Appends in `finals.jsx` only at sign-off. Never `index.html`, `hub.html`, `sheet.jsx`, `board.html`, `board.jsx`, `board.css`, other modules' files. Full mechanics, ids, views and the registration shape: `references/board.md`.
