@@ -1,6 +1,6 @@
 # The board · reference
 
-Everything lives in `explorations/catalogue-v2/`. Serve the repository root over http; never open files with `file://`.
+Everything lives in `explorations/catalogue-v2/`. Serve the repository root over http; never open files with `file://`. The runtime (React, Babel, Lucide) is vendored in `vendor/`, so no CDN is needed; `vendor/` is renderer territory, not touched by module work.
 
 ## Pages
 
@@ -9,6 +9,7 @@ Everything lives in `explorations/catalogue-v2/`. Serve the repository root over
 | `index.html` | Hub: one card per module. Never edited by module work. |
 | `board.html?m=<id>` | One module. Views `&v=drafts` (default while drafting), `&v=finals`, `&v=compare` (both tables side by side). |
 | `board.html?m=all` | Every module; slow, overview only. |
+| `sheet.html?m=<id>` | Contact sheet: every frame of the module small, light + dark pairs by sub-menu. `&sub=<name>`, `&ids=n-3,nwd-7`, `?m=all&sample=1` (sampler), `&s=0.4`. Headless: `scripts/contact-sheet.sh`. |
 | `drafts-archive.html` | The six pre-final Catalogue explorations. History; never edited. |
 | `legacy-index.html` | The old single-file board. Reference only; receives nothing new. |
 
@@ -23,7 +24,7 @@ Frame ids on a module page: `n-<i>` / `nd-<i>` draft phone light / dark, `nw-<i>
 | `mod-<id>.jsx`, `mod-<id>-web.jsx` | Yours. Phone screens, web screens, module data, module-only components. |
 | `modules.js` | One line per module, appended: `{ id, name, note, names: ['<Name>'], files: [...] }`. `files` in load order; a later file may use anything an earlier one defines. |
 | `finals.jsx` | Only at sign-off: append to `FIN` / `WEB`, add a `BOARD` entry with `id: '<id>'`. Never reorder existing entries. |
-| `board.html`, `board.jsx`, `board.css`, `board-pan.js`, `index.html` | Renderer. Not touched by module work. |
+| `board.html`, `board.jsx`, `board.css`, `board-pan.js`, `index.html`, `sheet.html`, `sheet.jsx`, `vendor/` | Renderer. Not touched by module work. |
 
 `base` in `modules.js` lists the files every page loads (device frames, tokens, final chrome, web shell, and the module files others borrow from: appshell, catalogue-tags, dispatch, topbar2). Add a file to `base` only when another module needs something from it.
 
