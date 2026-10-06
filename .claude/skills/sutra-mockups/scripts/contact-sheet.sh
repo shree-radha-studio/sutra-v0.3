@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Contact sheets of the Sutra board with headless Chrome: many frames small on one PNG, for bulk review and for
-# checking that a formatting change landed on every screen. Renders sheet.html; writes .board-check/sheet-*.png.
+# checking that a formatting change landed on every screen. Renders index.html; writes .board-check/sheet-*.png.
 #   bash .claude/skills/sutra-mockups/scripts/contact-sheet.sh                    sampler: first phone + web pair of every module
 #   bash .claude/skills/sutra-mockups/scripts/contact-sheet.sh crm                every frame of CRM; one PNG per sub-menu when the page is too tall for one
 #   bash .claude/skills/sutra-mockups/scripts/contact-sheet.sh crm payments       one sub-menu (name match)
@@ -28,7 +28,7 @@ PORT="$(python -c 'import socket;s=socket.socket();s.bind(("127.0.0.1",0));print
 (cd "$ROOT" && python -m http.server "$PORT" --bind 127.0.0.1 >/dev/null 2>&1) & SRV=$!
 trap 'kill $SRV 2>/dev/null' EXIT
 sleep 1
-BASE="http://127.0.0.1:$PORT/explorations/catalogue-v2/sheet.html"
+BASE="http://127.0.0.1:$PORT/explorations/catalogue-v2/index.html"
 PROF="$OUT/.profile-$$"
 
 # $1 url · $2 window size · $3 png path or "" · $4 dom dump path
@@ -52,7 +52,7 @@ else
   # whole module: measure first; split by sub-menu when one page would be cut
   dom="$OUT/sheet-$MOD.html"; render "$BASE?m=$MOD&s=$S$VIEW&ui=0" "$W,1000" "" "$dom"
   h="$(attr "$dom" h)"; subs="$(attr "$dom" subs)"
-  if [[ -z "$h" ]]; then echo "sheet  $MOD: the page did not mount (sheet.html?m=$MOD&dev in a browser for the error)"; exit 1; fi
+  if [[ -z "$h" ]]; then echo "sheet  $MOD: the page did not mount (index.html?m=$MOD&dev in a browser for the error)"; exit 1; fi
   if [[ "$h" -le "$MAXH" ]]; then sheet "m=$MOD" "sheet-$MOD"
   else echo "module $MOD is ${h}px tall at scale $S; one sheet per sub-menu"
     IFS='|' read -ra LIST <<< "$subs"

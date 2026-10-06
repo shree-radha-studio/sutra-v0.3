@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Build explorations/catalogue-v2/for-artifact/ : the board as one flat folder for publishing as a Claude Artifact
-# (the review copy the owner pins comments on). Root page = the contact sheet (index.html, a body fragment: the
+# (the review copy the owner pins comments on). FROZEN since 6 Oct 2026: the repository is the only board and the
+# published artifact is no longer republished; kept for the day the owner wants a fresh copy. Root page = the contact sheet (index.html, a body fragment: the
 # artifact host adds the document skeleton); board.html, hub.html and drafts-archive.html ride along as files.
 # Every path is root-relative, the .jsx files are precompiled to .js (no Babel in the artifact), the design-system
 # pieces the board needs are copied in, so nothing points outside the folder. Rebuild after any change, then publish.
@@ -50,7 +51,6 @@ s = re.sub(r'\.jsx(["\'])', r'.js\1', s)
 s = s.replace("files.push('finals.jsx', 'board.jsx')", "files.push('finals.js', 'board.js')").replace("files.push('finals.jsx', 'sheet.jsx')", "files.push('finals.js', 'sheet.js')")
 # Babel ran the JSX after the document was parsed; plain scripts must defer the same way, or #root does not exist yet
 s = s.replace("document.write('<script src=\"' + f + '\"><\\/script>')", "document.write('<script defer src=\"' + f + '\"><\\/script>')")
-s = s.replace('href="index.html"', 'href="hub.html"')
 if fragment:  # the artifact root page: the host wraps it in its own skeleton, so keep title, links, styles, scripts, body content
     m = re.search(r'<head>(.*?)</head>\s*<body>(.*?)</body>', s, re.S)
     head, body = m.group(1), m.group(2)
@@ -59,17 +59,11 @@ if fragment:  # the artifact root page: the host wraps it in its own skeleton, s
 open(dst, 'w', encoding='utf-8', newline='\n').write(s)
 PY
 }
-page "$V2/sheet.html" "$OUT/index.html" 1
+page "$V2/index.html" "$OUT/index.html" 1
 sed -i 's#<title>Sutra · contact sheet</title>#<title>Sutra design board</title>#' "$OUT/index.html"
 page "$V2/board.html" "$OUT/board.html" 0
 page "$V2/drafts-archive.html" "$OUT/drafts-archive.html" 0
-page "$V2/index.html" "$OUT/hub.html" 0
-# the hub's cards point at the board; add the sheet (root page) link on top
-python3 - "$OUT/hub.html" <<'PY'
-import sys; p = sys.argv[1]; s = open(p, encoding='utf-8').read()
-s = s.replace('<div class="grid" id="modules"></div>', '<p class="sub"><a href="index.html" style="color:#5A1F27">← Contact sheet (the review page: every frame small, click to enlarge)</a></p>\n<div class="grid" id="modules"></div>')
-open(p, 'w', encoding='utf-8', newline='\n').write(s)
-PY
+page "$V2/hub.html" "$OUT/hub.html" 0
 
 N=$(find "$OUT" -type f | wc -l | tr -d ' '); SZ=$(du -sh "$OUT" | cut -f1)
 echo "Bundled: $OUT ($N files, $SZ)"
