@@ -38,20 +38,20 @@ Sub-menus: Catalogue (default) · Carts · Sale orders. Customer mode is a switc
 | Full-screen viewer (colours, then media) | ★★★★★ | Keep | Customers buy from pictures. |
 | Scan pop-up | ★★★★★ | Simplify | The BRD's four quick-add buttons (Add pc, Add colour set, to all carts ×2) are too many under time pressure. Make it two buttons (Add piece · Add colour set) with one "all carts" switch. |
 | Scan camera, focus mode + Scan-to-add toggle | ★★★★★ | Gap | Only the pop-up is drawn. The camera screen and its green persistent state (F:84) are missing. |
-| Voice search (listening orb) | ★★ | Later | Not in the BRD. It could help staff who type slowly, but only if it understands Hindi / Hinglish names; nothing is specified. Keep the drawn frame, build after launch. |
+| Voice search (listening orb) | ★★★★★ | Keep | Owner, 6 Oct: about 30 % of users are semi-skilled workers (₹15–40k a month) who need voice search and easy browsing more than features. It must understand Hindi / Hinglish product talk. |
 | Tags · one action chip + one stock pill per card | ★★★★ | Keep | The card budget (DU:9) is the right discipline. |
 | "Why?" panel on a chip | ★★★ | Simplify | Managers want it; salespeople mostly don't. Show it on long-press only, not as a visible affordance. |
 | Salesperson tag rail (action · colours · about) | ★★★ | Keep | Where the sale manager sets the promotional badges (DU:13). |
 | Customer mode switch | ★★★★★ | Keep | Drawn across the finals. It must be impossible to miss when it is on. |
 | Carts · grouped by design, totals | ★★★★ | Keep | |
-| Cart card (double tap on a chip) | ★★ | Simplify | Double tap is hidden; few users find it. A plain tap on the cart chip should open the card. |
+| Cart chip: tap activates, double tap opens the card | ★★★★ | Keep | Owner, 6 Oct: a single tap makes that cart the active one, so what is picked in the catalogue goes into it; a double tap opens the cart card. As drawn. |
 | "+ new cart" from the cart button | ★★★★ | Gap | F:83. No screen shows starting a cart for a new customer. |
 | Over-credit-limit block on submit | ★★★★ | Gap | F:17. The salesperson needs to see why an order will not go through, in words, before the customer leaves. |
 | Sale orders · cards | ★★★★ | Keep | Phone default. |
 | Sale orders · table, column chooser, group by | ★★★ | Simplify | Desk-only. On phone keep cards and drop the table and group-by frames; tables at 390 px are hard to read. |
 | Sale order · opened | ★★★★ | Keep | |
 | Returns tab (cards, table, credit note pane) | ★★★ | Keep | Read-only here; the return itself is made in Dispatch. |
-| Analytics · orders, designs, customers | ★★★ | Simplify | Manager-only. Hide the Analytics tab for sale executives; on phone show one chart per screen, no tables. |
+| Analytics · orders, designs, customers | ★★★ | Simplify | Owner, 6 Oct: sale managers and above only; the tab is hidden for sale executives. On phone, one chart per screen, no tables. |
 
 ## 2 · App shell
 
@@ -68,7 +68,7 @@ simple.
 | Phone search | ★★★★★ | Gap | Search is drawn on web only. On phone it is the catalogue's top field (F:82), where people will use it most. |
 | Login and firm selector (admin sees all firms) | ★★★★ | Gap | F:28. Needed for the developer even if it is plain. |
 | User menu (profile, theme, show / hide modules) | ★★★ | Gap | F:289. One small sheet. |
-| Agent orb in the header | ★★ | Later | Same reasoning as voice search. |
+| Agent orb in the header | ★★★★★ | Keep | Owner, 6 Oct: required, for the same 30 % of users as voice search. |
 | Permission requests (24 h · 1 w · 1 m · 3 m) | ★★★ | Later | It belongs with Home › Approvals and Channels; draw it with those modules. |
 
 ## 3 · Dispatch
@@ -112,6 +112,20 @@ Sub-menus: Ready · Pending · Packing · Billed · Out of stock · Stock · Sal
 
 7. Dispatch · retire the older Ready and Pending frames once the approved-bar versions are confirmed.
 8. Catalogue · Sale orders on phone keep cards only; the table and group-by frames move to web only.
+
+## Owner answers (6 Oct 2026)
+
+| # | Answer |
+|---|---|
+| 1 | Scan pop-up: accepted. Two buttons (Add piece · Add colour set) and one "all carts" switch. |
+| 2 | Voice search and the agent orb stay. About 30 % of users are semi-skilled workers who need voice search and easy browsing across the app; they use few features. |
+| 3 | Cart chip: single tap activates the cart (catalogue picks go into it), double tap opens the cart card. Stays as drawn. |
+| 4 | Not answered yet. |
+| 5 | Analytics: sale managers and above. |
+| 6–8 | Not answered yet. |
+
+A product rule follows from answer 2, for every module: the screens a semi-skilled worker uses must work by
+voice and by browsing pictures, with as few typed fields and choices as possible.
 
 ## Decisions for the owner
 

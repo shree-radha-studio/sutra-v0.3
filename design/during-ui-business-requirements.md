@@ -127,3 +127,13 @@ the screen it came from so the BRD can absorb it later. Newest at the bottom.
   default margin per category (Lehenga 40 %, Saree 35 %, Blouse 45 % as placeholders), editable by admin.
 - Ready production (Direct book): the issue records the order, nothing leaves the godown; the receive counts finished
   pieces; the job rate is the purchase price. The on-paper material invoice to the karigar lives in Hub/accounts.
+
+## 6 Oct 2026 · Catalogue, App shell, Dispatch review (plans/review-1-catalogue-appshell-dispatch.md)
+
+- Users: about 30 % are semi-skilled workers (₹15–40k a month). They need voice search and easy browsing across the
+  app more than features; voice search and the agent orb are required, not phase 2. Screens these workers use must work
+  by voice and by browsing pictures, with few typed fields and choices.
+- Scan pop-up: two quick-add buttons (Add piece · Add colour set) and one "all carts" switch replace the four buttons of
+  BRD F:85.
+- Cart chip: a single tap activates the cart (catalogue picks go into it); a double tap opens the cart card.
+- Analytics under Sale orders: sale managers and above only; hidden for sale executives.
