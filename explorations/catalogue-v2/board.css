@@ -78,3 +78,11 @@ body.panning{cursor:grabbing;user-select:none}
 #views .mod{font-family:"Marcellus",serif;font-size:15px;letter-spacing:.04em;padding:0 10px 0 6px;opacity:.95}
 #views .lnk{opacity:.8}
 .col{position:absolute;top:0}
+/* phones (8 Oct): the view bar runs across the top and scrolls sideways, the zoom bar sits at the bottom, so the
+   two never overlap */
+@media (max-width:760px){
+  #views{left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));overflow-x:auto;scrollbar-width:none;border-radius:14px}
+  #views::-webkit-scrollbar{display:none}
+  #zoom{top:auto;bottom:calc(12px + env(safe-area-inset-bottom,0px));right:8px;left:8px;justify-content:center;overflow-x:auto;border-radius:14px}
+  #zoom button{padding:0 9px}
+}

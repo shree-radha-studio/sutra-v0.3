@@ -6,6 +6,7 @@
 # Every path is root-relative, the .jsx files are precompiled to .js (no Babel in the artifact), the design-system
 # pieces the board needs are copied in, so nothing points outside the folder. Rebuild after any change, then publish.
 set -euo pipefail
+echo "artifact-bundle.sh predates loader.js (8 Oct 2026): index.html and board.html now load their files through loader.js, which this script does not yet rewrite. Update it before publishing a new artifact copy." >&2; exit 1
 P="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DS="$P/design-system"; V2="$P/explorations/catalogue-v2"; OUT="$V2/for-artifact"
 command -v node >/dev/null || { echo "node is needed to precompile the JSX"; exit 1; }

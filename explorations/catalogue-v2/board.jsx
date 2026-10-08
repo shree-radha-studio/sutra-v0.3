@@ -42,13 +42,21 @@ const Device = ({ web, T, Scr }) => web ? <LaptopDevice width={1280} height={800
 const LAZY = Q.get('lazy') !== '0';
 const VisCtx = React.createContext(null);
 const DeviceM = React.memo(Device);
-const viewRect = () => { const z = window.__zoom || 1, w = innerWidth / z, h = innerHeight / z, mx = w * 0.75, my = h * 0.75; return { x0: scrollX / z - mx, y0: scrollY / z - my, x1: scrollX / z + w + mx, y1: scrollY / z + h + my }; };
+/* the visible area in board pixels. A phone's pinch-zoom moves the visual viewport, which scrollX / innerWidth do not
+   follow, so frames under the fingers stayed placeholders; window.visualViewport is the area actually on screen. */
+const viewRect = () => {
+  const z = window.__zoom || 1, vv = window.visualViewport;
+  const px = vv ? vv.pageLeft : scrollX, py = vv ? vv.pageTop : scrollY, vw = vv ? vv.width : innerWidth, vh = vv ? vv.height : innerHeight;
+  const w = vw / z, h = vh / z, mx = Math.max(w * 0.75, 600), my = Math.max(h * 0.75, 600);
+  return { x0: px / z - mx, y0: py / z - my, x1: px / z + w + mx, y1: py / z + h + my };
+};
 function useVisibleRect() {
   const [v, setV] = React.useState(viewRect);
   React.useEffect(() => {
     let raf = 0; const on = () => { if (raf) return; raf = requestAnimationFrame(() => { raf = 0; setV(viewRect()); }); };
     addEventListener('scroll', on, { passive: true }); addEventListener('resize', on); addEventListener('sutra:view', on);
-    return () => { removeEventListener('scroll', on); removeEventListener('resize', on); removeEventListener('sutra:view', on); };
+    const vv = window.visualViewport; if (vv) { vv.addEventListener('scroll', on); vv.addEventListener('resize', on); }
+    return () => { removeEventListener('scroll', on); removeEventListener('resize', on); removeEventListener('sutra:view', on); if (vv) { vv.removeEventListener('scroll', on); vv.removeEventListener('resize', on); } };
   }, []);
   return v;
 }
@@ -117,7 +125,7 @@ const href = v => { const q = new URLSearchParams(location.search); q.set('v', v
 /* fixed bar: hub link · module · view switcher · archive in its own tab */
 function ViewBar() {
   return <div id="views">
-    <a className="lnk" href="index.html">← All modules</a>
+    <a className="lnk" href={MOD_ID === 'all' ? 'index.html' : 'index.html?m=' + MOD_ID}>← Board</a>
     <span className="mod">{PAGE_TITLE}</span>
     <a className={'tab' + (VIEW === 'drafts' ? ' on' : '')} href={href('drafts')}>New drafts <small>{COUNTS.np + COUNTS.nw}</small></a>
     <a className={'tab' + (VIEW === 'finals' ? ' on' : '')} href={href('finals')}>Finals <small>{COUNTS.fp + COUNTS.fw}</small></a>
