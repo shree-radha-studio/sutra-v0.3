@@ -182,8 +182,60 @@ function Controls({ cls, view, setView, hasF, hasD, device, setDevice, theme, se
   </div>;
 }
 
+/* ───────────── code: every screen is a React component in a .jsx file; show its source for the developer ───────────── */
+const REPO = /\.github\.io$/.test(location.hostname) ? location.hostname.split('.')[0] + '/' + location.pathname.split('/')[1] : 'shree-radha-studio/sutra-v0.3';
+/* file paths as the page loads them → paths in the repository (the developer pack moves the kit files) */
+const repoPath = f => f.startsWith('../../design-system/') ? f.slice(6) : f.startsWith('../sutra-mobile/') ? 'design-system/ui_kits/sutra-mobile/' + f.slice(16)
+  : f.startsWith('./') ? 'design-system/ui_kits/catalogue-explorations/' + f.slice(2) : 'explorations/catalogue-v2/' + f;
+const ghUrl = (f, a, b) => 'https://github.com/' + REPO + '/blob/main/' + repoPath(f) + '#L' + a + (b && b !== a ? '-L' + b : '');
+const SKIP = new Set(['React', 'ReactDOM', 'Math', 'Object', 'Array', 'String', 'Number', 'JSON', 'Date', 'Set', 'Map', 'Promise', 'Boolean']);
+function CodePanel({ e }) {
+  const [stack, setStack] = useState([e.Scr && e.Scr.name || '']);
+  const [res, setRes] = useState(undefined);
+  const [copied, setCopied] = useState(false);
+  const [wrap, setWrap] = useState(() => store.get('sutra.board.wrap', innerWidth < 760));
+  useEffect(() => { store.set('sutra.board.wrap', wrap); }, [wrap]);
+  useEffect(() => { setStack([e.Scr && e.Scr.name || '']); }, [e]);
+  const name = stack[stack.length - 1];
+  const reg = useMemo(() => window.SutraLoad ? SutraLoad.findText("'" + e.name + "'") || SutraLoad.findText('"' + e.name + '"') : null, [e]);
+  useEffect(() => {
+    let live = true; setRes(undefined);
+    if (!window.SutraLoad) { setRes(null); return; }
+    if (!name) { /* an inline screen in the registration: show the lines around it */
+      if (!reg) { setRes(null); return; }
+      const lines = (SutraLoad.source(reg.file) || '').split('\n'), a = Math.max(1, reg.line - 2), b = Math.min(lines.length, reg.line + 10);
+      setRes({ file: reg.file, line: a, endLine: b, code: lines.slice(a - 1, b).join('\n') }); return;
+    }
+    SutraLoad.locate(name).then(r => { if (live) setRes(r || null); });
+    return () => { live = false; };
+  }, [name, reg]);
+  const uses = useMemo(() => {
+    if (!res) return [];
+    const found = new Set();
+    for (const m of res.code.matchAll(/<([A-Za-z_$][\w$]*)[\s/>]/g)) found.add(m[1]);
+    for (const m of res.code.matchAll(/(?:^|[^.\w$])([A-Za-z_$][\w$]*)\(/g)) found.add(m[1]);
+    return [...found].filter(n => n !== name && !SKIP.has(n) && SutraLoad.defines(n)).sort();
+  }, [res, name]);
+  const copy = () => { const done = () => { setCopied(true); setTimeout(() => setCopied(false), 1500); }; try { navigator.clipboard.writeText(res.code).then(done, () => prompt('Copy the code', res.code)); } catch (err) { prompt('Copy the code', res.code); } };
+  return <aside className="cd" aria-label="Code">
+    <div className="cd-head">
+      {stack.length > 1 ? <button type="button" className="bd-btn light" onClick={() => setStack(s => s.slice(0, -1))}>‹ {stack[stack.length - 2] || 'Screen'}</button> : null}
+      <b className="cd-name">{name || 'Screen, written inline'}</b>
+      {res ? <span className="cd-file">{res.file.split('/').pop()} · lines {res.line}–{res.endLine}</span> : null}
+      {res ? <button type="button" className={'bd-btn light' + (wrap ? ' on' : '')} onClick={() => setWrap(w => !w)} title="Wrap long lines">Wrap</button> : null}
+      {res ? <button type="button" className="bd-btn light" onClick={copy}>{copied ? 'Copied' : 'Copy'}</button> : null}
+      {res ? <a className="bd-btn light" href={ghUrl(res.file, res.line, res.endLine)} target="_blank" rel="noopener">GitHub ↗</a> : null}
+    </div>
+    {uses.length ? <div className="cd-uses"><span>Uses</span>{uses.map(n => <button key={n} type="button" onClick={() => setStack(s => [...s, n])}>{n}</button>)}</div> : null}
+    {res === undefined ? <p className="cd-note">Finding the code…</p> : res === null ? <p className="cd-note">The source of {name || 'this screen'} was not found in the loaded files.</p>
+      : <pre className={'cd-pre' + (wrap ? ' wrap' : '')}><code>{res.code}</code></pre>}
+    {reg && stack.length === 1 ? <p className="cd-note">Registered on the board as “{e.name}” in {reg.file.split('/').pop()}, line {reg.line} · <a href={ghUrl(reg.file, reg.line)} target="_blank" rel="noopener">GitHub ↗</a>. Shared chrome and the theme: final.jsx (phone) and web.jsx (web); rules: design/SUTRA-DESIGN-SCHEMA.md.</p> : null}
+  </aside>;
+}
+
 function Lightbox({ list, i, dark, onNav, onTheme, onClose, pinned, onPin }) {
   const [full, setFull] = useState(false);
+  const [code, setCode] = useState(false);
   const item = list[i], e = item.e;
   const sw = useRef(null);
   useEffect(() => {
@@ -192,11 +244,13 @@ function Lightbox({ list, i, dark, onNav, onTheme, onClose, pinned, onPin }) {
       else if (ev.key === 'ArrowRight') onNav(1);
       else if (ev.key === 'ArrowLeft') onNav(-1);
       else if (ev.key === 'd' || ev.key === 'D') onTheme(!dark);
+      else if (ev.key === 'c' || ev.key === 'C') setCode(c => !c);
     };
     addEventListener('keydown', k); return () => removeEventListener('keydown', k);
   }, [dark, onNav, onTheme, onClose]);
   const w = e.web ? WW : PW, h = e.web ? WH : PHH;
-  const fit = Math.min(1, (innerWidth - 24) / w, (innerHeight - 132) / h);
+  const wide = innerWidth >= 1000, side = code && wide;
+  const fit = Math.min(1, ((side ? innerWidth * 0.48 : innerWidth) - 24) / w, (innerHeight - 132) / h);
   const id = dark ? e.idD : e.idL;
   return <div className="sh-lb" role="dialog" aria-label={e.name}>
     <div className="sh-lb-bar">
@@ -204,13 +258,17 @@ function Lightbox({ list, i, dark, onNav, onTheme, onClose, pinned, onPin }) {
       <Seg label="Theme" value={dark ? 'd' : 'l'} set={v => onTheme(v === 'd')} opts={[['l', 'Light'], ['d', 'Dark']]} />
       <Seg label="Size" value={full ? 'full' : 'fit'} set={v => setFull(v === 'full')} opts={[['fit', 'Fit'], ['full', '100%']]} />
       <button type="button" className={'bd-btn light' + (pinned ? ' on' : '')} onClick={() => onPin(e, dark)}>{pinned ? 'Comparing' : '+ Compare'}</button>
-      <a className="bd-btn light" href={'board.html?m=' + e.mid + '&only=' + id + '&z=1'} target="_blank" rel="noopener" title="This screen alone, for inspecting the front-end code">Open alone ↗</a>
+      <button type="button" className={'bd-btn light' + (code ? ' on' : '')} onClick={() => setCode(c => !c)} title="The React (JSX) source of this screen">Code</button>
+      <a className="bd-btn light" href={'board.html?m=' + e.mid + '&only=' + id + '&z=1'} target="_blank" rel="noopener" title="This screen alone, for inspecting it in the browser's developer tools">Open alone ↗</a>
       <button type="button" className="sh-x" onClick={onClose} aria-label="Close">×</button>
     </div>
+    <div className={'sh-lb-body' + (code ? ' with-code' : '')}>
     <div className={'sh-lb-stage' + (full ? ' full' : '')} onClick={ev => { if (ev.target === ev.currentTarget) onClose(); }}
       onPointerDown={ev => { if (ev.pointerType === 'touch' && !full) sw.current = { x: ev.clientX, y: ev.clientY }; }}
       onPointerUp={ev => { const a = sw.current; sw.current = null; if (!a) return; const dx = ev.clientX - a.x, dy = ev.clientY - a.y; if (Math.abs(dx) > 60 && Math.abs(dx) > 1.5 * Math.abs(dy)) onNav(dx < 0 ? 1 : -1); }}>
       <div className="sh-lb-frame" style={{ zoom: full ? 1 : fit }}><Device web={e.web} T={dark ? FINALD : FINAL} Scr={e.Scr} /></div>
+    </div>
+    {code ? <CodePanel e={e} /> : null}
     </div>
     <div className="sh-lb-nav">
       <button type="button" className="bd-btn light" onClick={() => onNav(-1)} disabled={i === 0}>‹ Previous</button>
@@ -277,12 +335,21 @@ function Overview({ ver, go }) {
         <li><b>Finals and drafts</b>Finals are signed off. Drafts are still being decided; a new take sits beside the screen it would replace.</li>
         <li><b>Open, page, compare</b>Tap a screen to open it large, then ← → or swipe to page through. <i>+ Compare</i> pins screens from any module to see them side by side.</li>
         <li><b>Zoom</b>The slider, Ctrl / ⌘ + scroll or a pinch resizes every screen at once. <i>Canvas</i> shows a module as one pannable table.</li>
+        <li><b>Code</b>Every screen is a live React component. In the large view, <i>Code</i> shows its JSX, file and lines; <i>Open alone</i> opens it by itself.</li>
         <li><b>Screen ids</b>f- / w- are finals (phone / web), n- / nw- drafts; a d after the letter means dark. Quote the id when asking for a change.</li>
       </ul>
     </section>
     <section className="ov-mods">
       <h2 className="ov-h">The modules</h2>
       <div className="ov-grid">{MODULES.map(m => <ModuleCard key={m.id} mod={m} go={go} ver={ver} />)}</div>
+    </section>
+    <section className="ov-dev">
+      <h2 className="ov-h">For developers</h2>
+      <div className="ov-dev-grid">
+        <div><b>Every screen is code</b>Each screen is a React component in a <code>.jsx</code> file, drawn in the browser with no build step. Open a screen, press <i>Code</i>: its JSX, the file and lines, the components it uses (tap one to follow it), Copy and a GitHub link. <i>Open alone</i> shows the screen by itself for the browser's developer tools.</div>
+        <div><b>Where things are</b><code>modules.js</code> lists the modules and their files · <code>mod-&lt;module&gt;*.jsx</code> hold a module's screens and register them at the end · <code>final.jsx</code> / <code>web.jsx</code> the shared phone and web chrome and the theme · <code>finals.jsx</code> the signed-off lists · <code>design/SUTRA-DESIGN-SCHEMA.md</code> and <code>design/tokens-final.css</code> the rules and tokens.</div>
+        <div><b>Run it yourself</b><a href="share/sutra-design-board.zip" download>Download the front-end pack (zip)</a>: the whole board with its code, tokens, photos and runtime. Unzip, run <code>python -m http.server</code> in the folder, open <code>ui_kits/catalogue-explorations/index.html</code>. Or work from <a href={'https://github.com/' + REPO + '/tree/main/explorations/catalogue-v2'} target="_blank" rel="noopener">the repository</a>.</div>
+      </div>
     </section>
     <p className="ov-more">Also: <a href="board.html?m=all">the whole board as one canvas</a> · <a href="hub.html">module pages</a> · <a href="drafts-archive.html">the first Catalogue explorations</a></p>
   </div>;
