@@ -101,6 +101,21 @@ a{color:var(--maroon)}
 .sh-lb-stage{flex:1;min-height:0;display:flex;overflow:hidden;padding:0 12px}
 .sh-lb-stage.full{overflow:auto;-webkit-overflow-scrolling:touch}
 .sh-lb-frame{margin:auto;flex:none}
+.sh-lb-body{flex:1;min-height:0;display:flex}
+.sh-lb-body .sh-lb-stage{flex:1;min-width:0}
+/* code beside the screen on wide windows, instead of it on phones */
+.cd{flex:0 0 52%;min-width:0;display:flex;flex-direction:column;gap:8px;padding:4px 14px 6px 6px;color:#F7F2EB}
+.cd-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cd-name{font-family:"DM Mono",ui-monospace,monospace;font-size:15px;font-weight:500}
+.cd-file{font-size:12px;opacity:.7;margin-right:auto}
+.cd-uses{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12px}
+.cd-uses span{opacity:.6;letter-spacing:.1em;text-transform:uppercase;font-size:10.5px}
+.cd-uses button{height:24px;padding:0 8px;border:1px solid rgba(247,242,235,.3);border-radius:6px;background:transparent;color:#F7F2EB;font:12px "DM Mono",ui-monospace,monospace;cursor:pointer}
+.cd-uses button:hover{background:rgba(247,242,235,.14)}
+.cd-pre{flex:1;min-height:0;margin:0;overflow:auto;padding:12px 14px;border-radius:10px;background:#100B09;border:1px solid rgba(247,242,235,.14);font:12px/1.55 "DM Mono",ui-monospace,monospace;color:#EDE4D8;white-space:pre;tab-size:2;-webkit-overflow-scrolling:touch}
+.cd-pre.wrap{white-space:pre-wrap;overflow-wrap:anywhere}
+.cd-note{margin:0;font-size:12.5px;line-height:1.5;opacity:.75}
+.cd-note a{color:#F2C9CF}
 .sh-lb-nav{display:flex;align-items:center;justify-content:center;gap:16px;padding:10px 0 calc(14px + env(safe-area-inset-bottom,0px));font-size:13px}
 
 /* compare: pinned screens side by side */
@@ -141,7 +156,15 @@ a{color:var(--maroon)}
 .ov-subs button{height:28px;padding:0 10px;border:1px solid var(--line);border-radius:7px;background:transparent;color:#3E2F28;font:12.5px "Jost",sans-serif;cursor:pointer}
 .ov-subs button:hover{background:#1F1613;border-color:#1F1613;color:#F7F2EB}
 .ov-more{margin-top:28px;font-size:14px;color:var(--ink2)}
+.ov-dev{margin-top:34px}
+.ov-dev-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.ov-dev-grid>div{padding:16px 18px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.22);font-size:14px;line-height:1.55;color:#3E2F28}
+.ov-dev-grid b{display:block;margin-bottom:4px;font-family:"Marcellus",serif;font-weight:400;font-size:18px;color:#1F1613}
+.ov-dev-grid i{font-style:normal;font-weight:500;color:var(--maroon)}
+.ov-dev-grid code{padding:0 4px;border-radius:4px;background:rgba(31,22,19,.08);font:12.5px "DM Mono",ui-monospace,monospace}
 
+/* the code panel takes the whole large view under 1000px */
+@media (max-width:999px){.sh-lb-body.with-code .sh-lb-stage{display:none}.cd{flex:1 1 auto;padding:0 12px 6px}}
 /* phones and narrow windows */
 @media (max-width:760px){
   :root{--pad:14px}
@@ -164,6 +187,7 @@ a{color:var(--maroon)}
   .ov-grid{grid-template-columns:1fr}
   .ov-prev{height:214px;padding:14px 14px 0}
   .sh-lb-bar{gap:6px;padding:8px 10px}.sh-lb-bar .nm{flex-basis:100%;order:-1}
+  .ov-dev{order:4}.ov-more{order:5}
   .cp-title{font-size:20px}
 }
 @media (prefers-reduced-motion:reduce){.ov-card,.bd-prog{transition:none}.ov-card:hover{transform:none}}

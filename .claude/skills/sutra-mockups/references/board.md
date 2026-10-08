@@ -8,7 +8,8 @@ Everything lives in `explorations/catalogue-v2/`. Serve the repository root over
 |---|---|
 | `board.html?m=<id>` | One module. Views `&v=drafts` (default while drafting), `&v=finals`, `&v=compare` (both tables side by side). |
 | `board.html?m=all` | Every module; slow, overview only. |
-| `index.html` | The board, the landing page: Overview (one card per module) and a tab per module · sub-menus · Finals / Drafts · Phone / Web · theme · zoom · open large with ← → · *+ Compare* side by side · *Open alone*. Deep links `?m=<id>&sub=<name>&v=finals`. Headless for the scripts: `?m=<id>&ui=0`, `&sub=`, `&ids=`, `?m=all&sample=1`, `&s=0.4`. Renderer `sheet.jsx` + `sheet.css`; files load through `loader.js` (compiled once in a worker, cached in the browser). |
+| `index.html` | The board, the landing page: Overview (one card per module) and a tab per module · sub-menus · Finals / Drafts · Phone / Web · theme · zoom · open large with ← → · *+ Compare* side by side · *Code* (the screen's JSX, file and lines, components it uses, GitHub link) · *Open alone*. Deep links `?m=<id>&sub=<name>&v=finals`. Headless for the scripts: `?m=<id>&ui=0`, `&sub=`, `&ids=`, `?m=all&sample=1`, `&s=0.4`. Renderer `sheet.jsx` + `sheet.css`; files load through `loader.js` (compiled once in a worker, cached in the browser). |
+| `share/sutra-design-board.zip` | The front-end pack for developers (whole board, runnable from a folder). Rebuilt by `bash tools/share-bundle.sh`; the zip is committed so Pages serves it. |
 | `hub.html` | Hub: one card per module. Never edited by module work. |
 | `drafts-archive.html` | The six pre-final Catalogue explorations. History; never edited. |
 | `legacy-index.html` | The old single-file board. Reference only; receives nothing new. |

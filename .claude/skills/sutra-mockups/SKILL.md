@@ -42,7 +42,7 @@ bash .claude/skills/sutra-mockups/scripts/contact-sheet.sh                  # sa
 
 Open every screenshot you asked for and look: clipped captions, a tray covering content, wrong theme colours, an empty pane, a string that reads wrong. Fix, re-run. A change to `final.jsx`, `web.jsx` or the tokens touches every screen, so it is verified on the sampler, not on one frame. Only the script's output counts as verification; the in-app browser pane times out on the board, and ad-hoc html pages are not made.
 
-Then update `plans/<id>.md` (what changed, open questions), run `bash tools/sync.sh "<Module> · <what changed>"`, and tell the owner the page (`index.html?m=<id>` to review, `board.html?m=<id>` for the canvas), the frame ids to look at, and the decisions waiting on them. If they asked for the Claude Design drop, `bash tools/package-explorations.sh` rebuilds it.
+Then update `plans/<id>.md` (what changed, open questions), run `bash tools/sync.sh "<Module> · <what changed>"`, and tell the owner the page (`index.html?m=<id>` to review, `board.html?m=<id>` for the canvas), the frame ids to look at, and the decisions waiting on them. If they asked for the Claude Design drop, `bash tools/package-explorations.sh` rebuilds it; for the developers' front-end pack (the zip the board's Overview links), `bash tools/share-bundle.sh` and commit the zip.
 
 ## Shared files, so the team does not collide
 

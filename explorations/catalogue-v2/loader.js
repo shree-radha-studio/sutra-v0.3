@@ -11,6 +11,10 @@
      SutraLoad.module(id)         run the files of one module from modules.js (each file once); resolves when done
      SutraLoad.loaded(id)         true once that module's files have run
      SutraLoad.onProgress(fn)     fn({ done, total, file }) while files load
+     SutraLoad.locate(name)       where a top-level component is defined: { file, line, endLine, code } (original JSX,
+                                  found with Babel's parser), or null; the last file to define a name wins, as it does
+                                  in the page
+     SutraLoad.findText(s)        the first file and line holding the text s, e.g. a screen's caption
    Errors in a file are logged and collected in SutraLoad.errors; the rest of the page still loads. */
 (function () {
   var Q = new URLSearchParams(location.search);
@@ -20,7 +24,7 @@
   var HEADLESS = !Q.has('worker') && (Q.get('ui') === '0' || Q.has('ids') || Q.has('sample') || Q.has('nocache') ||
     navigator.webdriver === true || /HeadlessChrome/.test(navigator.userAgent));
   var PRESETS = ['react', 'es2015'], TAG = 'babel-7.29.0|react,es2015|v1';
-  var ran = {}, mods = {}, listeners = [], errors = [], chain = Promise.resolve(), stats = { done: 0, total: 0, hits: 0, compiled: 0, msFetch: 0, msCompile: 0, msRun: 0, t0: performance.now() };
+  var ran = {}, mods = {}, listeners = [], errors = [], chain = Promise.resolve(), sources = {}, order = [], located = {}, stats = { done: 0, total: 0, hits: 0, compiled: 0, msFetch: 0, msCompile: 0, msRun: 0, t0: performance.now() };
 
   function hash(s) { var h = 2166136261; for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0).toString(36) + '.' + s.length; }
   function progress(file) { listeners.forEach(function (fn) { try { fn({ done: stats.done, total: stats.total, file: file }); } catch (e) {} }); }
@@ -66,11 +70,45 @@
     if (!useWorkers()) return compileMain(path, text);
     return new Promise(function (ok, no) { var id = ++seq; pending[id] = { ok: ok, no: no, path: path, text: text }; workers[(next++) % workers.length].postMessage({ id: id, path: path, text: text, presets: PRESETS }); });
   }
+  /* the top-level declaration of a name, from Babel's parse of the original file (same code in compile-worker.js) */
+  function spanIn(B, text, name, path) {
+    var body = B.transform(text, { presets: ['react'], ast: true, code: false, sourceType: 'script', filename: path.split('/').pop() }).ast.program.body;
+    for (var i = 0; i < body.length; i++) {
+      var n = body[i];
+      if (n.type === 'FunctionDeclaration' && n.id && n.id.name === name) return { start: n.start, end: n.end, line: n.loc.start.line, endLine: n.loc.end.line };
+      if (n.type === 'VariableDeclaration') for (var j = 0; j < n.declarations.length; j++) { var d = n.declarations[j]; if (d.id && d.id.name === name) return { start: n.start, end: n.end, line: n.loc.start.line, endLine: n.loc.end.line }; }
+    }
+    return null;
+  }
+  function span(path, name) {
+    var text = sources[path];
+    if (!useWorkers()) return loadBabel().then(function () { return spanIn(Babel, text, name, path); });
+    return new Promise(function (ok, no) { var id = ++seq; pending[id] = { ok: ok, no: no, path: path, text: text }; workers[(next++) % workers.length].postMessage({ id: id, type: 'locate', path: path, text: text, name: name }); });
+  }
+  /* the last file run that declares name at the top level, or null */
+  function defines(name) {
+    if (!name || !/^[A-Za-z_$][\w$]*$/.test(name)) return null;
+    var re = new RegExp('(^|\\n)[ \\t]*(?:const|let|var|function)\\s+' + name.replace(/\$/g, '\\$') + '\\b');
+    for (var i = order.length - 1; i >= 0; i--) if (sources[order[i]] && re.test(sources[order[i]])) return order[i];
+    return null;
+  }
+  function locate(name) {
+    if (located[name]) return located[name];
+    var file = defines(name);
+    if (!file) return Promise.resolve(null);
+    located[name] = span(file, name).then(function (s) { return s ? { file: file, line: s.line, endLine: s.endLine, code: sources[file].slice(s.start, s.end) } : null; }, function () { return null; });
+    return located[name];
+  }
+  function findText(s) {
+    for (var i = 0; i < order.length; i++) { var t = sources[order[i]], k = t ? t.indexOf(s) : -1; if (k >= 0) return { file: order[i], line: t.slice(0, k).split('\n').length }; }
+    return null;
+  }
 
   /* fetch + compile start at once for every file; running waits its turn in the chain */
   function prepare(path) {
     var t0 = performance.now();
     return fetch(path, { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw new Error(path + ': HTTP ' + r.status); return r.text(); }).then(function (text) {
+      sources[path] = text;
       var key = TAG + '|' + path + '|' + hash(text), t1 = performance.now(); stats.msFetch += t1 - t0;
       return cacheGet(key).then(function (hit) {
         if (hit) { stats.hits++; return hit; }
@@ -91,7 +129,7 @@
     jobs.forEach(function (j) {
       chain = chain.then(function () { return j; }).then(function (r) {
         if (r.err) { errors.push(r.f + ': ' + r.err.message); console.error('[board] ' + r.f, r.err); }
-        else { var t = performance.now(); try { exec(r.f, r.code); } catch (e) { errors.push(r.f + ': ' + e.message); console.error('[board] ' + r.f, e); } stats.msRun += performance.now() - t; }
+        else { var t = performance.now(); order.push(r.f); try { exec(r.f, r.code); } catch (e) { errors.push(r.f + ': ' + e.message); console.error('[board] ' + r.f, e); } stats.msRun += performance.now() - t; }
         ran[r.f] = true; stats.done++; progress(r.f);
       });
     });
@@ -103,7 +141,8 @@
     return mods[id] === true ? Promise.resolve() : mods[id];
   }
   window.SutraLoad = {
-    run: run, module: module,
+    run: run, module: module, locate: locate, findText: findText, defines: defines,
+    source: function (path) { return sources[path] || null; },
     loaded: function (id) { return !!mods[id + ':done']; },
     onProgress: function (fn) { listeners.push(fn); },
     errors: errors, stats: stats, headless: HEADLESS,
