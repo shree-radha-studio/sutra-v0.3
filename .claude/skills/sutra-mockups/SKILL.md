@@ -46,4 +46,4 @@ Then update `plans/<id>.md` (what changed, open questions), run `bash tools/sync
 
 ## Shared files, so the team does not collide
 
-Yours: `mod-<id>*.jsx`, `plans/<id>.md`, `assets/<id>/`. One appended line in `modules.js`. Appends in `finals.jsx` only at sign-off. Never `index.html`, `hub.html`, `sheet.jsx`, `board.html`, `board.jsx`, `board.css`, other modules' files. Full mechanics, ids, views and the registration shape: `references/board.md`.
+Yours: `mod-<id>*.jsx`, `plans/<id>.md`, `assets/<id>/`. One appended line in `modules.js`. Appends in `finals.jsx` only at sign-off. Never `index.html`, `hub.html`, `sheet.jsx`, `loader.js`, `board.html`, `board.jsx`, `board.css`, other modules' files. Full mechanics, ids, views and the registration shape: `references/board.md`.

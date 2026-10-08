@@ -14,21 +14,22 @@
    The libraries are vendored in vendor/ (react 18.3.1, @babel/standalone 7.29.0, lucide 0.460.0), so the board needs no CDN. */
 (function () { var dev = new URLSearchParams(location.search).has('dev'), f = dev ? 'development' : 'production.min';
   document.write('<script src="vendor/react.' + f + '.js"><\/script><script src="vendor/react-dom.' + f + '.js"><\/script>'); })();</script>
-<script src="vendor/babel.min.js"></script>
 <script src="vendor/lucide.min.js"></script>
 <script src="../../design-system/ui_kits/data.js"></script>
 <script>/* data.js resolves assets relative to design-system/ui_kits/<kit>/; re-point them from here. */
 (function(){var D=window.SUTRA_DATA,o=D.A,n='../../design-system/assets/';D.A=n;D.designs.forEach(function(d){if(d.src)d.src=d.src.replace(o,n)});})();</script>
 <script src="modules.js"></script>
-<script>/* write the script tags for this page: base + the chosen module's files, then finals and the renderer */
+<script src="loader.js"></script>
+<script>/* the files for this page through loader.js (compiled once in a worker, kept in the browser): base + the chosen
+   module's files, then finals and the renderer */
 (function () {
   var q = new URLSearchParams(location.search), m = q.get('m') || 'all', M = window.SUTRA_MODULES;
   var mods = m === 'all' ? M.modules : M.modules.filter(function (x) { return x.id === m; });
-  if (!mods.length) { document.write('<p style="font:16px Jost,sans-serif;padding:40px">No module "' + m + '" in modules.js. Known: ' + M.modules.map(function (x) { return x.id; }).join(', ') + ' · <a href="hub.html">hub</a></p>'); return; }
+  if (!mods.length) { document.write('<p style="font:16px Jost,sans-serif;padding:40px">No module "' + m + '" in modules.js. Known: ' + M.modules.map(function (x) { return x.id; }).join(', ') + ' · <a href="index.html">board</a></p>'); return; }
   var files = M.base.slice(); mods.forEach(function (x) { x.files.forEach(function (f) { if (files.indexOf(f) < 0) files.push(f); }); });
   files.push('finals.jsx', 'board.jsx');
-  files.forEach(function (f) { document.write('<script type="text/babel" src="' + f + '"><\/script>'); });
   window.__BOARD_FILES = files;
+  document.addEventListener('DOMContentLoaded', function () { SutraLoad.run(files); });
 })();
 </script>
 </head>
