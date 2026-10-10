@@ -268,7 +268,7 @@ Object.assign(window, { WebHeader2, SubBar, CAT_SUBS, WebShell2, RETURNS_F, SOTa
 (window.NEW_DRAFT_MODULES = window.NEW_DRAFT_MODULES || []).push({ module: 'App shell · search pane', note: 'a right-side search pane dropping from the header field (8 Sep). The tab strip, header v2, sub-menu buttons, rail and sidebar were approved on 8 Sep and now live in the finals', subs: [
     { name: 'Search pane', flow: 'field focused → scope buttons, recents, habits → typing shows matches by section with the filter & sort chooser', phone: [], web: [['Search · stage 1 · scope, recent, for you', WebSearch1], ['Search · stage 2 · matches by section, filter & sort chooser', WebSearch2]] },
 ] });
-(window.NEW_DRAFT_MODULES = window.NEW_DRAFT_MODULES || []).push({ module: 'Catalogue · sale orders', note: 'full-width table without group-by · grouped column chooser · Returns tab (8 Sep)', subs: [
+(window.NEW_DRAFT_MODULES = window.NEW_DRAFT_MODULES || []).push({ module: 'Sales · sale orders', note: 'full-width table without group-by · grouped column chooser · Returns tab (8 Sep)', subs: [
     { name: 'Table', flow: 'full table, no group-by → column chooser open', phone: [], web: [['Sale orders · full table, no group-by', WebSalesTableFull], ['Sale orders · column chooser, grouped', WebSalesColumns]] },
     { name: 'Returns', flow: 'returns tab as cards → as a table', phone: [['Returns · cards', ScreenFReturns], ['Returns · table', ScreenFReturnsTable]], web: [['Returns · cards, credit note pane', WebReturns], ['Returns · table', WebReturnsTable]] },
 ] });
