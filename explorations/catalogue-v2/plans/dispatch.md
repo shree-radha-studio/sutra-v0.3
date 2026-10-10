@@ -1,5 +1,10 @@
 # Dispatch — plan (5 Sep 2026)
 
+> **10 Oct 2026:** the current direction is in `review-2-dispatch.md` (box board for Ready with Worked on · New ·
+> In packing · Held, Packing as 3–4 customer lanes with parcel boxes, the parcel's invoice and documents in the right
+> panel) and `review-2-end-to-end.md`. Where this plan disagrees (Ready = in-stock only, Pending as its own
+> sub-menu), the review wins until the owner answers its questions.
+
 Planning only. Nothing drawn, board untouched. Built from `design-system/research/brd-final.txt` lines 151–223
 (the Dispatch section), `brd-dispatch.txt`, `dispatch-screens.txt` (same text as
 `uploads/Dispatch-Module-Screen-Overview.docx`), the keyword sweep of `brd-masters.txt` and
