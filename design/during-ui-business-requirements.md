@@ -137,3 +137,26 @@ the screen it came from so the BRD can absorb it later. Newest at the bottom.
   BRD F:85.
 - Cart chip: a single tap activates the cart (catalogue picks go into it); a double tap opens the cart card.
 - Analytics under Sale orders: sale managers and above only; hidden for sale executives.
+
+## 10 Oct 2026 · Dispatch direction, review 2 (plans/review-2-end-to-end.md, plans/review-2-dispatch.md)
+
+- Ready holds every order that still has to go: approved and untouched, half sent, or worked on in dispatch two or
+  three times. An order leaves Ready only when it is fully sent or cancelled. From the Ready screens (dispatch nw-20,
+  n-1); this widens BRD D:7 ("only customers with at least one in-stock line").
+- Ready has separate sections for new orders and for orders taken through dispatch at least once and still pending.
+  Default sorts, plus sort and filter, for the dispatch manager.
+- Ready's main area is an order board like a quick-service kitchen display: every customer a box holding all their
+  orders, with product pictures; boxes very visible and structured, with fine curved corners (not hard rectangles,
+  not soft islands). The right panel is a searchable, collapsible, customer-wise list of orders with quick buttons
+  above it.
+- Packing: the dispatch manager picks an order from Ready and manages three or four packings at a time, mostly
+  (the old BRD said 7–8). On the floor, open parcel boxes per customer; the stock boy brings the picked pieces from
+  the aisles; each piece is scanned into a particular box; the box's contents are the packing slip, which becomes
+  that parcel's invoice. The screen shows the boxes filling, and the right panel shows the invoice of the selected
+  parcel as it builds, with transport slip and e-way bill checks beside it.
+- The owner wants the whole chain checked per parcel: packing slip → invoice → e-invoice / e-way bill → transport
+  document → shipment. Not in the BRDs: the e-way bill (nothing anywhere) and e-invoice for sales (only report
+  columns, F:243).
+- The 6 Oct table-like "structured" Dispatch drafts are not the direction.
+- Board only: Catalogue and Sales (sale orders, history, returns, analytics) are separate board pages so they can be
+  worked on apart; the app's own menu is unchanged.

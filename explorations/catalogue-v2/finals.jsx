@@ -6,10 +6,15 @@ const FIN = [['Catalogue grid · active cart', ScreenFGrid], ['Catalogue grid ·
 const WEB = [['Catalogue · grid, cart pane', WebGridS], ['Catalogue · list view', WebListS], ['Sidebar expanded · collapsible sub-menus', WebSidebarS], ['Listening · orb pressed', WebVoiceS], ['Product · customer view', WebProduct], ['Product · salesperson view', WebSales], ['Carts', WebCarts], ['Sale orders · cards, order preview pane', WebSalesOrders], ['Sale orders · grouped table, column filter, pane collapsed', WebSalesTable], ['Sale order · opened, customer pane', WebSalesOrder], ['Analytics · orders', WebAnalyticsOrders], ['Analytics · designs (SKU)', WebAnalyticsSKU], ['Analytics · customers', WebAnalyticsCust], ['Full-screen viewer', WebViewer]];
 /* module → sub-menu → screens. `id` = module id in modules.js. */
 const BOARD = [
-  { id: 'catalogue', module: 'Catalogue', note: 'picture-first grid · product pages · scan · carts · sale orders', subs: [
+  { id: 'catalogue', module: 'Catalogue', note: 'picture-first grid · product pages · scan · carts', subs: [
     { name: 'Catalogue', flow: 'grid → list → filters → listening → product, customer → salesperson (3) → scan → full-screen viewer', phone: [1, 2, 3, 5, 4, 6, 7, 8, 9, 10, 11], web: [1, 2, 4, 5, 6, 14] },
     { name: 'Carts', flow: 'carts → cart card over the catalogue', phone: [12, 13], web: [7] },
-    { name: 'Sale orders', flow: 'cards → table → group by → opened order → analytics (orders, designs, customers)', phone: [15, 16, 17, 18, 19, 20, 21], web: [8, 9, 10, 11, 12, 13] },
+  ] },
+  /* 10 Oct 2026: Sale orders and Analytics moved from the Catalogue entry to their own board page (id 'sales'), so they
+     can be reviewed apart. Board grouping only; FIN / WEB indexes unchanged, the app's menu still reads Catalogue. */
+  { id: 'sales', module: 'Sales', note: 'sale orders · opened order · analytics', subs: [
+    { name: 'Sale orders', flow: 'cards → table → group by → opened order', phone: [15, 16, 17, 18], web: [8, 9, 10] },
+    { name: 'Analytics', flow: 'orders vs dispatch → designs (SKU) → customers', phone: [19, 20, 21], web: [11, 12, 13] },
   ] },
   { id: 'appshell', module: 'App shell', note: 'navigation shared by every module', subs: [
     { name: 'Navigation', flow: 'phone side menu · web sidebar expanded (rail, tab strip and header v2 are on every web final)', phone: [14], web: [3] },
