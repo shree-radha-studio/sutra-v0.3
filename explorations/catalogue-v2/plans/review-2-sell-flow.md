@@ -98,6 +98,10 @@ final's chips plus a pressed "+", a sent state and an editing state), `CsNewCart
 - `CsSOCard` copies SOCard's markup (mod-appshell.jsx, not mine) only to carry the queue pill.
 - Filter count bubble stays "4"; grid frames untouched. Dark twins checked at --w 2700; console clean.
 
+## Decision 54 exemplars (provisional): no rail in the phone header
+Rule drawn: nothing in the phone header scrolls sideways except the user's own applied filter chips; a menu is fully visible (four items or fewer) or one tap away as a full-width sheet with every item and its count.
+n-23 `ScreenCsListChip` · Grid · lists as one chip, no rail (top bar, search island, one chip row: "Lehenga · 15 designs ▾" then the applied chips). n-24 `ScreenCsListSheet` · Grid · lists sheet (52 px rows with counts, current ticked, "Saved" head, "New list"). n-25 `ScreenCsSubSheet` · Sale orders · sub-menu sheet ("Catalogue · Sale orders ▾" head; Catalogue 15, Carts 3, Sale orders 4). List counts (126, 9, 14, 15, 31, 12, 8) are sample values. Dark twins nd-23 to nd-25.
+
 ## Provisional answers (lead, for the owner, 13 Oct; owner may overturn on the deck; nothing goes into final.jsx this hour)
 1 Phone header: three rows everywhere, two inside the catalogue grid (n-16, n-17 and n-18 stay as the exemplars). 2 Island per role: yes (n-19). 8 New customer: name, phone, city only; the rest later in the Hub (applied: n-10 and nw-10 now show the three fields and a line saying the rest is added later in the Hub; the optional group is gone). 9 Submit sheet: as drawn (n-11, nw-11).
 
