@@ -283,3 +283,45 @@ Appended to `design/during-ui-business-requirements.md` under 13 Oct: the user p
 budgets (three rows phone, six buttons web, two control rows); the forms rule (typed numbers are the form; more than four
 fields takes the main area); Hold as an approval action and the escalation path; new customer's three required fields;
 submit sheet contents and the no-block rule; the upload-centre slot list and the no-photo queue; import admin-only commit.
+
+---
+
+## 8. Provisional answers to the 14 decisions (13 Oct, the lead on the owner's behalf)
+
+The owner, 13 Oct, in the lead session: everything on the board is a draft; treat it so and give final recommendations;
+do not wait for approval. Orchestration moved to session_01TUT3xmppxib7BdNtXh4gmC at 14:52. The answers below are
+the lead's and stay provisional until the owner answers on the deck, which can overturn any of them; so nothing is
+appended to finals.jsx, nothing is retired, and nothing in final.jsx changes on their strength.
+
+Two rules from the owner that shape every answer:
+
+- No sweep across screens before the core screens are final. A decision is applied as one exemplar pair per module
+  (phone and web, light and dark, one `({ T }) => …` function), registered as a draft beside the current frames, so
+  the owner can use Compare. The sweep comes after sign-off.
+- Desk density means ruled and boxed with more air. The owner likes the rectangular boxes of the structured drafts
+  (more organised, easier to read) and finds those drafts crowded. So: 1 px rules, 4 px radii, numbers right-aligned,
+  status as words, and at most two control rows under the header, 44 px rows, no third pane, fewer columns on first
+  view.
+
+| # | Decision | Answer | Note |
+|---|---|---|---|
+| 1 | Phone header | Three rows everywhere, two inside the catalogue grid | The "Calmer grid header" compare frames are the exemplar; `T.Header` in final.jsx is not touched this round |
+| 2 | Island per role | Yes | One exemplar on the catalogue grid for a sale executive; `T.Island` is not touched this round |
+| 3 | Web header cap | Six buttons; Production regrouped Purchase ▾ · Materials ▾ · Recipes · Orders ▾ · Samples · More ▾; search never below 180 px | Exemplar on one Production frame |
+| 4 | Where a form lives | More than four fields takes the main area; the pane helps | New PO first, then New sample; New material goes to the Hub |
+| 5 | One language, two densities | Yes | Desk as defined above; Sale orders pair (n-19 / nw-15) is the first exemplar, retuned for air |
+| 6 | Approvals in one place | Yes | The sale-order page shows the state and links there |
+| 7a | Hold as a third action | Keep Hold | |
+| 7b | The two charts on the phone card | Behind a "Graphs" tab | Diverges from the deck's recommendation (inline); chosen for the owner's crowding steer |
+| 7c | Who clears an over-the-line flag | Admin only | Sub-admin sees the flag without the clear action |
+| 8 | New customer from the cart | Name, phone, city; the rest later in the Hub | |
+| 9 | The submit sheet | As drawn | Nothing blocks; editable and deletable in the queue (owner's rule of 13 Oct) |
+| 10 | Where a product master is created | The Hub creates, Production links | "Save and set recipe" opens Process setting pre-filled; "Save and add photos" opens the Upload centre |
+| 11 | Upload centre slots | As drawn | |
+| 12 | xlsx import | Dry run first; commit by admin only | |
+| 13 | Purchase inward | Supplier invoice number and date first; accounts card folded to Freight · Discount · GST · More | Exemplar frame |
+| 14 | Tranches | Collapsed to "default 30 / 30 / 40", opened on tap; reason chips under the head | Exemplar frame |
+
+Workstreams carrying them: Sell flow (1, 2, 8, 9), Hub masters (4, 10, 11, 12), Desk density (3, 4, 5, 13, 14), Home &
+Approvals (6, 7). Reviews running beside them, read-only on the board: CRM (decisions from 15), Studio (from 30),
+Production beyond the forms (from 45), and the architect's pack under `design/architect-pack/`.
