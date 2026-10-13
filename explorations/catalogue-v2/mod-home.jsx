@@ -203,7 +203,7 @@ function HmFlags({ T, flags, web }) {
 function HmCustomer({ T, c = HM_C, web }) {
   if (web) return <HmCard T={T} pad="7px 14px 8px">
     <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}><span style={{ fontFamily: T.fontDisplay, fontSize: 20, fontWeight: 600, color: T.ink, lineHeight: 1.1 }}>{c.name}</span><Meta T={T}>{c.city} · {c.tier} · since {c.since}</Meta></div>
-    <div style={{ display: 'flex', gap: 6, marginTop: 6, overflow: 'hidden' }}><T.Chip icon="phone" style={{ height: 30 }}><span style={{ fontFamily: T.fontMono, fontSize: 12 }}>{c.phone}</span></T.Chip><T.Chip icon="user" style={{ height: 30 }}>{c.broker} · {c.agency}</T.Chip><span style={{ flex: 1 }} /><T.Chip icon="history" outline style={{ height: 30 }}>Purchase history</T.Chip></div>
+    <div style={{ display: 'flex', gap: 6, marginTop: 6, overflow: 'hidden' }}><T.Chip icon="phone" style={{ height: 30 }}><span style={{ fontFamily: T.fontMono, fontSize: 12 }}>{c.phone}</span></T.Chip><T.Chip icon="user" style={{ height: 30 }}>{c.broker} · {c.agency}</T.Chip><span style={{ flex: 1 }} /></div>
   </HmCard>;
   return <HmCard T={T} pad={web ? '9px 14px 10px' : 14}>
     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -335,32 +335,61 @@ function ScreenHmApprovals({ T }) {
   </>, <T.Island active="Home" />);
 }
 
+/* ── the standing template (owner's rule, 13 Oct 15:30): the same eight tiles, in the same order, on every sale-order card.
+   A tile that fails its rule is tinted on the tile itself (danger tint, value in danger, flag icon in the corner); no prose. ── */
+const HM_RULES = { overdue: 0, gr: 25, credit: 100, score: 60 };   // fails when overdue > 0 · GR % above the limit · credit used above 100 % · score under the floor
+function HmTile({ T, label, value, sub, bad, children, small }) {
+  return <div style={{ position: 'relative', padding: '8px 9px 8px 10px', borderRadius: 16, background: bad ? T.danger + '1C' : T.surface, border: `1px solid ${bad ? T.danger + '66' : T.line}`, minWidth: 0 }}>
+    {bad && <span style={{ position: 'absolute', top: 8, right: 9, color: T.danger, display: 'grid' }}><Ic name="flag" size={13} sw={2} /></span>}
+    <Meta T={T} style={{ display: 'block', fontSize: 10.5, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', paddingRight: bad ? 14 : 0 }}>{label}</Meta>
+    <div style={{ fontFamily: T.fontDisplay, fontSize: small ? 17 : 21, fontWeight: 600, color: bad ? T.danger : T.ink, lineHeight: 1.1, marginTop: 2, fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>{value}</div>
+    {children}
+    {sub && <Meta T={T} style={{ display: 'block', fontSize: 10.5, marginTop: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{sub}</Meta>}
+  </div>;
+}
+function HmTiles({ T, open, cols = 2 }) {
+  const used = open + HM_TOTAL, pct = Math.round(used / HM_C.line * 100), overC = pct > HM_RULES.credit;
+  const tiers = [['High', 67], ['Mid', 25], ['Low', 8]], tc = [T.ink, T.ink2, T.line2];
+  const bar = (children) => <div style={{ display: 'flex', height: 8, borderRadius: 4, overflow: 'hidden', background: T.chipBg, gap: 1.5, margin: '5px 0 1px' }}>{children}</div>;
+  return <div style={{ display: 'grid', gridTemplateColumns: `repeat(${cols}, minmax(0,1fr))`, gap: 7 }}>
+    <HmTile small={cols > 2} T={T} label="Payment score" value="78" sub="out of 100" bad={78 < HM_RULES.score} />
+    <HmTile small={cols > 2} T={T} label="Overdue" value="₹62,400" sub="2 bills · 41 d" bad />
+    <HmTile small={cols > 2} T={T} label="GR ratio" value="40 %" sub="goods returned" bad={40 > HM_RULES.gr} />
+    <HmTile small={cols > 2} T={T} label={cols > 2 ? "Credit used" : "Credit line used"} value={pct + ' %'} sub={`${money(used)} of ${money(HM_C.line)}`} bad={overC}>
+      {bar(<><span style={{ width: Math.min(100, open / Math.max(used, HM_C.line) * 100) + '%', background: T.ink3 }} /><span style={{ width: (HM_TOTAL / Math.max(used, HM_C.line) * 100) + '%', background: overC ? T.danger : T.ink }} /></>)}
+    </HmTile>
+    <HmTile small={cols > 2} T={T} label="FY billing" value="₹4,50,000" sub="this year" />
+    <HmTile small={cols > 2} T={T} label="Total pcs" value="92" sub="this year" />
+    <HmTile small={cols > 2} T={T} label="Customer score" value="68" sub="high band" bad={68 < HM_RULES.score} />
+    <HmTile small={cols > 2} T={T} label="Appetite" value={<span style={{ fontSize: 13, fontWeight: 600 }}>High 67 %</span>} sub="Mid 25 % · Low 8 %">{bar(tiers.map(([t, v], i) => <span key={t} style={{ width: v + '%', background: tc[i] }} />))}</HmTile>
+  </div>;
+}
+/* the fixed flag vocabulary, rule-generated: OVERDUE ₹ · GR RATIO % · OVER CREDIT LINE ₹ · EDITED AFTER SUBMIT · NEW CUSTOMER · PRIORITY n */
+const HmChips = ({ T, over }) => <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>{[...(over > 0 ? [['danger', `Over credit line ${money(over)}`]] : []), ['danger', 'Overdue ₹62,400'], ['warn', 'GR ratio 40 %'], ['warn', 'Edited after submit']].map(([tone, text]) => <Pill key={text} T={T} tone={tone} small>{text}</Pill>)}</div>;
+/* a collapsed section, one tap away */
+const HmFold = ({ T, icon, label, sub }) => <div className="press" style={{ display: 'flex', alignItems: 'center', gap: 10, minHeight: 44, padding: '0 14px', borderRadius: T.rCard, background: T.surface, border: `1px solid ${T.line}` }}><Ic name={icon} size={16} color={T.ink2} /><span style={{ fontFamily: T.fontUI, fontSize: 13.5, fontWeight: 500, color: T.ink }}>{label}</span>{sub && <Meta T={T}>{sub}</Meta>}<span style={{ flex: 1 }} /><Ic name="chevron-right" size={16} color={T.ink3} /></div>;
+const HM_ORDER_SUB = `${HM_PCS} pcs · ${HM_LINES.length} designs · ${money(HM_TOTAL)}`;
+const HmCharts = ({ T, h = 56 }) => <div><div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}><HmChart T={T} mini title="Ramleela Fashion" d={HM_CH.cust} h={h} /><HmChart T={T} mini title="Deepak · broker" d={HM_CH.agency} h={h} /></div><div style={{ marginTop: 6 }}><Legend T={T} items={[['orders', T.accent], ['payments', T.ok]]} /></div></div>;
+
 /* ── P3 / P4 · the sale-order card ── */
 function HmApprovalSO({ T, over: isOver, role = 'manager', scroll }) {
   const open = isOver ? HM_OPEN.over : HM_OPEN.within;
   const over = Math.max(0, open + HM_TOTAL - HM_C.line);
-  const sub = role === 'subadmin';
+  const sub = role === 'subadmin', adm = role === 'admin';
   return frameF(T, <>
-    <HmDocHead T={T} no="SO-3456" meta="13/10/26 · In-cabin" note="Raised by Rohan Mehta · the salesperson can still edit or delete it until you act" />
-    <HmBody pb={sub ? 170 : 150} scroll={scroll}>
-      <HmFlags T={T} flags={hmFlags(over, open)} />
-      <div style={{ height: 10 }} />
+    <HmDocHead T={T} no="SO-3456" meta="13/10/26 · In-cabin · raised by Rohan Mehta" note={`${HM_PCS} pcs · ${money(HM_TOTAL)}`} />
+    <HmBody pb={sub || adm ? 170 : 150} scroll={scroll}>
       <HmCustomer T={T} />
-      <Sect T={T}>Their record</Sect>
-      <HmStanding T={T} items={hmStanding(open)} />
-      <Sect T={T}>Credit line</Sect>
-      <HmCredit T={T} open={open} />
-      <Sect T={T}>Appetite</Sect>
-      <HmAppetite T={T} />
-      <Sect T={T} right={<Meta T={T}>change a number with − and +</Meta>}>Order lines</Sect>
-      <HmLines T={T} />
-      <div style={{ height: 12 }} /><HmNote T={T} />
-      <Sect T={T} right={<Meta T={T}>last 3 orders</Meta>}>Order history</Sect>
-      <HmHistory T={T} />
-      <Sect T={T}>Orders and payments</Sect>
-      <div style={{ display: 'grid', gap: 10 }}><HmChart T={T} title="Orders vs payments · 12 months" d={HM_CH.cust} /><HmChart T={T} title="Raghani Co. (agency) · orders vs payments" d={HM_CH.agency} /></div>
+      <div style={{ height: 8 }} />
+      <HmTiles T={T} open={open} />
+      <div style={{ height: 9 }} /><HmChips T={T} over={over} />
+      <div style={{ height: 10 }} /><HmCharts T={T} />
+      {adm ? <Sect T={T}>Order</Sect> : <div style={{ height: 10 }} />}
+      {adm ? <><HmLines T={T} /><div style={{ height: 8 }} /></> : null}
+      {!adm && <HmFold T={T} icon="receipt-text" label="Order" sub={HM_ORDER_SUB} />}
+      <div style={{ display: 'grid', gap: 7, marginTop: 7 }}><HmFold T={T} icon="message-square-text" label="Note" /><HmFold T={T} icon="history" label="History" sub="last 3 orders" /></div>
     </HmBody>
-  </>, <HmFoot T={T} primary={sub ? 'Send to admin' : 'Approve'} icon={sub ? 'send' : 'check'} note={sub ? 'Over-the-line flags are cleared by admin' : null} />);
+  </>, <HmFoot T={T} primary={sub ? 'Send to admin' : 'Approve'} icon={sub ? 'send' : 'check'} note={sub ? 'Over-the-line flags are cleared by admin' : adm && over ? 'Approving clears the over-the-line flag' : null} />);
 }
 const ScreenHmApproveSO = ({ T }) => <HmApprovalSO T={T} />;
 const ScreenHmApproveSOFlagged = ({ T }) => <HmApprovalSO T={T} over role="subadmin" />;
@@ -403,18 +432,17 @@ function HmWebQueue({ T }) {
     <div style={{ display: 'grid', gap: 8 }}>{HM_QUEUE.map(q => <HmQCard key={q.no} T={T} q={q} web picked={q.no === 'SO-3456'} />)}</div>
   </div>;
 }
-/* the card in the middle: facts on the order, the lines with steppers, the note, actions docked at the foot */
+/* the card in the middle: the head, the standing tiles, the flag chips, the two charts, then the folds; the order lines live in the right pane */
 function HmWebCard({ T, over: isOver, role = 'manager' }) {
   const open = isOver ? HM_OPEN.over : HM_OPEN.within, sub = role === 'subadmin', over = Math.max(0, open + HM_TOTAL - HM_C.line);
   return <div style={{ flex: 1, minWidth: 0, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
     <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', padding: '8px 16px 0' }}>
-      <div style={{ marginBottom: 6 }}><HmFlags T={T} web flags={hmFlags(over, open)} /></div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, height: 26 }}><span style={{ fontFamily: T.fontMono, fontSize: 17, fontWeight: 600, color: T.ink }}>SO-3456</span><StatusPill T={T} s="Raised" /><span style={{ fontSize: 12, color: T.ink3, flex: 1, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>13/10/26 · In-cabin</span><Hit T={T} icon="printer" size={28} iconSize={14} style={{ background: T.chipBg }} /></div>
-      <div style={{ fontSize: 11.5, color: T.ink2, margin: '0 0 5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Raised by Rohan Mehta · the salesperson can still edit or delete it until you act</div>
-      <HmCustomer T={T} web />
-      <div style={{ marginTop: 5 }}><HmCredit T={T} open={open} web /></div>
-      <div style={{ marginTop: 5 }}><HmLines T={T} web /></div>
-      <div style={{ marginTop: 5 }}><HmNote T={T} tight /></div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, height: 26 }}><span style={{ fontFamily: T.fontMono, fontSize: 17, fontWeight: 600, color: T.ink }}>SO-3456</span><StatusPill T={T} s="Raised" /><span style={{ fontSize: 12, color: T.ink3, flex: 1, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{HM_PCS} pcs · {money(HM_TOTAL)} · 13/10/26 · raised by Rohan Mehta</span><Hit T={T} icon="printer" size={28} iconSize={14} style={{ background: T.chipBg }} /></div>
+      <div style={{ marginTop: 6 }}><HmCustomer T={T} web /></div>
+      <div style={{ marginTop: 6 }}><HmTiles T={T} open={open} cols={4} /></div>
+      <div style={{ marginTop: 7 }}><HmChips T={T} over={over} /></div>
+      <div style={{ marginTop: 7 }}><HmCharts T={T} h={44} /></div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 7, marginTop: 7 }}><HmFold T={T} icon="message-square-text" label="Note" /><HmFold T={T} icon="history" label="History" sub="last 3 orders" /></div>
     </div>
     <div style={{ flex: 'none', display: 'flex', alignItems: 'center', gap: 8, padding: '4px 16px', borderTop: `1px solid ${T.line}`, background: T.surface }}>
       <span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="press" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: T.fontUI, fontSize: 12.5, color: T.ink2, fontWeight: 500 }}>Mark for inspection<Ic name="arrow-right" size={13} />owner</span>{sub && <Meta T={T} style={{ fontSize: 11 }}>Over-the-line flags are cleared by admin</Meta>}</span>
@@ -424,24 +452,11 @@ function HmWebCard({ T, over: isOver, role = 'manager' }) {
     </div>
   </div>;
 }
-/* right pane: the customer's standing, appetite, history and the two charts */
-function HmRecordPane({ T, open }) {
-  const items = hmStanding(open).map(([l, v, , tone]) => [l, v, null, tone]); items[3] = ['FY billing', lakh(450000), null];
-  const lab = { margin: '9px 0 4px' };
-  return <div style={{ padding: '0 14px', height: '100%', overflow: 'hidden' }}>
-    <div style={{ height: 12 }} />
-    <HmStanding T={T} items={items} />
-    <HmLab T={T} style={lab}>Appetite</HmLab>
-    <HmAppetite T={T} web />
-    <HmLab T={T} style={lab} right={<Meta T={T}>last 3 orders</Meta>}>Order history</HmLab>
-    <HmHistory T={T} tight />
-    <HmLab T={T} style={lab}>Orders and payments</HmLab>
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}><HmChart T={T} mini title="Ramleela Fashion" d={HM_CH.cust} h={54} /><HmChart T={T} mini title="Raghani Co. (agency)" d={HM_CH.agency} h={54} /></div>
-  </div>;
-}
+/* right pane: the order itself, lines with steppers, GST extra */
+const HmOrderPane = ({ T }) => <div style={{ padding: '10px 14px', height: '100%', overflow: 'hidden' }}><HmLines T={T} web /><div style={{ marginTop: 8 }}><Meta T={T} style={{ display: 'block' }}>change a number with − and +</Meta></div></div>;
 function HmWebApprovals({ T, over: isOver, role = 'manager' }) {
   const open = isOver ? HM_OPEN.over : HM_OPEN.within, over = Math.max(0, open + HM_TOTAL - HM_C.line);
-  return <WebShell3 T={T} module="Home" crumb={['Home', 'Approvals', 'Sale orders', 'SO-3456']} section="Approvals" seg={Hm_SEG} active="Approvals" tabs={Hm_TABS('appr')} paneTitle="Ramleela Fashion" pane={<HmRecordPane T={T} open={open} />}>
+  return <WebShell3 T={T} module="Home" crumb={['Home', 'Approvals', 'Sale orders', 'SO-3456']} section="Approvals" seg={Hm_SEG} active="Approvals" tabs={Hm_TABS('appr')} paneTitle={`Order · ${HM_ORDER_SUB}`} paneWidth={460} pane={<HmOrderPane T={T} />}>
     <ViewTabs T={T} tabs={Hm_APPR_TABS} active="Sale orders" />
     <div style={{ flex: 1, minHeight: 0, display: 'flex', marginTop: 6 }}><HmWebQueue T={T} /><HmWebCard T={T} over={isOver} role={role} /></div>
   </WebShell3>;
@@ -531,12 +546,12 @@ function WebHmGate({ T }) {
     phone: [['Home · sale executive landing', ScreenHmHome]],
     web: [['Home · landing on the web shell', WebHmHome]] },
   { name: 'Approvals', flow: 'queue → sale order card → over the credit line → sale return card',
-    phone: [['Approvals · queue', ScreenHmApprovals], ['Approvals · sale order card', ScreenHmApproveSO], ['Approvals · flagged, over the credit line (sub-admin)', ScreenHmApproveSOFlagged], ['Approvals · flagged, admin approves', ScreenHmApproveSOAdmin], ['Approvals · sale return card', ScreenHmApproveReturn]],
-    web: [['Approvals · queue, card, facts pane', WebHmApprovals], ['Approvals · flagged, over the credit line (sub-admin)', WebHmApproveFlagged]] },
+    phone: [['Approvals · queue', ScreenHmApprovals], ['Approvals · sale order card · provisional, owner\'s rule of 13 Oct 15:30', ScreenHmApproveSO], ['Approvals · flagged, over the credit line (sub-admin) · provisional, owner\'s rule of 13 Oct 15:30', ScreenHmApproveSOFlagged], ['Approvals · flagged, admin approves · provisional, owner\'s rule of 13 Oct 15:30', ScreenHmApproveSOAdmin], ['Approvals · sale return card', ScreenHmApproveReturn]],
+    web: [['Approvals · card, order pane · provisional, owner\'s rule of 13 Oct 15:30', WebHmApprovals], ['Approvals · flagged, over the credit line (sub-admin) · provisional, owner\'s rule of 13 Oct 15:30', WebHmApproveFlagged]] },
   { name: 'Gate pass', flow: 'tokens',
     phone: [['Gate pass · tokens', ScreenHmGate]],
     web: [['Gate pass · token list, token pane', WebHmGate]] },
 ] });
 
-Object.assign(window, { Hm_SEG, Hm_TABS, Hm_APPR_TABS, HM_C, HM_LINES, HM_TOTAL, HM_PCS, HM_QUEUE, HM_RET, HM_AUTO, HM_MANUAL, HmCard, HmBody, HmHeader, HmPageHead, HmTabsRow, HmSeg, HmNeed, HmQuick, HmNotice, HmNoticePane, HmDocHead, HmFlags, HmCustomer, HmStanding, HmCredit, HmAppetite, HmColRow, HmLines, HmNote, HmHistory, HmChart, HmFoot, HmQCard, HmApprovalSO, HmLab, HmWebQueue, HmWebCard, HmRecordPane, HmWebApprovals, HmKindDisc, HmTokenRow, HmTokenTable, HmTokenPane,
+Object.assign(window, { Hm_SEG, Hm_TABS, Hm_APPR_TABS, HM_C, HM_LINES, HM_TOTAL, HM_PCS, HM_QUEUE, HM_RET, HM_AUTO, HM_MANUAL, HmCard, HmBody, HmHeader, HmPageHead, HmTabsRow, HmSeg, HmNeed, HmQuick, HmNotice, HmNoticePane, HmDocHead, HmFlags, HmCustomer, HmStanding, HmCredit, HmAppetite, HmColRow, HmLines, HmNote, HmHistory, HmChart, HmFoot, HmQCard, HmApprovalSO, HmLab, HmWebQueue, HmWebCard, HmOrderPane, HmTile, HmTiles, HmChips, HmFold, HmCharts, HmWebApprovals, HmKindDisc, HmTokenRow, HmTokenTable, HmTokenPane,
   ScreenHmHome, WebHmHome, ScreenHmApprovals, ScreenHmApproveSO, ScreenHmApproveSOFlagged, ScreenHmApproveSOAdmin, ScreenHmApproveReturn, WebHmApprovals, WebHmApproveFlagged, ScreenHmGate, WebHmGate });

@@ -162,3 +162,24 @@ New module file. Nothing in `design/`, `finals.jsx` or other modules was touched
 - Frames: n-3, n-4, n-5 (phone); nw-2, nw-3 (web). Console clean.
 - Assumed: order date 13/10/26 (the sell flow's), stock figures for 1457 (9 Firozi, 6 Bottle) invented; 3661 Peach keeps
   0 in stock so the "8 of 10 in stock" pill stays.
+
+## Round 3 (13 Oct 15:30) · the owner's rule for the approvals card, provisional
+
+Owner (via the lead, from the deck): an admin or accounts admin landing on any sale order sees, on the first screen, the
+customer's analytics and the flags, highlighted; the order itself is one tap away. Flags are not written as text: a failed
+rule tints the tile itself ("red flags over the same template").
+- Supersedes: the "Look twice" prose band is gone (no free-text reasons anywhere); the Graphs-tab idea for the phone is
+  dropped, the two charts sit inline on the first screen.
+- Card, top to bottom (phone n-3, n-4, n-5; web nw-2, nw-3): head (order no, date, who raised it, pcs and ₹ on one line)
+  → customer → eight fixed tiles in one order (Payment score · Overdue · GR ratio · Credit line used with a bar · FY
+  billing · Total pcs · Customer score · Appetite) → flag chips (OVERDUE ₹ · GR RATIO % · OVER CREDIT LINE ₹ · EDITED
+  AFTER SUBMIT; the queue uses the same set) → the two charts → folds: Order · 10 pcs · 4 designs · ₹47,950, Note,
+  History. On the web the order lines sit in the right pane; Note and History are folds in the main column.
+- Tile rules drawn (HM_RULES): overdue > 0 · GR ratio above 25 % · credit used above 100 % · score under 60. A failing tile:
+  danger tint, value in danger, a flag icon in the corner. Within the line only Overdue and GR ratio fail; over the line
+  Credit line used (108 %) fails too.
+- n-5 (admin) shows the Order fold expanded to show what one tap opens; footer note "Approving clears the over-the-line
+  flag". n-4 (sub-admin) shows the flag and "Send to admin", no clear action.
+- Waits, not drawn: role variants of the landing, the notifications screen, the user menu; the fold open states other than
+  n-5; Hold behaviour (kept as the third action).
+- Assumed: Total pcs 92, limit 25 % and floor 60 are mine; web tile label reads "Credit used" for width.
