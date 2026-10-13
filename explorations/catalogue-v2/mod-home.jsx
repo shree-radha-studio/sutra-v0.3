@@ -517,6 +517,8 @@ function WebHmGate({ T }) {
     <div style={{ padding: '14px 24px 0', flex: 1, minHeight: 0, overflow: 'hidden' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12 }}><T.Chip icon="search" outline>Token, party</T.Chip><T.Chip icon="calendar" x outline>Today</T.Chip><T.Chip on>Active 2</T.Chip><T.Chip outline>Done 2</T.Chip><span style={{ flex: 1 }} /><T.Btn icon="plus" style={{ height: 40 }}>New manual token</T.Btn></div>
       <HmTokenTable T={T} rows={HM_MANUAL} pick={pick.no} />
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, margin: '16px 2px 6px' }}><span style={{ width: 3, height: 12, borderRadius: 2, background: T.accent, alignSelf: 'center' }} /><span style={{ fontFamily: T.fontDisplay, fontSize: 16, fontWeight: 600, color: T.ink }}>Auto tokens still to come through the gate</span><span style={{ flex: 1 }} /><span className="press" style={{ fontSize: 12, color: T.ink2, fontWeight: 500 }}>Open Auto</span></div>
+      <HmCard T={T} pad="2px 14px">{HM_AUTO.filter(t => !t.ok).map((t, i) => <div key={t.no} className="press" style={{ display: 'flex', alignItems: 'center', gap: 12, minHeight: 48, borderTop: i ? `1px solid ${T.line}` : 0 }}><HmKindDisc T={T} kind={t.kind} s={30} /><Mono T={T} size={12.5}>{t.no}</Mono><span style={{ flex: 1, minWidth: 0, fontFamily: T.fontDisplay, fontSize: 16.5, fontWeight: 600, color: T.ink, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t.party}</span><Meta T={T}>{t.kind} · {t.parcels} parcels</Meta><span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 12, fontWeight: 600, color: T.warn, width: 62 }}><Ic name="clock" size={14} />Active</span></div>)}</HmCard>
       <Meta T={T} style={{ display: 'block', margin: '10px 4px 0', whiteSpace: 'normal' }}>A manual token stays Active until the entry is made in the ERP. Auto tokens are only verified at the gate.</Meta>
     </div>
   </WebShell3>;
@@ -537,11 +539,3 @@ function WebHmGate({ T }) {
 
 Object.assign(window, { Hm_SEG, Hm_TABS, Hm_APPR_TABS, HM_C, HM_LINES, HM_TOTAL, HM_PCS, HM_QUEUE, HM_RET, HM_AUTO, HM_MANUAL, HmCard, HmBody, HmHeader, HmPageHead, HmTabsRow, HmSeg, HmNeed, HmQuick, HmNotice, HmNoticePane, HmDocHead, HmFlags, HmCustomer, HmStanding, HmCredit, HmAppetite, HmColRow, HmLines, HmNote, HmHistory, HmChart, HmFoot, HmQCard, HmApprovalSO, HmLab, HmWebQueue, HmWebCard, HmRecordPane, HmWebApprovals, HmKindDisc, HmTokenRow, HmTokenTable, HmTokenPane,
   ScreenHmHome, WebHmHome, ScreenHmApprovals, ScreenHmApproveSO, ScreenHmApproveSOFlagged, ScreenHmApproveSOAdmin, ScreenHmApproveReturn, WebHmApprovals, WebHmApproveFlagged, ScreenHmGate, WebHmGate });
-
-/*TMPSTART*/
-(window.NEW_DRAFT_MODULES = window.NEW_DRAFT_MODULES || []).push({ module: 'Home · tmp', note: 'tmp', subs: [{ name: 'tmp', flow: 'tmp', phone: [
-  ['so 0', ({ T }) => <HmApprovalSO T={T} scroll={1} />], ['so 480', ({ T }) => <HmApprovalSO T={T} scroll={480} />], ['so 960', ({ T }) => <HmApprovalSO T={T} scroll={960} />], ['so 1440', ({ T }) => <HmApprovalSO T={T} scroll={1440} />],
-  ['flagged 480', ({ T }) => <HmApprovalSO T={T} over role="subadmin" scroll={480} />],
-  ['ret 480', ({ T }) => <ScreenHmApproveReturn T={T} scroll={480} />], ['ret 960', ({ T }) => <ScreenHmApproveReturn T={T} scroll={960} />],
-], web: [] }] });
-/*TMPEND*/
