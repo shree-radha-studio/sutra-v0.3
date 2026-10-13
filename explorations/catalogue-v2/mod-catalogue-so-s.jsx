@@ -3,7 +3,7 @@
    The chrome is the finals' own and is not touched: frameF + SOHeader + T.Island on the phone, WebShell + ViewTabs + the
    toolbar chips + RightPane on the web. Desk changes only the content: 4px boxes, 3px tags and thumbs, 1px rules, no
    shadow, no zebra, 44px web / 56px phone rows, 11px uppercase heads, numbers right-aligned and tabular, status as an
-   outlined word, colour only for danger and warn. The one maroon line is the active view tab; content carries none.
+   outlined word, colour only for danger and warn. The content's one maroon line is its primary action (the pane's Approval card); the view tab's marker is chrome.
    ₹ stays: these are salesperson / manager screens. Every identifier is prefixed SoS. */
 
 /* ── Desk primitives (own copies: the Dispatch Ds* helpers do not load on the catalogue page) ─────────────────── */
@@ -13,7 +13,7 @@ const SoSNumS = (T, extra) => ({ fontFamily: T.fontUI, fontSize: 13, color: T.in
 const SoSTag = ({ T, tone, h = 20, children, style }) => { const c = tone === 'danger' ? T.danger : tone === 'warn' ? T.warn : T.ink2; return <span style={{ display: 'inline-flex', alignItems: 'center', height: h, padding: '0 6px', borderRadius: 3, border: `1px solid ${tone ? c : T.line2}`, color: c, fontFamily: T.fontUI, fontSize: 10, fontWeight: 600, letterSpacing: '.07em', textTransform: 'uppercase', whiteSpace: 'nowrap', flex: 'none', lineHeight: 1, ...style }}>{children}</span>; };
 /* square outlined icon button inside content (the chrome keeps its round Hit) */
 const SoSIcon = ({ T, icon, s = 36 }) => <span className="press" style={{ width: s, height: s, borderRadius: 3, border: `1px solid ${T.line2}`, display: 'grid', placeItems: 'center', color: T.ink, flex: 'none' }}><Ic name={icon} size={15} /></span>;
-const SoSBtn = ({ T, icon, children, h = 36, style }) => <span className="press" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7, height: h, padding: '0 12px', borderRadius: 3, border: `1px solid ${T.ink}`, color: T.ink, fontFamily: T.fontUI, fontSize: 12.5, fontWeight: 500, whiteSpace: 'nowrap', ...style }}>{icon && <Ic name={icon} size={14} />}{children}</span>;
+const SoSBtn = ({ T, icon, children, h = 36, fill, style }) => <span className="press" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7, height: h, padding: '0 12px', borderRadius: 3, border: `1px solid ${fill ? T.accent : T.ink}`, background: fill ? T.accent : 'transparent', color: fill ? T.onAccent : T.ink, fontFamily: T.fontUI, fontSize: 12.5, fontWeight: 500, whiteSpace: 'nowrap', ...style }}>{icon && <Ic name={icon} size={14} />}{children}</span>;
 /* photo beside every design number: 4:5, 3px */
 const SoSThumb = ({ T, code, w = 28, h = 35 }) => <Thumb T={T} d={XD.byCode[code]} w={w} h={h} r={3} />;
 const SoSDesign = ({ T, code, w, h, size = 16 }) => <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, flex: 'none' }}><SoSThumb T={T} code={code} w={w} h={h} /><span style={{ fontFamily: T.fontDisplay, fontSize: size, fontWeight: 600, color: T.ink, fontVariantNumeric: 'tabular-nums' }}>{code}</span></span>;
@@ -107,7 +107,7 @@ function SoSOrderPane({ T, o }) {
       </div>)}
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, height: 44, paddingTop: 10, borderTop: `1px solid ${T.line2}` }}><span style={{ fontSize: 12, color: T.ink3, fontVariantNumeric: 'tabular-nums' }}>{o.pcs} pcs · {o.designs} designs · GST extra</span><span style={{ flex: 1 }} /><PriceF v={total} size={21} font={T.fontSerif} color={T.ink} dim={T.ink3} weight={600} /></div>
     </div>
-    <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '12px 20px 16px', borderTop: `1px solid ${T.line}` }}><SoSIcon T={T} icon="printer" /><SoSIcon T={T} icon="share-2" /><span style={{ flex: 1 }} /><SoSBtn T={T} icon="pencil">Edit</SoSBtn><SoSBtn T={T} icon="arrow-up-right">Approval card</SoSBtn></div>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '12px 20px 16px', borderTop: `1px solid ${T.line}` }}><SoSIcon T={T} icon="printer" /><SoSIcon T={T} icon="share-2" /><span style={{ flex: 1 }} /><SoSBtn T={T} icon="pencil">Edit</SoSBtn><SoSBtn T={T} icon="arrow-up-right" fill>Approval card</SoSBtn></div>
   </div>;
 }
 function WebSoSTable({ T }) {
