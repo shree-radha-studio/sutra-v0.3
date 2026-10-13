@@ -140,13 +140,14 @@ Fix with the next Dispatch pass (my files): phone header → shared header; web 
 
 ---
 
-## 6. Open questions
+## 6. Rulings (lead, 13 Oct; the owner's decisions 3, 4, 5, 13, 14 still to come)
 
-1. **Toolbar chips.** I kept the toolbar row (search, This month, Group by, Columns) as chrome, pill-shaped in both
-   densities; `sale-orders-structured.md` §1 squares them. Chrome or content?
-2. **Phone Dispatch header.** Move the structured Dispatch phone screens onto the shared module header (as §3 says), or
-   does the packer get a lighter Desk header as a role variant (ties to decision 2, island per role)?
-3. **Flags on sale orders.** The table shows the approver-side flags (over the line, bills overdue, waiting n d) on the
-   salesperson's book too. Keep them visible there, or approver only?
-4. **Mixed frames.** Allowed per region, never per row (§1, last rule). Enough, or should each frame pick one?
-5. **Pane width on Dispatch.** 310 (SCH §5) or 330 like the drafts, now that the pane holds ruled tables?
+1. **Toolbar chips are chrome:** pill in both densities. `sale-orders-structured.md` §1 is superseded on this point.
+2. **Dispatch phone screens move onto the shared module header** (lockup, role, cart, menu, search island, sub-menu
+   scroller); the row count follows decision 1. A lighter packer header only if decision 2 asks for role variants.
+3. **Flags are approver-side only** (owner, 13 Oct). Sale managers and accounts see them on the book (nw-13 is captioned
+   as the manager view); a sale executive sees RAISED / IN QUEUE and no flag column. Executive variant: to draw.
+4. **Mixed density per frame region, never per row.** The content area picks one density; a pane may carry the other.
+5. **Dispatch pane 310**, per SCH §5.
+
+Board ids after the lead's merge (review branch): cards n-19 / nd-19, table nw-13 / nwd-13.
