@@ -63,15 +63,19 @@ b{font-weight:600}
 .facts .l{font-size:12px;color:var(--ink2);margin-top:6px}
 
 /* body grid with the contents rail */
-.body{display:grid;grid-template-columns:200px 1fr;gap:44px;margin-top:30px}
-nav.toc{position:sticky;top:env(safe-area-inset-top,0px);align-self:start;padding-top:12px}
-nav.toc ol{list-style:none;padding:0;margin:0;display:grid;gap:2px}
-nav.toc a{display:block;padding:6px 10px;border:0;border-left:2px solid transparent;color:var(--ink2);font-size:13px;border-radius:0 8px 8px 0}
+.body{display:block;margin-top:24px}
+nav.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;align-items:center;gap:12px;padding:8px 0;background:var(--bg);border-bottom:1px solid var(--line)}
+nav.toc ol{list-style:none;padding:0;margin:0;display:flex;gap:2px;flex:1;overflow-x:auto;scrollbar-width:none}
+nav.toc a{display:block;padding:8px 10px;border:0;border-bottom:2px solid transparent;color:var(--ink2);font-size:13px;border-radius:8px 8px 0 0;white-space:nowrap}
 nav.toc a:hover{background:var(--surface2);color:var(--ink)}
-nav.toc a.on{border-left-color:var(--accent);color:var(--ink);font-weight:500}
+nav.toc a.on{border-bottom-color:var(--accent);color:var(--ink);font-weight:500}
+nav.toc .board{display:flex;align-items:center;gap:6px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);flex:0 0 auto}
+nav.toc .board input{font:inherit;font-family:var(--mono);font-size:11.5px;text-transform:none;letter-spacing:0;width:300px;max-width:40vw;padding:5px 8px;border:1px solid var(--line2);border-radius:8px;background:var(--surface);color:var(--ink)}
+.dfilter{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.dec .board-link{font-size:12.5px}
 nav.toc .n{font-family:var(--mono);font-size:11px;color:var(--ink3);margin-right:8px}
 main{min-width:0}
-section{padding-block:44px 8px;scroll-margin-top:12px}
+section{padding-block:28px 8px;scroll-margin-top:60px}
 section + section{border-top:1px solid var(--line)}
 .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:14px}
 .sec-head .n{font-family:var(--mono);font-size:12px;color:var(--ink3)}
@@ -155,10 +159,8 @@ dialog.lb .cap{color:#FAF7F2;font-size:13px;text-align:center;padding:10px 6px 0
 .sr{position:absolute;left:-9999px}
 @media (max-width:900px){
   .body{grid-template-columns:1fr;gap:10px}
-  nav.toc{position:static;display:flex;overflow-x:auto;gap:4px;padding:8px 0;border-bottom:1px solid var(--line)}
-  nav.toc ol{display:flex;gap:4px}
-  nav.toc a{white-space:nowrap;border-left:0;border-bottom:2px solid transparent;border-radius:8px 8px 0 0}
-  nav.toc a.on{border-bottom-color:var(--accent)}
+  nav.toc{overflow-x:auto}
+  nav.toc .board input{width:160px}
   .facts{grid-template-columns:1fr 1fr}
   .grid2,.grid3,.thesis{grid-template-columns:1fr}
   .step{grid-template-columns:1fr;gap:12px}
@@ -194,10 +196,10 @@ dialog.lb .cap{color:#FAF7F2;font-size:13px;text-align:center;padding:10px 6px 0
       <li><a href="#flow"><span class="n">3</span>The sell flow</a></li>
       <li><a href="#forms"><span class="n">4</span>Entry forms</a></li>
       <li><a href="#priorities"><span class="n">5</span>Priorities</a></li>
-      <li><a href="#decisions"><span class="n">6</span>Your decisions</a></li>
+      <li><a href="#decisions"><span class="n">6</span>Decisions · <span id="dtab" class="num">0 of 39</span></a></li>
       <li><a href="#next"><span class="n">7</span>What happens next</a></li>
       <li><a href="#round2"><span class="n">8</span>Round 2 · 15:00</a></li>
-    </ol></nav>
+    </ol><label class="board"><span>Board</span><input id="boardurl" type="url" value="http://localhost:8000/explorations/catalogue-v2/" spellcheck="false" aria-label="Board base URL"></label></nav>
 
     <main>
       <!-- 1 · thesis -->
@@ -462,6 +464,7 @@ dialog.lb .cap{color:#FAF7F2;font-size:13px;text-align:center;padding:10px 6px 0
         <p class="lede">Answer one by one; each answer starts a session. Pick an option, add a note if the answer is "yes, but". The recommended option is marked. At 15:00 the lead answered 1 to 14 provisionally (section 8) so the team could draw compare pairs; your answer here overturns the lead's. Decisions 15 to 53 come from the CRM, Studio and Production reviews of the same afternoon.</p>
         <div class="dprog"><span id="dcount">0 of 14 answered</span><div class="bar"><i id="dbar"></i></div><span id="dsave" class="faint"></span></div>
         <div id="dnotice" class="notice" hidden>Answers are saved in this browser only on this device. Sign in as the owner to have them reach the session.</div>
+        <div class="dfilter" id="dfilter" role="group" aria-label="Filter decisions"><button type="button" class="opt on" data-f="all">All</button><button type="button" class="opt" data-f="un">Unanswered</button><button type="button" class="opt" data-f="tpl">Template and sell flow (1 to 14)</button><button type="button" class="opt" data-f="crm">CRM</button><button type="button" class="opt" data-f="studio">Studio</button><button type="button" class="opt" data-f="prod">Production</button><button type="button" class="opt" data-f="r3">Round 3 (54)</button></div>
         <div id="decisions-list"></div>
       </section>
 
@@ -548,85 +551,85 @@ dialog.lb .cap{color:#FAF7F2;font-size:13px;text-align:center;padding:10px 6px 0
 <script>
 /* ---------- decisions ---------- */
 const DECISIONS = [
-  { id:'d1', title:'Phone header', q:'Three rows on every module and two inside the catalogue grid is the proposal. Compare the two drafts against the final f-1 on the board (Catalogue · sell flow › Calmer grid header).',
+  { id:'d1', mod:'catalogue', title:'Phone header', q:'Three rows on every module and two inside the catalogue grid is the proposal. Compare the two drafts against the final f-1 on the board (Catalogue · sell flow › Calmer grid header).',
     opts:['Three rows everywhere, two inside the grid','Three rows everywhere','Keep four rows'], rec:0, see:['img/catalogue-f-1.jpg','img/p-cs-grid3.jpg','img/p-cs-grid2.jpg'] },
-  { id:'d2', title:'Island per role', q:'Show only the role’s modules at the foot of the phone: at most four tabs plus More and the orb. A packer sees Home · Dispatch · More.',
+  { id:'d2', mod:'appshell', title:'Island per role', q:'Show only the role’s modules at the foot of the phone: at most four tabs plus More and the orb. A packer sees Home · Dispatch · More.',
     opts:['Yes, per role','No, every module for everyone'], rec:0 },
-  { id:'d3', title:'Web header cap', q:'At most six sub-menu buttons in the header, and the search field never below 180 px. Production regrouped as Purchase ▾ · Materials ▾ · Recipes · Orders ▾ (with Job cards) · Samples · More ▾ (Costing, Karigars).',
+  { id:'d3', mod:'production', title:'Web header cap', q:'At most six sub-menu buttons in the header, and the search field never below 180 px. Production regrouped as Purchase ▾ · Materials ▾ · Recipes · Orders ▾ (with Job cards) · Samples · More ▾ (Costing, Karigars).',
     opts:['Cap at six, regroup Production','Keep eight, shrink the search','Other (note)'], rec:0, see:['img/production-nw-22.jpg'] },
-  { id:'d4', title:'Where a form lives', q:'A form with more than four fields takes the main area; the right pane helps (supplier snapshot, stock, checklist). New PO, New material and New sample move out of the pane.',
+  { id:'d4', mod:'production', title:'Where a form lives', q:'A form with more than four fields takes the main area; the right pane helps (supplier snapshot, stock, checklist). New PO, New material and New sample move out of the pane.',
     opts:['Yes, main area for long forms','Keep the pane forms'], rec:0, see:['img/production-nw-10.jpg','img/production-nw-6.jpg'] },
-  { id:'d5', title:'One language, two densities', q:'Cabin and Desk on the same tokens and chrome. The structured Dispatch look becomes the Desk density for Dispatch, Production tables, pending books, Hub lists, Reports and the Approvals queue. Status as outlined words; colour only for danger and warn.',
+  { id:'d5', mod:'catalogue', title:'One language, two densities', q:'Cabin and Desk on the same tokens and chrome. The structured Dispatch look becomes the Desk density for Dispatch, Production tables, pending books, Hub lists, Reports and the Approvals queue. Status as outlined words; colour only for danger and warn.',
     opts:['Yes, two densities of one language','Rounded look for the whole product','Structured look for the whole product'], rec:0, see:['img/catalogue-f-15.jpg','img/p-desk-cards.jpg','img/catalogue-w-9.jpg','img/p-desk-table.jpg','img/catalogue-w-1.jpg','img/dispatch-nw-24.jpg'] },
-  { id:'d6', title:'Approvals in one place', q:'Every approval is a card on Home › Approvals with the BRD’s facts. The sale order page shows the state and a link; its own Approve button goes.',
+  { id:'d6', mod:'home', title:'Approvals in one place', q:'Every approval is a card on Home › Approvals with the BRD’s facts. The sale order page shows the state and a link; its own Approve button goes.',
     opts:['Yes, one place','Keep Approve on the sale order page too'], rec:0, see:['img/catalogue-f-18.jpg','img/p-hm-queue.jpg','img/p-hm-approve.jpg','img/p-hm-approve-web.jpg'] },
-  { id:'d7', title:'The approval card itself', q:'Three small calls on the card you sent the reference for.',
+  { id:'d7', mod:'home', title:'The approval card itself', q:'Three small calls on the card you sent the reference for.',
     parts:[ {k:'hold', l:'Hold as a third action beside Reject and Approve', opts:['Keep Hold','Reject and Approve only'], rec:0},
             {k:'charts', l:'The two charts on the phone card', opts:['Inline, long scroll','Behind a Graphs tab'], rec:0},
             {k:'over', l:'Who may clear an “over the credit line” flag in the queue', opts:['Admin only','Sub-admin too'], rec:0} ], see:['img/p-hm-approve.jpg','img/p-hm-flagged.jpg','img/p-hm-approve-web.jpg'] },
-  { id:'d8', title:'New customer from the cart', q:'Name, phone and city only, as the BRD says; broker, agency, GST and credit days can follow in the Hub.',
+  { id:'d8', mod:'catalogue', title:'New customer from the cart', q:'Name, phone and city only, as the BRD says; broker, agency, GST and credit days can follow in the Hub.',
     opts:['Three fields now, the rest later','Broker and GST at creation too'], rec:0, see:['img/p-cs-newcustomer.jpg'] },
-  { id:'d9', title:'The submit sheet', q:'Pcs, ₹, due days as chips 10 · 20 · 30 · custom (default 20), priority 1 to 5 (default 3) and the note for approval on one sheet. No credit check and nothing that blocks, per your rule of 13 Oct; the credit facts move to the approver’s card, and the order stays editable and deletable in the queue.',
+  { id:'d9', mod:'catalogue', title:'The submit sheet', q:'Pcs, ₹, due days as chips 10 · 20 · 30 · custom (default 20), priority 1 to 5 (default 3) and the note for approval on one sheet. No credit check and nothing that blocks, per your rule of 13 Oct; the credit facts move to the approver’s card, and the order stays editable and deletable in the queue.',
     opts:['As drawn','Simpler: no priority on the sheet','Other (note)'], rec:0, see:['img/p-cs-submit.jpg','img/p-cs-queue.jpg'] },
-  { id:'d10', title:'Where a product master is created', q:'In the Hub, with “Save and set recipe” opening Process setting pre-filled and “Save and add photos” opening the Upload centre; price shows TBD until costing.',
+  { id:'d10', mod:'hub', title:'Where a product master is created', q:'In the Hub, with “Save and set recipe” opening Process setting pre-filled and “Save and add photos” opening the Upload centre; price shows TBD until costing.',
     opts:['Hub creates, Production links','Inside Process setting step 1','Both doors, same form'], rec:0, see:['img/p-hub-newproduct.jpg'] },
-  { id:'d11', title:'Upload centre slots', q:'Per colour: primary (model shoot) · side profiles × 4 · AI shoot · real-world shoot · video, with the primary image settable, and phone capture per colour.',
+  { id:'d11', mod:'hub', title:'Upload centre slots', q:'Per colour: primary (model shoot) · side profiles × 4 · AI shoot · real-world shoot · video, with the primary image settable, and phone capture per colour.',
     opts:['As drawn','Fewer slots (note which)','Other (note)'], rec:0, see:['img/p-hub-upload.jpg','img/p-hub-upload-phone.jpg'] },
-  { id:'d12', title:'xlsx import', q:'Dry run first; commit as a second act by admin only; eight masters, products and SKUs first.',
+  { id:'d12', mod:'hub', title:'xlsx import', q:'Dry run first; commit as a second act by admin only; eight masters, products and SKUs first.',
     opts:['Admin-only commit','Any manager may commit'], rec:0, see:['img/p-hub-import.jpg'] },
-  { id:'d13', title:'Purchase inward form', q:'Supplier invoice number and date first, above the lines; the accounts card folded to Freight · Discount · GST with More.',
+  { id:'d13', mod:'production', title:'Purchase inward form', q:'Supplier invoice number and date first, above the lines; the accounts card folded to Freight · Discount · GST with More.',
     opts:['Yes, fold and reorder','Keep every field open'], rec:0, see:['img/production-nw-6.jpg'] },
-  { id:'d14', title:'New production order tranches', q:'Tranches collapsed to “default 30 / 30 / 40” per process, opened on tap; the reason chips move under the head.',
+  { id:'d14', mod:'production', title:'New production order tranches', q:'Tranches collapsed to “default 30 / 30 / 40” per process, opened on tap; the reason chips move under the head.',
     opts:['Collapse, open on tap','Keep the editor open'], rec:0, see:['img/production-nw-22.jpg'] },
-  { n:15, id:'d15', title:'CRM · Follow-ups opening screen', q:'Phone opens on the Today tab (every action across lists, oldest first) with the Journey board one tab away; web opens on the board. Or both open on the board, as drawn.',
+  { n:15, id:'d15', mod:'crm', title:'CRM · Follow-ups opening screen', q:'Phone opens on the Today tab (every action across lists, oldest first) with the Journey board one tab away; web opens on the board. Or both open on the board, as drawn.',
     opts:['Today on the phone, board on web','Board on both'], rec:0 },
-  { n:16, id:'d16', title:'CRM · Payments tabs', q:'Journey map and Broker / agency only, with a group-by chip (stage · customer) on the map; the Bills and Customers tabs leave. Or keep the four tabs.',
+  { n:16, id:'d16', mod:'crm', title:'CRM · Payments tabs', q:'Journey map and Broker / agency only, with a group-by chip (stage · customer) on the map; the Bills and Customers tabs leave. Or keep the four tabs.',
     opts:['Two tabs and group-by','Keep four tabs'], rec:0 },
-  { n:17, id:'d17', title:'CRM · Heat and score colour', q:'Hot / Warm / Cold as a word in an outlined tag and the score ring in ink, colour only when a score is failing. Or the three-hue dots and rings as drawn.',
+  { n:17, id:'d17', mod:'crm', title:'CRM · Heat and score colour', q:'Hot / Warm / Cold as a word in an outlined tag and the score ring in ink, colour only when a score is failing. Or the three-hue dots and rings as drawn.',
     opts:['Words and ink; colour for danger and warn only','Three-hue dots and rings as drawn'], rec:0 },
-  { n:18, id:'d18', title:'CRM · Journeys on the phone', q:'Read-only map only; step settings, new journey, test run, add step and publish leave the phone. Or keep every web state on the phone.',
+  { n:18, id:'d18', mod:'crm', title:'CRM · Journeys on the phone', q:'Read-only map only; step settings, new journey, test run, add step and publish leave the phone. Or keep every web state on the phone.',
     opts:['Read-only on the phone','Every web state on the phone'], rec:0 },
-  { n:19, id:'d19', title:'CRM · The sale executive’s view', q:'Draw the no-₹ variants beside the manager’s: the executive sees catalogue prices and the packet value, never FY billing, credit line, open book or bill amounts. Or one drawing with the note "₹ for manager roles".',
+  { n:19, id:'d19', mod:'crm', title:'CRM · The sale executive’s view', q:'Draw the no-₹ variants beside the manager’s: the executive sees catalogue prices and the packet value, never FY billing, credit line, open book or bill amounts. Or one drawing with the note "₹ for manager roles".',
     opts:['Draw them','One drawing with a note'], rec:0 },
-  { n:20, id:'d20', title:'CRM · RED', q:'A stage and list inside Payments owned by the admin, with Escalate raising the Home › Approvals card. Or RED itself as an approval item on Home.',
+  { n:20, id:'d20', mod:'crm', title:'CRM · RED', q:'A stage and list inside Payments owned by the admin, with Escalate raising the Home › Approvals card. Or RED itself as an approval item on Home.',
     opts:['Stage in Payments; Escalate is the approval','RED as an approval item on Home'], rec:0 },
-  { n:21, id:'d21', title:'CRM · Dossier on the phone', q:'Info · Packets · Orders only on the phone; Invoices & payments, Shipments, Returns & credit notes and Growth are web only. Or all seven tabs on the phone.',
+  { n:21, id:'d21', mod:'crm', title:'CRM · Dossier on the phone', q:'Info · Packets · Orders only on the phone; Invoices & payments, Shipments, Returns & credit notes and Growth are web only. Or all seven tabs on the phone.',
     opts:['Three on the phone','All seven on the phone'], rec:0 },
-  { n:22, id:'d22', title:'CRM · WhatsApp channel', q:'The WhatsApp Business API (automated journey steps, approved templates, delivery and read ticks; template approval and a per-message cost) or the phone’s own WhatsApp through the share sheet (no automation, no ticks). Recommended: the API for the Payments journey and the packet’s delivery state; until it is live, the phone’s WhatsApp and a "handed to WhatsApp" state.',
+  { n:22, id:'d22', mod:'crm', title:'CRM · WhatsApp channel', q:'The WhatsApp Business API (automated journey steps, approved templates, delivery and read ticks; template approval and a per-message cost) or the phone’s own WhatsApp through the share sheet (no automation, no ticks). Recommended: the API for the Payments journey and the packet’s delivery state; until it is live, the phone’s WhatsApp and a "handed to WhatsApp" state.',
     opts:['API, phone WhatsApp until it is live','Phone WhatsApp only','API from day one'], rec:0 },
-  { n:30, id:'d30', title:'Studio · The Stitch window', q:'The terminal is drawn on deep-space black with a pink-blue-orange thread and glows. Keep it everywhere Stitch appears; or keep the dark stage and chat inside the terminal only as Studio’s one named exception (thread as a 2 px mark, glows only while Stitch draws, nothing of it elsewhere); or retreat to sand and espresso. Compare the drawn terminal with the exemplar in the house language.',
+  { n:30, id:'d30', mod:'studio', title:'Studio · The Stitch window', q:'The terminal is drawn on deep-space black with a pink-blue-orange thread and glows. Keep it everywhere Stitch appears; or keep the dark stage and chat inside the terminal only as Studio’s one named exception (thread as a 2 px mark, glows only while Stitch draws, nothing of it elsewhere); or retreat to sand and espresso. Compare the drawn terminal with the exemplar in the house language.',
     opts:['Dark inside the terminal only, as the named exception','Keep as drawn everywhere','Sand and espresso like every other screen'], rec:0 },
-  { n:31, id:'d31', title:'Studio · The header', q:'Seven sub-menu buttons collapse the search on every frame; decision 3 caps the row at six.',
+  { n:31, id:'d31', mod:'studio', title:'Studio · The header', q:'Seven sub-menu buttons collapse the search on every frame; decision 3 caps the row at six.',
     opts:['Memory ▾ holds Memory and Settings','Photoshoots and Upload centre move to a Pictures module','Keep seven, accept the collapsed search'], rec:0 },
-  { n:32, id:'d32', title:'Studio · The phone’s scope', q:'Everything as drawn, all thirteen phone frames final; or the phone as the review companion in v1 (chat with canvas cards, the full canvas, swipe approval, History, Moodboard, Save as sample); or review and approve only, no chat.',
+  { n:32, id:'d32', mod:'studio', title:'Studio · The phone’s scope', q:'Everything as drawn, all thirteen phone frames final; or the phone as the review companion in v1 (chat with canvas cards, the full canvas, swipe approval, History, Moodboard, Save as sample); or review and approve only, no chat.',
     opts:['Review companion in v1','Everything as drawn','Review and approve only'], rec:0 },
-  { n:33, id:'d33', title:'Studio · Picture or controls in the terminal', q:'Three panes always open, the picture 520 px of 1280. Or the chat column collapses to its spine when a set lands, the right pane opens only on a pick, the tuner slides over the pane. Or the chat becomes a bottom bar under the stage.',
+  { n:33, id:'d33', mod:'studio', title:'Studio · Picture or controls in the terminal', q:'Three panes always open, the picture 520 px of 1280. Or the chat column collapses to its spine when a set lands, the right pane opens only on a pick, the tuner slides over the pane. Or the chat becomes a bottom bar under the stage.',
     opts:['Chat to spine, pane on pick, tuner over the pane','As drawn','Chat as a bottom bar'], rec:0 },
-  { n:34, id:'d34', title:'Studio · Names', q:'The BRD companion calls a session a "track"; the drawings call the category the track and the session a thread. Keep the drawn names and correct the BRD, or rename the drawings to the BRD. Every Studio caption changes with the answer.',
+  { n:34, id:'d34', mod:'studio', title:'Studio · Names', q:'The BRD companion calls a session a "track"; the drawings call the category the track and the session a thread. Keep the drawn names and correct the BRD, or rename the drawings to the BRD. Every Studio caption changes with the answer.',
     opts:['Track = category, thread = session; fix the BRD','Rename the drawings to the BRD'], rec:0 },
-  { n:35, id:'d35', title:'Studio · The designer’s island', q:'Decision 2 gives each role its modules; Studio sits under More on every phone frame today.',
+  { n:35, id:'d35', mod:'studio', title:'Studio · The designer’s island', q:'Decision 2 gives each role its modules; Studio sits under More on every phone frame today.',
     opts:['Design chair gets Home · Studio · Catalogue · More','Studio stays under More for everyone'], rec:0 },
-  { n:36, id:'d36', title:'Studio · Save as sample and the number', q:'Create sample mints S-0413 at once and the thread’s Archive is the only shelf, as drawn; or a "Stitch drafts" shelf before Samples, which adds a sub-menu and a state to every row.',
+  { n:36, id:'d36', mod:'studio', title:'Studio · Save as sample and the number', q:'Create sample mints S-0413 at once and the thread’s Archive is the only shelf, as drawn; or a "Stitch drafts" shelf before Samples, which adds a sub-menu and a state to every row.',
     opts:['S-number at once, Archive is the shelf','A Stitch drafts shelf'], rec:0 },
-  { n:45, id:'d45', title:'Production · Orders default view on web', q:'List (the manager’s book with the lifecycle pane), cards one click away; or cards first as drawn.',
+  { n:45, id:'d45', mod:'production', title:'Production · Orders default view on web', q:'List (the manager’s book with the lifecycle pane), cards one click away; or cards first as drawn.',
     opts:['List first','Cards first'], rec:0 },
-  { n:46, id:'d46', title:'Production · Job card views', q:'Three (Cards · Table · Calendar), Swimlanes and Gantt under Later; or four with the Gantt for drag-to-reschedule; or all five as the 8 Sep brief asked.',
+  { n:46, id:'d46', mod:'production', title:'Production · Job card views', q:'Three (Cards · Table · Calendar), Swimlanes and Gantt under Later; or four with the Gantt for drag-to-reschedule; or all five as the 8 Sep brief asked.',
     opts:['Three','Four, with the Gantt','All five'], rec:0 },
-  { n:47, id:'d47', title:'Production · Job cards on the phone', q:'List, filter sheet and the opened card only; retire phone swimlanes, timeline and calendar. Or keep them.',
+  { n:47, id:'d47', mod:'production', title:'Production · Job cards on the phone', q:'List, filter sheet and the opened card only; retire phone swimlanes, timeline and calendar. Or keep them.',
     opts:['List, filter, opened card only','Keep them'], rec:0 },
-  { n:48, id:'d48', title:'Production · Scan a job', q:'Scan is a way in: the camera lands on the job page and the separate scan page retires. Or keep a separate scan page.',
+  { n:48, id:'d48', mod:'production', title:'Production · Scan a job', q:'Scan is a way in: the camera lands on the job page and the separate scan page retires. Or keep a separate scan page.',
     opts:['Scan lands on the job page','Keep a separate scan page'], rec:0 },
-  { n:49, id:'d49', title:'Production · Overview', q:'Five tiles and one ruled Suggestions list with a reason column; or seven tiles and four strips as drawn. An exemplar of the five-tile Overview is on the board.',
+  { n:49, id:'d49', mod:'production', title:'Production · Overview', q:'Five tiles and one ruled Suggestions list with a reason column; or seven tiles and four strips as drawn. An exemplar of the five-tile Overview is on the board.',
     opts:['Five tiles and one Suggestions list','Seven tiles and four strips'], rec:0 },
-  { n:50, id:'d50', title:'Production · Costing', q:'A ruled table (photo beside the number, cost, margin, price, flag word) with the breakdown pane; default margins in a Settings sheet. Or cards as drawn with margins on the toolbar.',
+  { n:50, id:'d50', mod:'production', title:'Production · Costing', q:'A ruled table (photo beside the number, cost, margin, price, flag word) with the breakdown pane; default margins in a Settings sheet. Or cards as drawn with margins on the toolbar.',
     opts:['Ruled table with the breakdown pane','Cards as drawn'], rec:0 },
-  { n:51, id:'d51', title:'Production · Karigar app scope', q:'Record pieces, my jobs, hand-over to another karigar, verified state; nothing else and no ₹. Or record pieces only. Or no karigar app in phase 1.',
+  { n:51, id:'d51', mod:'production', title:'Production · Karigar app scope', q:'Record pieces, my jobs, hand-over to another karigar, verified state; nothing else and no ₹. Or record pieces only. Or no karigar app in phase 1.',
     opts:['Pieces, my jobs, hand-over, verified; no ₹','Record pieces only','No karigar app in phase 1'], rec:0 },
-  { n:52, id:'d52', title:'Production · What the phone creates', q:'Floor entries only (issue, receive, finished-goods receive, dye receive, sample move, inward capture); new karigar, new cut order, bulk issue and sample → product are desk only. Or keep every sheet on the phone.',
+  { n:52, id:'d52', mod:'production', title:'Production · What the phone creates', q:'Floor entries only (issue, receive, finished-goods receive, dye receive, sample move, inward capture); new karigar, new cut order, bulk issue and sample → product are desk only. Or keep every sheet on the phone.',
     opts:['Floor entries only','Every sheet on the phone'], rec:0 },
-  { n:53, id:'d53', title:'Production · Delay reason', q:'Capture one reason chip when a tranche is received late, so the Karigars analytics donut is real; or drop the donut.',
+  { n:53, id:'d53', mod:'production', title:'Production · Delay reason', q:'Capture one reason chip when a tranche is received late, so the Karigars analytics donut is real; or drop the donut.',
     opts:['Capture one reason chip','Drop the donut'], rec:0 },
-  { n:54, id:'d54', title:'Phone header · no hidden menus', q:'Your concern of 15:35: the sideways rails in the phone header (the lists bar on the grid, the sub-menu scroller on other modules) run past the screen, so three to five items show and the rest need a scroll or a tap every time. Proposed rule: on the phone nothing in the header scrolls sideways except the user’s own applied filter chips; a menu is either fully visible (four items or fewer) or one tap away as a full-width sheet that lists every item with its count. On the grid the lists bar becomes one chip (“Lehenga · 15 designs ▾”) at the start of the chip row; on every module the page head carries the sub-menu name with a chevron that opens the sheet. Compare frames are being drawn in Catalogue · sell flow › Calmer header.',
+  { n:54, id:'d54', mod:'catalogue', title:'Phone header · no hidden menus', q:'Your concern of 15:35: the sideways rails in the phone header (the lists bar on the grid, the sub-menu scroller on other modules) run past the screen, so three to five items show and the rest need a scroll or a tap every time. Proposed rule: on the phone nothing in the header scrolls sideways except the user’s own applied filter chips; a menu is either fully visible (four items or fewer) or one tap away as a full-width sheet that lists every item with its count. On the grid the lists bar becomes one chip (“Lehenga · 15 designs ▾”) at the start of the chip row; on every module the page head carries the sub-menu name with a chevron that opens the sheet. Compare frames are being drawn in Catalogue · sell flow › Calmer header.',
     opts:['Rule as proposed: visible or one tap to a full sheet','Keep the rails, add a labelled “All lists” button','Other (note)'], rec:0 },
 ];
 const state = {};   // id -> {choice, parts, note}
@@ -635,12 +638,16 @@ let db = null, user = null, saveTimer = {}, writable = true;
 function lsGet(){ try{ return JSON.parse(localStorage.getItem('sutra-r2-decisions')||'{}') }catch(e){ return {} } }
 function lsSet(){ try{ localStorage.setItem('sutra-r2-decisions', JSON.stringify(state)) }catch(e){} }
 
+function boardBase(){ const i=document.getElementById('boardurl'); let v=(i&&i.value.trim())||'http://localhost:8000/explorations/catalogue-v2/'; if(!/\/$/.test(v)) v+='/'; return v }
+const DGROUP = d => { const n = d.n || (DECISIONS.indexOf(d)+1); return n<=14?'tpl':n<=22?'crm':n<=36?'studio':n<=53?'prod':'r3' };
+let dfilter = 'all';
 function answered(d){ const s = state[d.id]; if(!s) return false; if(d.parts) return d.parts.every(p => s.parts && s.parts[p.k] != null); return s.choice != null }
-function progress(){ const n = DECISIONS.filter(answered).length; document.getElementById('dcount').textContent = n + ' of ' + DECISIONS.length + ' answered'; document.getElementById('dbar').style.width = (100*n/DECISIONS.length) + '%'; }
+function progress(){ const n = DECISIONS.filter(answered).length; document.getElementById('dcount').textContent = n + ' of ' + DECISIONS.length + ' answered'; document.getElementById('dbar').style.width = (100*n/DECISIONS.length) + '%'; const t = document.getElementById('dtab'); if (t) t.textContent = n + ' of ' + DECISIONS.length; }
 
 function render(){
   const root = document.getElementById('decisions-list'); root.innerHTML = '';
   DECISIONS.forEach((d, i) => {
+    if (dfilter === 'un' ? answered(d) : (dfilter !== 'all' && DGROUP(d) !== dfilter)) return;
     const s = state[d.id] || {};
     const el = document.createElement('article'); el.className = 'dec' + (answered(d) ? ' answered' : ''); el.id = d.id;
     const groups = d.parts ? d.parts : [{k:null, l:null, opts:d.opts, rec:d.rec}];
@@ -655,6 +662,7 @@ function render(){
     });
     html += '<div class="foot"><textarea id="note-' + d.id + '" placeholder="Note, if the answer is yes, but…">' + (s.note ? s.note.replace(/</g,'&lt;') : '') + '</textarea>';
     if (d.see) html += '<button type="button" class="see" data-see="' + d.id + '">See it</button>';
+    if (d.mod) html += '<a class="board-link" href="' + boardBase() + 'board.html?m=' + d.mod + '" target="_blank" rel="noopener">Open module on the board</a>';
     html += '<span class="state" id="st-' + d.id + '">' + (answered(d) ? 'Answered' : '') + '</span></div></div>';
     el.innerHTML = html; root.appendChild(el);
   });
@@ -724,8 +732,31 @@ const secs = links.map(a => document.querySelector(a.getAttribute('href')));
 const io = new IntersectionObserver(es => { es.forEach(e => { if (e.isIntersecting) { links.forEach(l => l.classList.toggle('on', l.getAttribute('href') === '#' + e.target.id)); } }); }, { rootMargin: '-20% 0px -70% 0px' });
 secs.forEach(s => s && io.observe(s));
 
+/* ---------- tabs: one section at a time; the hash remembers, localStorage as fallback ---------- */
+const TABS = links.map(a => a.getAttribute('href').slice(1));
+function showTab(id){
+  if (!TABS.includes(id)) id = TABS[0];
+  secs.forEach(s => { if (s) s.hidden = s.id !== id; });
+  links.forEach(l => l.classList.toggle('on', l.getAttribute('href') === '#' + id));
+  try { localStorage.setItem('sutra-r2-tab', id) } catch (e) {}
+}
+function routeHash(){
+  const h = location.hash.replace('#', '');
+  if (TABS.includes(h)) { showTab(h); window.scrollTo(0, 0); return; }
+  if (h && DECISIONS.some(d => d.id === h)) { showTab('decisions'); const el = document.getElementById(h); if (el) el.scrollIntoView({ block: 'start' }); return; }
+  let saved = null; try { saved = localStorage.getItem('sutra-r2-tab') } catch (e) {}
+  showTab(saved || TABS[0]);
+}
+window.addEventListener('hashchange', routeHash);
+
+/* board base url */
+(function(){ const i = document.getElementById('boardurl'); if (!i) return; try { const v = localStorage.getItem('sutra-r2-board'); if (v) i.value = v; } catch (e) {} i.addEventListener('change', () => { try { localStorage.setItem('sutra-r2-board', i.value.trim()) } catch (e) {} render(); }); })();
+
+/* decision filters */
+document.getElementById('dfilter').addEventListener('click', ev => { const b = ev.target.closest('button.opt'); if (!b) return; dfilter = b.dataset.f; document.querySelectorAll('#dfilter .opt').forEach(x => x.classList.toggle('on', x === b)); render(); });
+
 /* ---------- boot: local first, then the shared store ---------- */
-Object.assign(state, lsGet()); render();
+Object.assign(state, lsGet()); render(); routeHash();
 (async () => {
   if (!window.claude || !window.claude.use) return;
   try {
