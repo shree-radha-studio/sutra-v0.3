@@ -421,3 +421,25 @@ Assumptions I will build on unless told otherwise: GST block drawn with a blank 
 says "below lead time (45 d)"; the gate token appears as a chip on invoice DONE, shipment rows, the transport
 document and the credit note; parcel cards show a plain pcs count (no capacity mark, boxes vary); Warehouse stock is
 three tabs, not three nodes.
+
+## 13 Oct 2026 · Design drafts (a new section on the Dispatch page)
+
+The owner's direction of 10 Oct, drawn from `plans/review-2-dispatch.md` §5 as three screens in their own band,
+"Dispatch · design drafts" (files `mod-dispatch-dd.jsx`, `mod-dispatch-dd-web.jsx`, prefix `Dd`). Nothing else changed.
+
+- **nw-28 · Ready · box board.** Columns Worked on · New · In packing (3 of 4) · Held (a handle). One box per
+  customer: head band, due and P-tag, NEW / WORKED ON ×n / PARTLY SENT tags, photos of the pieces still owed with
+  qty, "0 left" dimmed, PACK. The selected box carries the one maroon line. Right panel "All orders": search, quick
+  buttons, customers that open to orders and lines. Pending is folded into Ready (the sub-menu row drops it).
+- **nw-29 · Packing · three customers on the floor.** One lane per live customer; the active lane shows its boxes as
+  4 × 3 photo slots with "10 / 12", the newest piece ringed; two compact lanes; a free fourth lane. Right panel = the
+  selected box's invoice (firm, bill-to, place of supply, two orders, HSN, IGST at 18 % and 5 %) and its five
+  documents (packing slip, invoice, e-invoice, e-way bill, transport slip) with one next step.
+- **n-32 · Packing · packer phone.** The scan drops the piece into slot 10 of the box; box switcher; "to bring" list;
+  no ₹.
+
+Look: 8 px boxes, 6 px photos and buttons, 1 px line2 borders, a surface2 head band; photos from `assets/crm/` and
+`assets/studio/` so every box has pictures.
+
+Open, for the owner: corners at 8 px (the schema's cards are 22); Pending folded into Ready; the rest of
+review 2 §8 (who makes IRN and e-way bills, HSN per design, LR timing, one customer at a time or mixed, box size).

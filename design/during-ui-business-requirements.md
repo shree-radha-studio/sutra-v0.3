@@ -137,3 +137,17 @@ the screen it came from so the BRD can absorb it later. Newest at the bottom.
   BRD F:85.
 - Cart chip: a single tap activates the cart (catalogue picks go into it); a double tap opens the cart card.
 - Analytics under Sale orders: sale managers and above only; hidden for sale executives.
+
+## 10 Oct 2026 · Dispatch direction (owner; plans/review-2-dispatch.md, drawn 13 Oct as Dispatch › Design drafts)
+
+- Ready holds every approved order until it is fully sent or cancelled, the half-sent ones too (BRD D:7 showed only
+  customers with an in-stock line). Sections: new orders and worked-on orders (been through dispatch at least once).
+  Screens: Design drafts · "Ready · box board" (nw-28).
+- Ready is a box board like a kitchen order screen: one box per customer with all their orders and photos, very
+  visible boxes with fine curved edges; sort and filter, or default sorts; a searchable, collapsible customer list in
+  the right panel with quick buttons above it. Screen: nw-28.
+- Packing runs 3–4 customers at a time (BRD B:91 said 7–8). The floor: open parcel boxes per customer, the stock boy
+  brings the pieces, the box contents become the packing slip, then the invoice. The screen shows a scanned piece
+  landing in a chosen box, and the right panel shows the invoice of the selected box. Screens: nw-29, n-32.
+- Transport slip, e-way bill and e-invoice checks sit beside the box invoice; the flow runs end to end: packing,
+  transport documents, e-way bills, an invoice per box. Screen: nw-29 (documents list).
