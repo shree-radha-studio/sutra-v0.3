@@ -12,29 +12,30 @@
 const Hm_SEG = [['Home'], ['Notifications', 5], ['Approvals', 7, true], ['Gate pass']];   // web sub-menu buttons: [label, count, chevron]
 const Hm_TABS = k => ({
   home: [{ icon: 'house', label: 'Home · Today', on: true }, { icon: 'layout-grid', label: 'Catalogue' }, { icon: 'receipt-text', label: 'Sale orders · Raised' }],
-  appr: [{ icon: 'house', label: 'Home' }, { icon: 'clipboard-check', label: 'Approvals · Sale orders' }, { icon: 'receipt-text', label: 'SO-3455 · Ramleela Fashion', on: true }],
+  appr: [{ icon: 'house', label: 'Home' }, { icon: 'clipboard-check', label: 'Approvals · Sale orders' }, { icon: 'receipt-text', label: 'SO-3456 · Ramleela Fashion', on: true }],
   gate: [{ icon: 'house', label: 'Home' }, { icon: 'ticket', label: 'Gate pass · Manual', on: true }],
 }[k]);
 const Hm_APPR_TABS = [['Sale orders', 4, 'receipt-text'], ['Returns', 1, 'rotate-ccw'], ['Purchase inwards', 1, 'package-plus'], ['Overages', 1, 'factory'], ['Costing', 0, 'calculator']];
 const HM_C = { name: 'Ramleela Fashion', city: 'Surat', tier: 'Platinum', since: '30/08/24', phone: '98152 23366', broker: 'Deepak', agency: 'Raghani Co.', line: 120000 };
 const HM_NOTE = '2018 ke red ka stock check karna hai';
-/* order SO-3455 · lines: design, rate, colours as [name, qty, in stock, at the last step] */
+/* the order the sell flow submitted (SO-3456, 13/10/26) · lines: design, rate, colours as [name, qty, in stock, at the last step] */
 const HM_LINES = [
-  { code: '2798', rate: 4995, cols: [['Sky', 4, 20, null, 6], ['Peach', 0, 15], ['Purple', 1, 2]] },   // 5th item: the qty it had before the edit
-  { code: '6002', rate: 4995, cols: [['Lilac', 3, 12]] },
+  { code: '2798', rate: 4995, cols: [['Sky', 2, 20, null, 4], ['Purple', 1, 2]] },   // 5th item: the qty it had before the edit
+  { code: '6002', rate: 4995, cols: [['Lilac', 1, 12]] },
   { code: '3661', rate: 5995, cols: [['Peach', 2, 0, 8]] },
+  { code: '1457', rate: 3995, cols: [['Firozi', 3, 9], ['Bottle', 1, 6]] },
 ];
 const hmQty = l => l.cols.reduce((s, c) => s + c[1], 0);
 const HM_PCS = HM_LINES.reduce((s, l) => s + hmQty(l), 0);                                  // 10
-const HM_TOTAL = HM_LINES.reduce((s, l) => s + hmQty(l) * l.rate, 0);                       // 51,950
+const HM_TOTAL = HM_LINES.reduce((s, l) => s + hmQty(l) * l.rate, 0);                       // 47,950
 const HM_INSTOCK = HM_LINES.reduce((s, l) => s + l.cols.reduce((t, c) => t + Math.min(c[1], c[2]), 0), 0);   // 8
 const HM_OPEN = { within: 64000, over: 82000 };   // open exposure of Ramleela: P3 fits the line, P4 crosses it
 const HM_HIST = [['SO-3398', '24/08/26', '05/09/26'], ['SO-3302', '29/07/26', '14/08/26'], ['SO-3215', '02/07/26', '17/07/26']];
 const HM_CH = { cust: { o: [38, 42, 35, 48, 52, 46, 58, 61, 54, 66, 72, 68], p: [30, 40, 34, 42, 45, 44, 50, 52, 49, 58, 60, 52] }, agency: { o: [210, 235, 198, 260, 284, 251, 312, 330, 298, 356, 372, 348], p: [190, 220, 190, 236, 262, 240, 280, 298, 270, 320, 330, 300] } };
 /* sale orders waiting: flags in words (tone, text), flagged first (danger count, then warn count, then oldest) */
 const HM_QUEUE = [
-  { no: 'SO-3455', name: 'Ramleela Fashion', city: 'Surat', amt: HM_TOTAL, pcs: HM_PCS, flags: [['danger', 'Overdue ₹62,400'], ['warn', 'GR ratio 40 %'], ['warn', 'Edited after submit']], by: 'Rohan Mehta', on: '10/09/26', d: '2798' },
-  { no: 'SO-3451', name: 'Preeti Fashion Hub', city: 'Ludhiana', amt: 39955, pcs: 9, flags: [['danger', 'Over credit line ₹9,950'], ['warn', 'Priority 1']], by: 'Rohan Mehta', on: '09/09/26', d: '2006' },
+  { no: 'SO-3456', name: 'Ramleela Fashion', city: 'Surat', amt: HM_TOTAL, pcs: HM_PCS, flags: [['danger', 'Overdue ₹62,400'], ['warn', 'GR ratio 40 %'], ['warn', 'Edited after submit']], by: 'Rohan Mehta', on: '13/10/26', d: '2798' },
+  { no: 'SO-3451', name: 'Preeti Fashion Hub', city: 'Ludhiana', amt: 39955, pcs: 9, flags: [['danger', 'Over credit line ₹14,200'], ['warn', 'Priority 1']], by: 'Rohan Mehta', on: '09/09/26', d: '2006' },
   { no: 'SO-3460', name: 'Kavya Silks', city: 'Jaipur', amt: 26970, pcs: 6, flags: [['warn', 'New customer']], by: 'Sunita Rao', on: '11/09/26', d: '2006' },
   { no: 'SO-3448', name: 'A V Creation', city: 'Ambala', amt: 19980, pcs: 4, flags: [], by: 'Sunita Rao', on: '08/09/26', d: '6002' },
 ];
@@ -114,7 +115,7 @@ function ScreenHmHome({ T }) {
       </div>
       <Sect T={T} style={sc}>Needs you</Sect>
       <div style={{ display: 'grid', gap: 6 }}>
-        <HmNeed T={T} icon="clipboard-check" title="3 approvals waiting" sub="SO-3455 · SO-3451 · SO-3448" />
+        <HmNeed T={T} icon="clipboard-check" title="3 approvals waiting" sub="SO-3456 · SO-3451 · SO-3448" />
         <HmNeed T={T} icon="shopping-basket" title="2 carts open since yesterday" sub="Ramleela Fashion · RL Fashion" />
         <HmNeed T={T} icon="octagon-alert" tone="danger" title="1 cart over the credit line" sub="RL Fashion · Meerut · will go up flagged" />
       </div>
@@ -159,7 +160,7 @@ function WebHmHome({ T }) {
       </div>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 20 }}><span style={{ fontFamily: T.fontDisplay, fontSize: 20, fontWeight: 600, color: T.ink }}>Needs you</span><span style={{ fontSize: 12, color: T.ink3 }}>6 things</span></div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 10 }}>
-        <HmNeed T={T} icon="clipboard-check" title="4 sale orders to approve" sub="SO-3455 · SO-3451 · SO-3448 · SO-3460" />
+        <HmNeed T={T} icon="clipboard-check" title="4 sale orders to approve" sub="SO-3456 · SO-3451 · SO-3448 · SO-3460" />
         <HmNeed T={T} icon="rotate-ccw" title="1 sale return" sub="SR-0112 · Nalli Fashion Mart · ₹12,990" />
         <HmNeed T={T} icon="package-plus" title="1 purchase inward" sub="GRN-0451 · Surat Fabrics · ₹84,000" />
         <HmNeed T={T} icon="factory" title="1 production overage" sub="PO-1187 · Rahul (karigar) · +6 pcs" />
@@ -188,7 +189,7 @@ const hmFlags = (over, open) => [
   ...(over > 0 ? [['danger', `Over the credit line by ${money(over)}`, `line ${money(HM_C.line)}, open ${money(open)}, this order ${money(HM_TOTAL)}`]] : []),
   ['danger', 'Overdue ₹62,400', '2 bills, oldest 41 d'],
   ['warn', 'GR ratio 40 %', 'goods returned, last 12 months'],
-  ['warn', 'Edited after submit', '2 min ago · qty of 2798 Sky 6 → 4'],
+  ['warn', 'Edited after submit', '2 min ago · qty of 2798 Sky 4 → 2'],
 ];
 function HmFlags({ T, flags, web }) {
   if (!flags.length) return null;
@@ -243,7 +244,7 @@ function HmCredit({ T, open, order = HM_TOTAL, line = HM_C.line, web }) {
 }
 /* appetite: what they usually buy, by price tier (BRD F:54) */
 function HmAppetite({ T, tiers = [['High', 67], ['Mid', 25], ['Low', 8]], web }) {
-  const col = [T.blue, T.blue + '99', T.blue + '55'];
+  const col = [T.ink, T.ink2, T.line2];
   return <HmCard T={T} pad={web ? '10px 14px 12px' : 14}>
     <div style={{ display: 'flex', height: 14, borderRadius: 7, overflow: 'hidden', background: T.chipBg, gap: 2 }}>{tiers.map(([t, v], i) => <span key={t} style={{ width: v + '%', background: col[i], display: 'grid', placeItems: 'center', fontFamily: T.fontUI, fontSize: 9.5, fontWeight: 600, color: T.dark ? T.bg : '#fff' }}>{v >= 20 ? v : ''}</span>)}</div>
     <div style={{ marginTop: 8 }}><Legend T={T} items={tiers.map(([t, v], i) => [t, col[i], v + ' %'])} /></div>
@@ -340,7 +341,7 @@ function HmApprovalSO({ T, over: isOver, role = 'manager', scroll }) {
   const over = Math.max(0, open + HM_TOTAL - HM_C.line);
   const sub = role === 'subadmin';
   return frameF(T, <>
-    <HmDocHead T={T} no="SO-3455" meta="10/09/26 · In-cabin" note="Raised by Rohan Mehta · the salesperson can still edit or delete it until you act" />
+    <HmDocHead T={T} no="SO-3456" meta="13/10/26 · In-cabin" note="Raised by Rohan Mehta · the salesperson can still edit or delete it until you act" />
     <HmBody pb={sub ? 170 : 150} scroll={scroll}>
       <HmFlags T={T} flags={hmFlags(over, open)} />
       <div style={{ height: 10 }} />
@@ -399,15 +400,16 @@ const HmLab = ({ T, children, right, style }) => <div style={{ display: 'flex', 
 function HmWebQueue({ T }) {
   return <div style={{ width: 300, flex: 'none', borderRight: `1px solid ${T.line}`, padding: '12px 12px 0', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
     <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, margin: '0 2px 10px' }}><span style={{ fontFamily: T.fontDisplay, fontSize: 18, fontWeight: 600, color: T.ink }}>Sale orders</span><Meta T={T}>4 · flagged first</Meta><span style={{ flex: 1 }} /><Hit T={T} icon="sliders-horizontal" size={30} iconSize={14} style={{ background: T.chipBg, alignSelf: 'center' }} /></div>
-    <div style={{ display: 'grid', gap: 8 }}>{HM_QUEUE.map(q => <HmQCard key={q.no} T={T} q={q} web picked={q.no === 'SO-3455'} />)}</div>
+    <div style={{ display: 'grid', gap: 8 }}>{HM_QUEUE.map(q => <HmQCard key={q.no} T={T} q={q} web picked={q.no === 'SO-3456'} />)}</div>
   </div>;
 }
 /* the card in the middle: facts on the order, the lines with steppers, the note, actions docked at the foot */
 function HmWebCard({ T, over: isOver, role = 'manager' }) {
-  const open = isOver ? HM_OPEN.over : HM_OPEN.within, sub = role === 'subadmin';
+  const open = isOver ? HM_OPEN.over : HM_OPEN.within, sub = role === 'subadmin', over = Math.max(0, open + HM_TOTAL - HM_C.line);
   return <div style={{ flex: 1, minWidth: 0, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
     <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', padding: '8px 16px 0' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, height: 26 }}><span style={{ fontFamily: T.fontMono, fontSize: 17, fontWeight: 600, color: T.ink }}>SO-3455</span><StatusPill T={T} s="Raised" /><span style={{ fontSize: 12, color: T.ink3, flex: 1, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>10/09/26 · In-cabin</span><Hit T={T} icon="printer" size={28} iconSize={14} style={{ background: T.chipBg }} /></div>
+      <div style={{ marginBottom: 6 }}><HmFlags T={T} web flags={hmFlags(over, open)} /></div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, height: 26 }}><span style={{ fontFamily: T.fontMono, fontSize: 17, fontWeight: 600, color: T.ink }}>SO-3456</span><StatusPill T={T} s="Raised" /><span style={{ fontSize: 12, color: T.ink3, flex: 1, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>13/10/26 · In-cabin</span><Hit T={T} icon="printer" size={28} iconSize={14} style={{ background: T.chipBg }} /></div>
       <div style={{ fontSize: 11.5, color: T.ink2, margin: '0 0 5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Raised by Rohan Mehta · the salesperson can still edit or delete it until you act</div>
       <HmCustomer T={T} web />
       <div style={{ marginTop: 5 }}><HmCredit T={T} open={open} web /></div>
@@ -439,9 +441,8 @@ function HmRecordPane({ T, open }) {
 }
 function HmWebApprovals({ T, over: isOver, role = 'manager' }) {
   const open = isOver ? HM_OPEN.over : HM_OPEN.within, over = Math.max(0, open + HM_TOTAL - HM_C.line);
-  return <WebShell3 T={T} module="Home" crumb={['Home', 'Approvals', 'Sale orders', 'SO-3455']} section="Approvals" seg={Hm_SEG} active="Approvals" tabs={Hm_TABS('appr')} paneTitle="Ramleela Fashion" pane={<HmRecordPane T={T} open={open} />}>
+  return <WebShell3 T={T} module="Home" crumb={['Home', 'Approvals', 'Sale orders', 'SO-3456']} section="Approvals" seg={Hm_SEG} active="Approvals" tabs={Hm_TABS('appr')} paneTitle="Ramleela Fashion" pane={<HmRecordPane T={T} open={open} />}>
     <ViewTabs T={T} tabs={Hm_APPR_TABS} active="Sale orders" />
-    <div style={{ padding: '6px 24px 0', flex: 'none' }}><HmFlags T={T} web flags={hmFlags(over, open)} /></div>
     <div style={{ flex: 1, minHeight: 0, display: 'flex', marginTop: 6 }}><HmWebQueue T={T} /><HmWebCard T={T} over={isOver} role={role} /></div>
   </WebShell3>;
 }
