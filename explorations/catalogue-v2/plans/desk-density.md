@@ -3,15 +3,18 @@
 Workstream of review 2 (`plans/review-2-template-and-sell-flow.md` §1.6, §1.8, decision 5). Proposes the schema's §9, audits
 every sub-menu on the board for its density, checks the structured Dispatch drafts against the chrome rule, and lists
 what they still miss. Proposed text only: the schema changes when the owner answers decision 5 and the lead lands it.
-Compare pair on the board: Catalogue · sale orders · structured › Sale orders · Desk (n-16, nw-13) against f-15 and w-9.
+Compare pair on the board: Catalogue · sale orders · structured › Sale orders · Desk (n-19, nw-15 on the review branch)
+against f-15 and w-9. Decision 5 answered yes, provisionally, by the lead for the owner (13 Oct); the owner may overturn.
 
 ---
 
 ## 1. Proposed SCH §9 · Densities
 
 One language, two densities, the same tokens. *Cabin* shows the product the way a buyer meets it: picture first, rounded,
-generous. *Desk* shows the business the way an accountant trusts it: ruled rows, counts first, status as words. A screen
-picks a density for its **content area** only. A desk table inside a cabin shell is the normal case.
+generous. *Desk* shows the business the way an accountant trusts it: ruled and boxed, numbers right-aligned, status as
+words, **and with air**. Desk is not denser: it is more ordered. The owner likes the rectangular, ruled boxes and finds
+the first structured drafts crowded, so Desk never buys order with more rows per screen. A screen picks a density for
+its **content area** only. A desk table inside a cabin shell is the normal case.
 
 **Never changes between densities.** The tokens of §1 (both themes), the three type faces of §2, and the chrome:
 rail, sidebar, tab strip, web header, view tabs (`ViewTabs`) and the toolbar row under them, right pane (frame, width,
@@ -27,7 +30,9 @@ where the BRD allows, phone and web, light and dark.
 | Photo | 16 (grid 4:5 hero), 8 in list rows | 3, always 4:5: 32 × 40 web, 36 × 45 phone, 28 × 35 in a card strip |
 | Tag, chip, button, input inside content | pill (999) | 3 |
 | Rules | gaps between cards | 1px `line` between rows; no zebra, no gradient |
-| Row height | list row 78 (photo 62 × 78) | 44 web, 56 phone (48 for a nested row); heads 34 web / 30 phone |
+| Row height | list row 78 (photo 62 × 78) | 44 web (never 36), 56 phone (48 for a nested row); heads 38 web / 30 phone |
+| Air | card gaps 10–12 | cell gutter 24 web, side padding 20 in a table, 16 in a phone box; 14 between boxes |
+| First view | — | at most six columns (the rest behind Columns); about eight rows, then a foot with the count and totals |
 | Column heads | — | 11 px uppercase, .07em, `ink3` on `surface2`; numeric heads right-aligned |
 | Numbers | display face, `PriceF` | UI face, tabular, right-aligned in columns; `PriceF` only for the one total of a card or pane |
 | Counts | KPI tile, value display 24 | count cell, display 28 web / 30 phone over an 11 px uppercase label; no tile box |
@@ -44,6 +49,10 @@ live state on a frame (PACKING INTO).
 **The maroon line.** The chrome spends it first: the active view tab underline on web and on the phone's module header.
 When the chrome has spent it, Desk content carries none (selection is ink, actions are outlined). When it has not, the
 content's single primary button takes it.
+
+**The air budget (Desk).** Two control rows under the header, never three: view tabs, then one toolbar (search ·
+Filters ▾ · one sort · at most four quick chips). No third pane: main area plus the one right pane. One table per
+main area on first view; a second list goes behind a tab. A form takes the main area at more than four fields (D4).
 
 **Which density.** Desk where the user reads more than about twenty rows, compares numbers down a column, or works a
 form with Tab and Enter. Cabin where the user finds by picture, shows a customer, or works with one hand on the floor.
@@ -151,3 +160,32 @@ Fix with the next Dispatch pass (my files): phone header → shared header; web 
 5. **Dispatch pane 310**, per SCH §5.
 
 Board ids after the lead's merge (review branch): cards n-19 / nd-19, table nw-13 / nwd-13.
+
+---
+
+## 7. Exemplars drawn on the provisional answers (13 Oct; all drafts, nothing in finals)
+
+Pictures for the owner to compare, not decisions applied: decisions 3, 4, 5, 13 and 14 are unanswered on the deck.
+Every caption ends "· provisional, pending decision n". The two Production screens are copies in my own file;
+`mod-production-web.jsx` is untouched.
+
+Owner's scope rule: one exemplar pair per decision for compare, no sweep before the core screens are final.
+
+| Decision | File | Frames (ids on my branch with the file loaded; the review branch may shift them) | What it shows |
+|---|---|---|---|
+| D5 · Desk with air | `mod-catalogue-so-s.jsx` (revised) | n-19 / nw-15 on the review branch | Six columns on first view, 44 px rows, 24 gutters, 8 rows then a foot, two control rows, pane facts cut to three; Approval card is the content's maroon |
+| D5 · Dispatch at the source | `mod-dispatch-ds.jsx` (new) | n-32 · nw-28 | Ready on the shared phone header (DHeader) and on WebShell3 with pane 310; two control rows, six columns, 60 px rows, one design photo + count, status as words, no money; Start packing / Pack next is the maroon. Compare with nw-24 and its phone twin |
+| D3 · header of six | `mod-production-ds.jsx` | n-47 · nw-48 | Phone scroller of six groups; web header Purchase ▾ · Materials ▾ · Recipes · Orders ▾ · Samples · More ▾, Orders ▾ open with Job cards inside, search 196 |
+| D13 · inward | `mod-production-ds.jsx` | n-48 · nw-49 | Supplier invoice no and date first (box 1), received the only typed number, accounts folded to Freight · Discount · GST with More; phone has no money |
+| D4 · forms to the main area | `mod-production-ds.jsx` | n-49 · nw-50 | New PO out of the pane: supplier and dates, lines (qty typed, rate from the last purchase), photos; the supplier's last purchases in the pane. Phone: a full-screen form, not a sheet |
+| D14 · tranches | `mod-production-ds.jsx` | n-50 · nw-51 | Reason chips under the head, "30 / 30 / 40 · ends dd/mm" per process, Embroidery opened to three tranches; fields cut to four, the rest as meta |
+
+New files need one `modules.js` line each (the lead adds them at merge): `mod-production-ds.jsx` in production after
+`mod-production-web3.jsx`; `mod-dispatch-ds.jsx` in dispatch after `mod-dispatch-s-web.jsx`. Ids above are with both loaded.
+
+**Maroon (lead's ruling, 13 Oct).** Inside Desk content the primary action is the one maroon line (filled accent); the
+view tab's marker is chrome and stays. Known leftover: the shared `SupplierPane` keeps its accent tick on "Last purchases".
+
+**Waits.** The rest of Dispatch onto the shared header and pane 310 (ruling 2, 5; Ready is drawn); the sale-executive Sale orders variant
+without flags (ruling 3); the Dispatch gaps of §4; the D4 moves of New material (to the Hub) and New sample; folding §1 into the
+schema (the lead lands it). 
