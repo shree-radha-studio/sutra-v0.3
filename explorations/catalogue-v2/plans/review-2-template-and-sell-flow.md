@@ -312,7 +312,7 @@ Two rules from the owner that shape every answer:
 | 5 | One language, two densities | Yes | Desk as defined above; Sale orders pair (n-19 / nw-15) is the first exemplar, retuned for air |
 | 6 | Approvals in one place | Yes | The sale-order page shows the state and links there |
 | 7a | Hold as a third action | Keep Hold | |
-| 7b | The two charts on the phone card | Behind a "Graphs" tab | Diverges from the deck's recommendation (inline); chosen for the owner's crowding steer |
+| 7b | The two charts on the phone card | Inline, on the first screen | The lead first chose a Graphs tab; the owner overturned it at 15:30: the customer's analytics and the flags are the first screen, the order is one tap away, and flags are a fixed template with highlighted tiles, never prose (see design/during-ui-business-requirements.md, 13 Oct 15:30) |
 | 7c | Who clears an over-the-line flag | Admin only | Sub-admin sees the flag without the clear action |
 | 8 | New customer from the cart | Name, phone, city; the rest later in the Hub | |
 | 9 | The submit sheet | As drawn | Nothing blocks; editable and deletable in the queue (owner's rule of 13 Oct) |

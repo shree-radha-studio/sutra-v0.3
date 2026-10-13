@@ -168,3 +168,16 @@ the screen it came from so the BRD can absorb it later. Newest at the bottom.
   bills, high return ratio, new customer, edited after submit) is a flag on the approver's side, in words, and flagged orders
   sort first in the queue. Who clears an over-the-line flag (admin only, or sub-admin too) is open. From the submit sheet and
   the approvals card.
+
+### 13 Oct 2026, 15:30 · the approvals card: analytics first, flags as a template (owner, on the deck)
+
+- When an admin or accounts admin opens a sale order in Home › Approvals, the first screen is the customer's
+  analytics and the flags, highlighted; the order itself (lines, note, history) is one tap away or collapsible.
+  The metrics are the ones on the owner's Miro reference and in the BRD (F:46 to F:56): payment score, overdue,
+  GR ratio, credit line used, FY billing, total pieces, customer score, appetite, and the two charts.
+- Flags are not written as text. They are threshold rules on a fixed set of metrics, shown as highlights on the
+  same template every time (the failing tile marked, the fixed flag chips on the queue and the card), so that an
+  admin reads the same layout on every order and the feature needs no generated prose. The thresholds (overdue,
+  GR ratio limit, credit line, score floor) are the firm's to set; not decided here.
+- This overturns the lead's provisional answer to decision 7b (charts behind a tab): the charts stay on the first
+  screen. Decision 7 on the deck is otherwise unchanged.
