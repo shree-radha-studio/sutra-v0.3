@@ -69,8 +69,7 @@ final's chips plus a pressed "+", a sent state and an editing state), `CsNewCart
 - **Recent customers**: three of the five, last order dates from the board's orders; customers who already have an open cart
   (Ramleela Fashion, RL Fashion, Nalli) are left out. Search finds the rest. The first row is drawn picked (ink outline and a
   check, not maroon) so "Start cart D" has something to start.
-- **New customer**: "Optional" shows Broker · Agency and GST number; credit days (30 default) and transport sit behind "More".
-  Phone is the contact (BRD: "contact").
+- **New customer**: three fields only (name, phone, city); broker, GST, credit days and transport are added later in the Hub. Phone is the contact (BRD: "contact").
 - **Voice button** on the customer search and on the approval note (the 30 % semi-skilled users need voice, review 1 answer 2).
 - **Sale book** stays In-cabin · WhatsApp (BRD "two books") and is chosen when the cart is started, as in the final's cart card.
 - **Carts screen entry points**: the final's "New customer" chip on the phone Carts screen and the "+" chip both open the new
@@ -88,7 +87,7 @@ final's chips plus a pressed "+", a sent state and an editing state), `CsNewCart
 - Filter count bubble stays "4"; grid frames untouched. Dark twins checked at --w 2700; console clean.
 
 ## Provisional answers (lead, for the owner, 13 Oct; owner may overturn on the deck; nothing goes into final.jsx this hour)
-1 Phone header: three rows everywhere, two inside the catalogue grid (n-16, n-17 and n-18 stay as the exemplars). 2 Island per role: yes (n-19). 8 New customer: name, phone, city only; the rest later in the Hub (n-10 and nw-10 already draw the rest as optional, behind "can wait"; trim to the three fields if the owner confirms). 9 Submit sheet: as drawn (n-11, nw-11).
+1 Phone header: three rows everywhere, two inside the catalogue grid (n-16, n-17 and n-18 stay as the exemplars). 2 Island per role: yes (n-19). 8 New customer: name, phone, city only; the rest later in the Hub (applied: n-10 and nw-10 now show the three fields and a line saying the rest is added later in the Hub; the optional group is gone). 9 Submit sheet: as drawn (n-11, nw-11).
 
 ## Trade-offs for the owner
 - n-16 saves only about 10 px (the Meta line takes back most of the chips row). n-17 at rest is level with n-16; n-18 saves

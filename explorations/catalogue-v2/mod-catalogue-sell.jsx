@@ -92,13 +92,7 @@ function CsNewCustBody({ T }) {
       <CsField T={T} label="Phone" value={CS_NEW.phone} mono />
       <CsField T={T} label="City" value={CS_NEW.city} chevron />
     </div>
-    <div style={{ borderTop: `1px solid ${T.line}`, marginTop: 14 }}>
-      <div className="press" style={{ display: 'flex', alignItems: 'center', gap: 8, height: 38 }}><span style={{ fontFamily: T.fontUI, fontSize: 12.5, fontWeight: 600, color: T.ink2 }}>Optional</span><Meta T={T}>can wait</Meta><span style={{ flex: 1 }} /><Ic name="chevron-up" size={16} color={T.ink3} /></div>
-      <CsOptRow T={T} label="Broker · Agency" value={CS_NEW.broker} />
-      <CsOptRow T={T} label="GST number" />
-      <div className="press" style={{ display: 'flex', alignItems: 'center', gap: 6, height: 40, borderTop: `1px solid ${T.line}`, fontFamily: T.fontUI, fontSize: 13, fontWeight: 600, color: T.ink2 }}>More<span style={{ fontWeight: 400, color: T.ink3, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>· credit days (30 default), transport</span></div>
-    </div>
-    <Meta T={T} style={{ display: 'block', whiteSpace: 'normal', marginTop: 6, lineHeight: 1.4 }}>Required for the cart: name, phone, city. The rest can wait.</Meta>
+    <Meta T={T} style={{ display: 'block', whiteSpace: 'normal', marginTop: 14, lineHeight: 1.45 }}>Name, phone and city is enough to start a cart. Broker, GST number, credit days and transport can be added later in the Hub.</Meta>
   </>;
 }
 const CsAddBtn = ({ T }) => <T.Btn icon="user-plus" style={{ width: '100%', height: 48 }}>Add and start cart D</T.Btn>;
@@ -210,7 +204,7 @@ function ScreenCsNewCart({ T }) {
 }
 /* P2 · new customer sheet */
 function ScreenCsNewCustomer({ T }) {
-  return <CsOverCarts T={T} sheet={<Sheet T={T} h={580} title="New customer" foot={<CsAddBtn T={T} />}><CsNewCustBody T={T} /></Sheet>} />;
+  return <CsOverCarts T={T} sheet={<Sheet T={T} h={410} title="New customer" foot={<CsAddBtn T={T} />}><CsNewCustBody T={T} /></Sheet>} />;
 }
 /* P3 · submit: summary, due, priority, note. Nothing here can block. */
 function ScreenCsSubmit({ T }) {
