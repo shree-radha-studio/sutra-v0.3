@@ -3,15 +3,18 @@
 Workstream of review 2 (`plans/review-2-template-and-sell-flow.md` §1.6, §1.8, decision 5). Proposes the schema's §9, audits
 every sub-menu on the board for its density, checks the structured Dispatch drafts against the chrome rule, and lists
 what they still miss. Proposed text only: the schema changes when the owner answers decision 5 and the lead lands it.
-Compare pair on the board: Catalogue · sale orders · structured › Sale orders · Desk (n-16, nw-13) against f-15 and w-9.
+Compare pair on the board: Catalogue · sale orders · structured › Sale orders · Desk (n-19, nw-15 on the review branch)
+against f-15 and w-9. Decision 5 answered yes, provisionally, by the lead for the owner (13 Oct); the owner may overturn.
 
 ---
 
 ## 1. Proposed SCH §9 · Densities
 
 One language, two densities, the same tokens. *Cabin* shows the product the way a buyer meets it: picture first, rounded,
-generous. *Desk* shows the business the way an accountant trusts it: ruled rows, counts first, status as words. A screen
-picks a density for its **content area** only. A desk table inside a cabin shell is the normal case.
+generous. *Desk* shows the business the way an accountant trusts it: ruled and boxed, numbers right-aligned, status as
+words, **and with air**. Desk is not denser: it is more ordered. The owner likes the rectangular, ruled boxes and finds
+the first structured drafts crowded, so Desk never buys order with more rows per screen. A screen picks a density for
+its **content area** only. A desk table inside a cabin shell is the normal case.
 
 **Never changes between densities.** The tokens of §1 (both themes), the three type faces of §2, and the chrome:
 rail, sidebar, tab strip, web header, view tabs (`ViewTabs`) and the toolbar row under them, right pane (frame, width,
@@ -27,7 +30,9 @@ where the BRD allows, phone and web, light and dark.
 | Photo | 16 (grid 4:5 hero), 8 in list rows | 3, always 4:5: 32 × 40 web, 36 × 45 phone, 28 × 35 in a card strip |
 | Tag, chip, button, input inside content | pill (999) | 3 |
 | Rules | gaps between cards | 1px `line` between rows; no zebra, no gradient |
-| Row height | list row 78 (photo 62 × 78) | 44 web, 56 phone (48 for a nested row); heads 34 web / 30 phone |
+| Row height | list row 78 (photo 62 × 78) | 44 web (never 36), 56 phone (48 for a nested row); heads 38 web / 30 phone |
+| Air | card gaps 10–12 | cell gutter 24 web, side padding 20 in a table, 16 in a phone box; 14 between boxes |
+| First view | — | at most six columns (the rest behind Columns); about eight rows, then a foot with the count and totals |
 | Column heads | — | 11 px uppercase, .07em, `ink3` on `surface2`; numeric heads right-aligned |
 | Numbers | display face, `PriceF` | UI face, tabular, right-aligned in columns; `PriceF` only for the one total of a card or pane |
 | Counts | KPI tile, value display 24 | count cell, display 28 web / 30 phone over an 11 px uppercase label; no tile box |
@@ -44,6 +49,10 @@ live state on a frame (PACKING INTO).
 **The maroon line.** The chrome spends it first: the active view tab underline on web and on the phone's module header.
 When the chrome has spent it, Desk content carries none (selection is ink, actions are outlined). When it has not, the
 content's single primary button takes it.
+
+**The air budget (Desk).** Two control rows under the header, never three: view tabs, then one toolbar (search ·
+Filters ▾ · one sort · at most four quick chips). No third pane: main area plus the one right pane. One table per
+main area on first view; a second list goes behind a tab. A form takes the main area at more than four fields (D4).
 
 **Which density.** Desk where the user reads more than about twenty rows, compares numbers down a column, or works a
 form with Tab and Enter. Cabin where the user finds by picture, shows a customer, or works with one hand on the floor.
