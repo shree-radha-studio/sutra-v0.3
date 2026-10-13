@@ -166,10 +166,52 @@ function ScreenPDkGroups({ T }) {
   </Body></>, prDock(T));
 }
 
-Object.assign(window, { PDK_SEG, PDK_GROUPS, PDkShell, PDkFloat, PDK_NODES, PDkHeader, PDkUp, PDkBox, PDkBoxHead, PDkField, PDkTag, PDkChip, PDkBtn, PDkCols, PDkNum, PDkMain, PDK_INW, PDkInwardMain, WebPDkInward, ScreenPDkInward, PDK_PROCS, PDK_NEED, PDkReadyPane, PDkNewOrderMain, WebPDkNewOrder, WebPDkHeaderOpen, ScreenPDkNewOrder, ScreenPDkGroups });
+/* ── D4 · New purchase order out of the pane: a main-area form, the supplier's last purchases in the pane ──────────── */
+const PDK_PO = [['m10', 300, 62], ['m5', 500, 28]];
+function WebPDkPONew({ T }) {
+  const total = PDK_PO.reduce((s, [, q, r]) => s + q * r, 0);
+  return <PDkShell T={T} section="Purchase orders" active="Purchase" crumb={['Production', 'Purchase', 'Orders', 'New PO']} tab="New purchase order · PU-0347" paneTitle="Surat Textiles" pane={<SupplierPane T={T} />}>
+    <ViewTabs T={T} tabs={[['New PO', null, 'plus'], ...PO_TABS]} active="New PO" right={<Meta T={T}>PU-0347 · auto · Surat purchase book</Meta>} />
+    <PDkMain>
+      <PDkBox T={T}>
+        <PDkBoxHead T={T} n="1" title="Supplier and dates" right={<Meta T={T}>the pane shows what we last bought from them</Meta>} />
+        <div style={{ display: 'flex', gap: 16, padding: '12px 20px 14px' }}><PDkField T={T} label="Supplier" value="Surat Textiles · score 81" caret focus /><PDkField T={T} label="Book" value="Surat purchase" caret w={170} /><PDkField T={T} label="Expected" value="18/09/26" icon="calendar" w={150} /><PDkField T={T} label="For production order" value="2798 · PO-1187 · Stitching 20/09" caret /></div>
+      </PDkBox>
+      <PDkBox T={T} style={{ overflow: 'hidden' }}>
+        <PDkBoxHead T={T} n="2" title="Lines" sub="qty is the number you type; the rate comes from the last purchase" />
+        <PDkCols T={T} cols={[['Material'], ['In stock', 90, true], ['Qty', 100, true], ['Rate ₹', 80, true], ['Value ₹', 100, true]]} />
+        {PDK_PO.map(([id, q, r]) => { const m = prMat(id); return <div key={id} style={{ display: 'flex', alignItems: 'center', gap: 24, height: 56, padding: '0 20px', borderBottom: `1px solid ${T.line}`, fontFamily: T.fontUI, fontSize: 13.5 }}>
+          <span style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', gap: 10 }}><Swatch m={m} w={32} h={40} r={3} /><span style={{ minWidth: 0 }}><div style={{ color: T.ink, fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{prMatName(m)}</div><Meta T={T}>{m.code} · {m.group}</Meta></span></span>
+          <span style={PDkNum(T, 90, { color: T.ink2 })}>{m.stock} {m.unit}</span>
+          <span style={{ width: 100, flex: 'none', display: 'flex', justifyContent: 'flex-end' }}><span style={{ width: 90, height: 36, lineHeight: '34px', borderRadius: 3, border: `1px solid ${T.line2}`, background: T.bg, textAlign: 'right', padding: '0 10px', fontWeight: 600, fontVariantNumeric: 'tabular-nums', boxSizing: 'border-box' }}>{q} {m.unit}</span></span>
+          <span style={PDkNum(T, 80)}>{r}</span><span style={PDkNum(T, 100, { fontWeight: 600 })}>{prMoney(q * r)}</span>
+        </div>; })}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, height: 48, padding: '0 20px' }}><PDkBtn T={T} icon="plus" h={34}>Add a line</PDkBtn><span style={{ flex: 1 }} /><Meta T={T}>2 lines · rates for money roles</Meta><span style={PDkNum(T, 110, { fontWeight: 600, fontSize: 15 })}>{prMoney(total)}</span></div>
+      </PDkBox>
+      <PDkBox T={T}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '14px 20px' }}><span className="press" style={{ width: 56, height: 56, borderRadius: 3, border: `1px dashed ${T.line2}`, display: 'grid', placeItems: 'center', color: T.ink2, flex: 'none' }}><Ic name="camera" size={18} /></span><span style={{ width: 230, flex: 'none', fontFamily: T.fontUI, fontSize: 12.5, color: T.ink2, lineHeight: 1.4 }}>2 photos from WhatsApp attached · the supplier gets the PO with the pictures</span><div style={{ flex: 1, display: 'flex', alignItems: 'center', height: 40, padding: '0 12px', borderRadius: 3, border: `1px solid ${T.line2}`, background: T.bg, fontFamily: T.fontUI, fontSize: 13.5, color: T.ink3 }}>Narration · e.g. same lot as PU-0319</div></div>
+      </PDkBox>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 'none' }}><Meta T={T}>PM approves before it goes to the supplier</Meta><span style={{ flex: 1 }} /><PDkBtn T={T}>Save draft</PDkBtn><PDkBtn T={T} fill icon="send">Raise PO · send</PDkBtn></div>
+    </PDkMain>
+  </PDkShell>;
+}
+/* D4 · phone: the same form as a full screen (not a sheet), one field per row, qty only */
+function ScreenPDkPONew({ T }) {
+  return frameF(T, <><PrHeader T={T} title="New PO · PU-0347" back noSearch /><Body style={{ padding: '14px 16px 110px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}><PDkField T={T} label="Supplier" value="Surat Textiles · score 81" caret focus /><div style={{ display: 'flex', gap: 10 }}><PDkField T={T} label="Expected" value="18/09/26" icon="calendar" /><PDkField T={T} label="Book" value="Surat purchase" caret /></div><PDkField T={T} label="For production order" value="2798 · PO-1187 · Stitching" caret /></div>
+    <div style={{ ...PDkUp(T), margin: '18px 0 4px' }}>Lines · qty</div>
+    {PDK_PO.map(([id, q]) => { const m = prMat(id); return <div key={id} style={{ display: 'flex', alignItems: 'center', gap: 10, height: 60, borderTop: `1px solid ${T.line}` }}><Swatch m={m} w={36} h={45} r={3} /><span style={{ flex: 1, minWidth: 0 }}><div style={{ fontFamily: T.fontUI, fontSize: 14.5, fontWeight: 500, color: T.ink, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{prMatName(m)}</div><Meta T={T}>{m.stock} {m.unit} in stock</Meta></span><span style={{ width: 92, height: 44, lineHeight: '42px', borderRadius: 3, border: `1px solid ${T.line2}`, background: T.bg, textAlign: 'right', padding: '0 10px', fontFamily: T.fontUI, fontSize: 15, fontWeight: 600, fontVariantNumeric: 'tabular-nums', boxSizing: 'border-box' }}>{q} {m.unit}</span></div>; })}
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10, height: 56, borderTop: `1px solid ${T.line}`, borderBottom: `1px solid ${T.line}` }}><Ic name="plus" size={16} color={T.ink2} /><span style={{ fontFamily: T.fontUI, fontSize: 13.5, color: T.ink2 }}>Add a line</span><span style={{ flex: 1 }} /><Ic name="camera" size={16} color={T.ink2} /><span style={{ fontFamily: T.fontUI, fontSize: 12.5, color: T.ink2 }}>2 photos</span></div>
+    <Meta T={T} style={{ display: 'block', marginTop: 10 }}>Rates come from the last purchase · PM approves before it goes to the supplier.</Meta>
+    <PDkBtn T={T} fill icon="send" h={52} style={{ width: '100%', marginTop: 16, boxSizing: 'border-box' }}>Raise PO · send</PDkBtn>
+  </Body></>, prDock(T));
+}
+
+Object.assign(window, { PDK_SEG, PDK_GROUPS, PDkShell, PDkFloat, PDK_NODES, PDkHeader, PDkUp, PDkBox, PDkBoxHead, PDkField, PDkTag, PDkChip, PDkBtn, PDkCols, PDkNum, PDkMain, PDK_INW, PDkInwardMain, WebPDkInward, ScreenPDkInward, PDK_PROCS, PDK_NEED, PDkReadyPane, PDkNewOrderMain, WebPDkNewOrder, WebPDkHeaderOpen, ScreenPDkNewOrder, ScreenPDkGroups, PDK_PO, WebPDkPONew, ScreenPDkPONew });
 
 (window.NEW_DRAFT_MODULES = window.NEW_DRAFT_MODULES || []).push({ module: 'Production · review 2 exemplars', note: 'one pair per decision for compare (13 Oct): D3 header of six · D13 inward, paper first, accounts folded · D14 tranches collapsed · Desk density', subs: [
   { name: 'Header · six groups (D3)', flow: 'phone scroller of six → web header with Orders ▾ open', phone: [['Header · six groups in the scroller, Orders · provisional, pending decision 3', ScreenPDkGroups]], web: [['Header · six buttons, Orders ▾ open (Job cards inside), search 196 · provisional, pending decision 3', WebPDkHeaderOpen]] },
   { name: 'Purchase inward · paper first (D13)', flow: 'invoice no and date first → received qty → accounts folded', phone: [['Inward · paper first, no money (warehouse) · provisional, pending decision 13', ScreenPDkInward]], web: [['Inward · paper first, accounts folded to Freight · Discount · GST, Desk density · provisional, pending decision 13', WebPDkInward]] },
+  { name: 'New PO · main-area form (D4)', flow: 'supplier and dates → lines (qty typed) → photos → raise; the supplier\'s last purchases in the pane', phone: [['New PO · full-screen form, qty only · provisional, pending decision 4', ScreenPDkPONew]], web: [['New PO · main-area form, supplier pane, Desk density · provisional, pending decision 4', WebPDkPONew]] },
   { name: 'New order · tranches collapsed (D14)', flow: 'reason chips under the head → processes with default tranches → one opened', phone: [['New order · sheet, reason chips, tranches as one line · provisional, pending decision 14', ScreenPDkNewOrder]], web: [['New order · tranches collapsed, Embroidery opened, Desk density · provisional, pending decision 14', WebPDkNewOrder]] },
 ] });

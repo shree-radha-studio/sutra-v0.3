@@ -173,16 +173,19 @@ Owner's scope rule: one exemplar pair per decision for compare, no sweep before 
 
 | Decision | File | Frames (ids on my branch with the file loaded; the review branch may shift them) | What it shows |
 |---|---|---|---|
-| D5 · Desk with air | `mod-catalogue-so-s.jsx` (revised) | n-19 / nw-15 on the review branch | Six columns on first view, 44 px rows, 24 gutters, 8 rows then a foot, two control rows, pane facts cut to three |
+| D5 · Desk with air | `mod-catalogue-so-s.jsx` (revised) | n-19 / nw-15 on the review branch | Six columns on first view, 44 px rows, 24 gutters, 8 rows then a foot, two control rows, pane facts cut to three; Approval card is the content's maroon |
+| D5 · Dispatch at the source | `mod-dispatch-ds.jsx` (new) | n-32 · nw-28 | Ready on the shared phone header (DHeader) and on WebShell3 with pane 310; two control rows, six columns, 60 px rows, one design photo + count, status as words, no money; Start packing / Pack next is the maroon. Compare with nw-24 and its phone twin |
 | D3 · header of six | `mod-production-ds.jsx` | n-47 · nw-48 | Phone scroller of six groups; web header Purchase ▾ · Materials ▾ · Recipes · Orders ▾ · Samples · More ▾, Orders ▾ open with Job cards inside, search 196 |
 | D13 · inward | `mod-production-ds.jsx` | n-48 · nw-49 | Supplier invoice no and date first (box 1), received the only typed number, accounts folded to Freight · Discount · GST with More; phone has no money |
-| D14 · tranches | `mod-production-ds.jsx` | n-49 · nw-50 | Reason chips under the head, "30 / 30 / 40 · ends dd/mm" per process, Embroidery opened to three tranches; fields cut to four, the rest as meta |
+| D4 · forms to the main area | `mod-production-ds.jsx` | n-49 · nw-50 | New PO out of the pane: supplier and dates, lines (qty typed, rate from the last purchase), photos; the supplier's last purchases in the pane. Phone: a full-screen form, not a sheet |
+| D14 · tranches | `mod-production-ds.jsx` | n-50 · nw-51 | Reason chips under the head, "30 / 30 / 40 · ends dd/mm" per process, Embroidery opened to three tranches; fields cut to four, the rest as meta |
 
-`mod-production-ds.jsx` needs one line in `modules.js`: production `files`, after `mod-production-web3.jsx` (the lead adds it).
-D4 (forms to the main area) has no separate exemplar: the inward and new-order frames are main-area forms with a helping
-pane; New PO, New material and New sample wait for the sweep.
+New files need one `modules.js` line each (the lead adds them at merge): `mod-production-ds.jsx` in production after
+`mod-production-web3.jsx`; `mod-dispatch-ds.jsx` in dispatch after `mod-dispatch-s-web.jsx`. Ids above are with both loaded.
+
+**Maroon (lead's ruling, 13 Oct).** Inside Desk content the primary action is the one maroon line (filled accent); the
+view tab's marker is chrome and stays. Known leftover: the shared `SupplierPane` keeps its accent tick on "Last purchases".
 
 **Waits.** Dispatch phone onto the shared header and pane 310 (ruling 2, 5); the sale-executive Sale orders variant
-without flags (ruling 3); the Dispatch gaps of §4; the D4 moves of New PO, New material, New sample; folding §1 into the
-schema (the lead lands it). Content primaries in Desk frames are filled ink, so the active view tab stays the one maroon
-line; the owner may want the maroon on the form's submit instead.
+without flags (ruling 3); the Dispatch gaps of §4; the D4 moves of New material (to the Hub) and New sample; folding §1 into the
+schema (the lead lands it). 
