@@ -186,6 +186,6 @@ New files need one `modules.js` line each (the lead adds them at merge): `mod-pr
 **Maroon (lead's ruling, 13 Oct).** Inside Desk content the primary action is the one maroon line (filled accent); the
 view tab's marker is chrome and stays. Known leftover: the shared `SupplierPane` keeps its accent tick on "Last purchases".
 
-**Waits.** Dispatch phone onto the shared header and pane 310 (ruling 2, 5); the sale-executive Sale orders variant
+**Waits.** The rest of Dispatch onto the shared header and pane 310 (ruling 2, 5; Ready is drawn); the sale-executive Sale orders variant
 without flags (ruling 3); the Dispatch gaps of §4; the D4 moves of New material (to the Hub) and New sample; folding §1 into the
 schema (the lead lands it). 
