@@ -12,7 +12,7 @@ const CS_NEW = { name: 'Shree Vastra Collection', phone: '98765 43210', city: 'J
 const CS_NOTE = '2018 ke red ka stock check karna hai';
 const CS_TABS = [{ icon: 'layout-grid', label: 'Catalogue' }, { icon: 'shopping-basket', label: 'Carts · 3 active', on: true }];
 /* Cart A's customer and the order it became (SO-3456), for the queue screens */
-const CS_CUST = { id: 'ca', name: 'Ramleela Fashion', city: 'Surat', market: 'Ring Road', tier: 'Platinum', score: 90, phone: '98152 23366', transport: 'Patel Parcel Service', broker: 'Harjeet Singh' };
+const CS_CUST = { id: 'ca', name: 'Ramleela Fashion', city: 'Surat', market: 'Adajan', tier: 'Platinum', score: 90, phone: '98152 23366', transport: 'Patel Parcel Service', broker: 'Harjeet Singh' };
 const csTotals = () => { const g = groupsOf(); return { g, pcs: g.reduce((s, x) => s + x.pcs, 0), total: g.reduce((s, x) => s + x.pcs * (x.d.price || 0), 0) }; };
 const csOrder = () => { const { g, pcs, total } = csTotals(); return { no: 'SO-3456', c: CS_CUST, date: '13/10/26', pcs, designs: g.length, bill: total, status: 'In queue' }; };
 
@@ -46,7 +46,7 @@ const CsCustRow = ({ T, c, last, sel }) => <div className="press" style={{ displ
 </div>;
 const CsLabel = ({ T, children, right, style }) => <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, margin: '0 2px 7px', ...style }}><span style={{ fontFamily: T.fontUI, fontSize: 12.5, fontWeight: 600, color: T.ink2 }}>{children}</span><span style={{ flex: 1 }} />{right}</div>;
 /* design photos beside their numbers, for the summary and the sent card */
-const CsDesigns = ({ T, size = 1 }) => <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>{groupsOf().map(g => <span key={g.d.code} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Thumb T={T} d={g.d} w={Math.round(28 * size)} h={Math.round(35 * size)} r={7} /><span style={{ fontFamily: T.fontDisplay, fontSize: 16, fontWeight: 600, color: T.ink, fontVariantNumeric: 'tabular-nums' }}>{g.d.code}</span></span>)}</div>;
+const CsDesigns = ({ T, size = 1 }) => <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6 }}>{groupsOf().map(g => <span key={g.d.code} style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}><Thumb T={T} d={g.d} w={Math.round(26 * size)} h={Math.round(33 * size)} r={7} /><span style={{ fontFamily: T.fontDisplay, fontSize: 16, fontWeight: 600, color: T.ink, fontVariantNumeric: 'tabular-nums' }}>{g.d.code}</span></span>)}</div>;
 
 /* Cart chips like the final's (tap activates), plus: "+" in its pressed state, a sent cart greyed with a "sent" tag, and the
    active chip reading "SO-3456 · editing" while a queued order is being edited */
@@ -58,9 +58,9 @@ function CsCartChips({ T, cart = 'A', sent, editing, plusOn, style }) {
         <Ic name="check" size={12} sw={2.2} />sent
       </span>;
       const on = c.k === cart;
-      return <span key={c.k} className="press" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, height: 34, padding: on ? '0 12px 0 4px' : '0 10px 0 4px', borderRadius: 999, background: on ? T.accent : T.chipBg, color: on ? T.onAccent : T.ink, fontFamily: T.fontUI, fontSize: 12.5, fontWeight: 500, flex: 'none', whiteSpace: 'nowrap' }}>
+      return <span key={c.k} className="press" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, height: 34, padding: on ? (editing ? '0 10px 0 4px' : '0 12px 0 4px') : '0 10px 0 4px', borderRadius: 999, background: on ? T.accent : T.chipBg, color: on ? T.onAccent : T.ink, fontFamily: T.fontUI, fontSize: 12.5, fontWeight: 500, flex: 'none', whiteSpace: 'nowrap' }}>
         <span style={{ width: 26, height: 26, borderRadius: 13, background: on ? 'rgba(255,255,255,.2)' : T.bg2, display: 'grid', placeItems: 'center', fontFamily: T.fontDisplay, fontSize: 13, fontWeight: 600 }}>{c.k}</span>
-        {on ? (editing || c.name) : c.name.split(' ')[0]}<b style={{ fontWeight: 500, opacity: .7 }}>{c.n}</b>
+        {on ? (editing || c.name) : c.name.split(' ')[0]}{!(on && editing) && <b style={{ fontWeight: 500, opacity: .7 }}>{c.n}</b>}
       </span>;
     })}
     <span className="press" style={{ width: 34, height: 34, borderRadius: 17, border: plusOn ? 0 : `1px dashed ${T.line2}`, background: plusOn ? T.ink : 'transparent', color: plusOn ? T.bg : T.ink2, display: 'grid', placeItems: 'center', flex: 'none', boxShadow: plusOn ? `0 0 0 3px ${T.chipBg}` : 'none' }}><Ic name="plus" size={15} sw={plusOn ? 2.2 : 1.6} /></span>
@@ -106,7 +106,7 @@ const CsAddBtn = ({ T }) => <T.Btn icon="user-plus" style={{ width: '100%', heig
 /* ── Submit for approval: nothing on this sheet can block. Credit and overdue reasons are flags on the approver's side. ── */
 function CsSubmitBody({ T }) {
   const { pcs, g, total } = csTotals();
-  return <div style={{ display: 'grid', gap: 15 }}>
+  return <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr)', gap: 15 }}>
     <div style={{ padding: '12px 14px', borderRadius: 18, background: T.surface, border: `1px solid ${T.line}` }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
         <span style={{ flex: 1, minWidth: 0 }}><div style={{ fontFamily: T.fontDisplay, fontSize: 21, fontWeight: 500, color: T.ink, lineHeight: 1.1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Ramleela Fashion</div><Meta T={T} style={{ display: 'block', marginTop: 3 }}>Surat · {pcs} pcs · {g.length} designs</Meta></span>
@@ -135,7 +135,7 @@ const CsInfoStrip = ({ T, icon, tone, children, meta }) => <div style={{ display
   <Ic name={icon} size={17} color={tone || T.ink2} style={{ marginTop: 1 }} />
   <span style={{ flex: 1, minWidth: 0 }}><div style={{ fontFamily: T.fontUI, fontSize: 13, lineHeight: 1.35, color: T.ink }}>{children}</div>{meta && <Meta T={T} style={{ display: 'block', whiteSpace: 'normal', marginTop: 3 }}>{meta}</Meta>}</span>
 </div>;
-const CsQueueStrip = ({ T }) => <CsInfoStrip T={T} icon="clock" tone={T.warn} meta="You can edit or delete it until it is approved."><b style={{ fontWeight: 600 }}>In the approval queue</b> · Nalini (accounts) · since 10:42</CsInfoStrip>;
+const CsQueueStrip = ({ T }) => <CsInfoStrip T={T} icon="clock" tone={T.warn} meta="You can edit or delete it until it is approved."><div style={{ fontWeight: 600 }}>In the approval queue</div><div style={{ color: T.ink2, fontSize: 12.5, marginTop: 1 }}>Nalini (accounts) · since 10:42</div></CsInfoStrip>;
 const csLines = () => groupsOf().map(g => ({ d: g.d, cols: g.cols }));
 const CsQueueButtons = ({ T }) => <div style={{ display: 'flex', gap: 8 }}><T.Btn kind="secondary" icon="trash-2" style={{ height: 48 }}>Delete</T.Btn><T.Btn icon="pencil" style={{ flex: 1, height: 48 }}>Edit order</T.Btn></div>;
 
@@ -234,8 +234,8 @@ function ScreenCsEditing({ T }) {
   const { g, pcs, total } = csTotals();
   return frameF(T, <>
     <div style={{ display: 'flex', alignItems: 'center', padding: '0 20px', height: 44 }}><span style={{ fontFamily: T.fontDisplay, fontSize: 26, fontWeight: 500, color: T.ink }}>Carts</span><span style={{ flex: 1 }} /><T.Chip icon="user-plus">New customer</T.Chip></div>
-    <div style={{ padding: '6px 16px 0' }}><CsCartChips T={T} cart="A" editing="SO-3456 · editing" /></div>
-    <div style={{ margin: '10px 14px 0' }}><CsInfoStrip T={T} icon="pencil">Editing SO-3456 · it goes back to the queue when you send</CsInfoStrip></div>
+    <div style={{ padding: '6px 12px 0' }}><CsCartChips T={T} cart="A" editing="SO-3456 · editing" /></div>
+    <div style={{ margin: '10px 14px 0' }}><CsInfoStrip T={T} icon="pencil"><div style={{ fontWeight: 600 }}>Editing SO-3456</div><div style={{ color: T.ink2, fontSize: 12.5, marginTop: 1 }}>It goes back to the queue when you send</div></CsInfoStrip></div>
     <div style={{ margin: '10px 14px 0', borderRadius: T.rCard, background: T.surface, border: `1px solid ${T.line}`, overflow: 'hidden', boxShadow: T.dark ? 'none' : '0 6px 18px -12px rgba(36,23,18,.25)' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px 12px' }}><span style={{ minWidth: 0 }}><div style={{ fontFamily: T.fontDisplay, fontSize: 20, fontWeight: 500, color: T.ink, whiteSpace: 'nowrap' }}>Ramleela Fashion</div><div style={{ fontSize: 12, color: T.ink3, marginTop: 2 }}>Surat · 30 days credit · {g.length} designs · {pcs} pcs</div></span><span style={{ flex: 1 }} /><span style={{ display: 'inline-flex', padding: 3, borderRadius: 999, background: T.bg2, flex: 'none' }}>{['In-cabin', 'WhatsApp'].map((b, i) => <span key={b} className="press" style={{ height: 26, padding: '0 10px', borderRadius: 999, display: 'grid', placeItems: 'center', fontSize: 11.5, background: i === 0 ? T.surface : 'transparent', color: i === 0 ? T.ink : T.ink3 }}>{b}</span>)}</span></div>
       <CartGroups T={T} groups={g} />
@@ -248,7 +248,7 @@ function ScreenCsEditing({ T }) {
 /* P7 · delete, in words: a short sheet over the queue screen */
 function ScreenCsDeleteConfirm({ T }) {
   return <div style={{ position: 'relative', height: '100%' }}><ScreenCsInQueue T={T} />{scrimF(T)}
-    <Sheet T={T} h={300} title="Delete SO-3456?" foot={<div style={{ display: 'flex', gap: 8 }}><T.Btn kind="secondary" style={{ flex: 1, height: 48 }}>Keep it</T.Btn><T.Btn icon="trash-2" style={{ flex: 1, height: 48 }}>Delete</T.Btn></div>}>
+    <Sheet T={T} h={252} title="Delete SO-3456?" foot={<div style={{ display: 'flex', gap: 8 }}><T.Btn kind="secondary" style={{ flex: 1, height: 48 }}>Keep it</T.Btn><T.Btn icon="trash-2" style={{ flex: 1, height: 48 }}>Delete</T.Btn></div>}>
       <div style={{ fontFamily: T.fontUI, fontSize: 15, lineHeight: 1.5, color: T.ink, padding: '4px 2px 0' }}>It leaves the queue. The customer’s picks come back as cart A, so you can start again.</div>
     </Sheet>
   </div>;
@@ -300,7 +300,7 @@ const WebCsSubmit = ({ T }) => <CsWebShell T={T} title="Submit cart A" pane={<Cs
 function WebCsInQueue({ T }) {
   const o = csOrder(); const list = [o, ...ORDERS_F.filter(x => x.status !== 'Cancelled')]; const sum = list.reduce((a, x) => a + x.bill, 0);
   const tabs = [{ icon: 'layout-grid', label: 'Catalogue' }, { icon: 'receipt-text', label: 'Sale orders · Raised', on: true }];
-  const pane = <CsPane T={T} fade foot={<CsQueueButtons T={T} />}><CsQueueStrip T={T} /><div style={{ marginTop: 10 }}><CustomerBar T={T} c={o.c} compact /></div><div style={{ marginTop: 10 }}><OrderLines T={T} o={o} lines={csLines()} /></div></CsPane>;
+  const pane = <CsPane T={T} fade foot={<CsQueueButtons T={T} />}><CsQueueStrip T={T} /><div style={{ margin: '12px 2px 10px' }}><div style={{ fontFamily: T.fontDisplay, fontSize: 21, fontWeight: 500, color: T.ink, lineHeight: 1.1 }}>{o.c.name}</div><Meta T={T} style={{ display: 'block', marginTop: 3 }}>{o.c.city} · {o.c.tier} · {o.pcs} pcs · {o.designs} designs</Meta></div><OrderLines T={T} o={o} lines={csLines()} /></CsPane>;
   return <WebShell3 T={T} module="Catalogue" crumb={['Catalogue', 'Sale orders', 'Raised']} section="Sale orders" seg={CAT_SEG} active="Sale orders" mode="Customer mode" tabs={tabs} paneTitle={o.no} pane={pane}>
     <ViewTabs T={T} tabs={SO_TABS2.map(([t, n]) => t === 'Raised' ? [t, n + 1] : [t, n])} active="Raised" extra={[['Analytics', null, 'bar-chart-3']]} right={<span style={{ display: 'inline-flex', padding: 3, borderRadius: 999, background: T.bg2 }}>{[['layout-list', 'cards'], ['table-2', 'table']].map(([ic, v]) => <span key={v} className="press" style={{ width: 34, height: 26, borderRadius: 999, display: 'grid', placeItems: 'center', background: v === 'cards' ? T.surface : 'transparent', color: v === 'cards' ? T.ink : T.ink3 }}><Ic name={ic} size={15} /></span>)}</span>} />
     <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '12px 24px 0' }}><T.Chip icon="search" outline>Order, customer, agent</T.Chip><T.Chip icon="calendar" x outline>This month</T.Chip><T.Chip icon="arrow-down-up" outline>Newest</T.Chip><span style={{ flex: 1 }} /><span style={{ fontSize: 12, color: T.ink3 }}>{list.length} orders · {money(sum)}</span><Hit T={T} icon="printer" size={34} iconSize={16} style={{ background: T.chipBg }} /><Hit T={T} icon="download" size={34} iconSize={16} style={{ background: T.chipBg }} /></div>

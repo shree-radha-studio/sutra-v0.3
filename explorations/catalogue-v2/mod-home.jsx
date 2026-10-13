@@ -5,7 +5,7 @@
    StatusPill, Ic, T.Btn, T.Chip, T.Kpi, T.Step, T.Tag, T.Island, WebShell3, ViewTabs (see COMPONENTS.md).
    Roles drawn: Sales (sale executive, no ₹ tile) on the phone landing, Sale manager (₹) on the web landing, sub-admin
    (cannot approve over the credit line) on the flagged card, Guard on the gate pass.
-   Owner's rule (13 Oct): nothing blocks a sale order at submission; the salesperson can edit or delete it while it waits;
+   Owner's rule (13 Oct): nothing stops a sale order at submission; the salesperson can edit or delete it while it waits;
    every reason not to approve shows on the approver's card as a flag, in words, with the fact beside it. */
 
 /* ── module data (fictional; the board's own names and codes) ── */
@@ -193,16 +193,16 @@ const hmFlags = (over, open) => [
 function HmFlags({ T, flags, web }) {
   if (!flags.length) return null;
   const c = flags.some(f => f[0] === 'danger') ? T.danger : T.warn;
-  return <div style={{ display: web ? 'flex' : 'block', gap: 14, padding: web ? '7px 14px' : '10px 12px 8px', borderRadius: 18, background: c + '14', border: `1px solid ${c}55` }}>
+  return <div style={{ display: web ? 'flex' : 'block', gap: 14, padding: web ? '5px 14px' : '10px 12px 8px', borderRadius: 18, background: c + '14', border: `1px solid ${c}55` }}>
     <div style={{ display: 'flex', alignItems: 'center', gap: 8, ...(web ? { width: 124, flex: 'none', alignSelf: 'flex-start', paddingTop: 1 } : { marginBottom: 4 }) }}><Ic name="eye" size={16} color={c} /><span style={{ fontFamily: T.fontDisplay, fontSize: web ? 16 : 17, fontWeight: 600, color: T.ink }}>Look twice</span><span style={{ fontFamily: T.fontUI, fontSize: 11, fontWeight: 600, color: c, fontVariantNumeric: 'tabular-nums' }}>{flags.length}</span></div>
-    <div style={{ flex: 1, minWidth: 0 }}>{flags.map(([tone, label, fact]) => <div key={label} style={{ display: 'flex', gap: 9, alignItems: 'flex-start', padding: web ? '1px 0' : '4px 0' }}><span style={{ width: 7, height: 7, borderRadius: 4, background: tone === 'danger' ? T.danger : T.warn, flex: 'none', marginTop: 6 }} /><span style={{ fontFamily: T.fontUI, fontSize: 12.5, color: T.ink2, lineHeight: 1.4 }}><b style={{ color: T.ink, fontWeight: 600 }}>{label}</b> · {fact}</span></div>)}</div>
+    <div style={{ flex: 1, minWidth: 0 }}>{flags.map(([tone, label, fact]) => <div key={label} style={{ display: 'flex', gap: 9, alignItems: 'flex-start', padding: web ? '0' : '4px 0' }}><span style={{ width: 7, height: 7, borderRadius: 4, background: tone === 'danger' ? T.danger : T.warn, flex: 'none', marginTop: web ? 6 : 6 }} /><span style={{ fontFamily: T.fontUI, fontSize: web ? 12 : 12.5, color: T.ink2, lineHeight: web ? 1.45 : 1.4 }}><b style={{ color: T.ink, fontWeight: 600 }}>{label}</b> · {fact}</span></div>)}</div>
   </div>;
 }
 /* the customer: name (display), where · tier · since, call chip, broker chip, purchase history */
 function HmCustomer({ T, c = HM_C, web }) {
-  if (web) return <HmCard T={T} pad="9px 14px 10px">
+  if (web) return <HmCard T={T} pad="7px 14px 8px">
     <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}><span style={{ fontFamily: T.fontDisplay, fontSize: 20, fontWeight: 600, color: T.ink, lineHeight: 1.1 }}>{c.name}</span><Meta T={T}>{c.city} · {c.tier} · since {c.since}</Meta></div>
-    <div style={{ display: 'flex', gap: 6, marginTop: 7, overflow: 'hidden' }}><T.Chip icon="phone" style={{ height: 32 }}><span style={{ fontFamily: T.fontMono, fontSize: 12 }}>{c.phone}</span></T.Chip><T.Chip icon="user" style={{ height: 32 }}>{c.broker} · {c.agency}</T.Chip><span style={{ flex: 1 }} /><T.Chip icon="history" outline style={{ height: 32 }}>Purchase history</T.Chip></div>
+    <div style={{ display: 'flex', gap: 6, marginTop: 6, overflow: 'hidden' }}><T.Chip icon="phone" style={{ height: 30 }}><span style={{ fontFamily: T.fontMono, fontSize: 12 }}>{c.phone}</span></T.Chip><T.Chip icon="user" style={{ height: 30 }}>{c.broker} · {c.agency}</T.Chip><span style={{ flex: 1 }} /><T.Chip icon="history" outline style={{ height: 30 }}>Purchase history</T.Chip></div>
   </HmCard>;
   return <HmCard T={T} pad={web ? '9px 14px 10px' : 14}>
     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -263,8 +263,8 @@ function HmColRow({ T, c, rate, web }) {
 function HmLines({ T, web }) {
   return <HmCard T={T} pad={0} style={{ overflow: 'hidden' }}>
     {HM_LINES.map((l, i) => { const d = XD.byCode[l.code]; const q = hmQty(l);
-      if (web) return <div key={l.code} style={{ display: 'flex', gap: 10, padding: '5px 14px', borderTop: i ? `1px solid ${T.line}` : 0 }}>
-        <Thumb T={T} d={d} w={40} h={50} r={9} />
+      if (web) return <div key={l.code} style={{ display: 'flex', gap: 10, padding: '4px 14px', borderTop: i ? `1px solid ${T.line}` : 0 }}>
+        <Thumb T={T} d={d} w={36} h={45} r={8} />
         <div style={{ width: 108, flex: 'none' }}><div style={{ fontFamily: T.fontDisplay, fontSize: 20, fontWeight: 600, color: T.ink, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{d.code}</div><Meta T={T} style={{ display: 'block', marginTop: 3, fontSize: 11 }}>{d.cat} · {d.name}</Meta><div style={{ marginTop: 4 }}><PriceF v={q * l.rate} size={15} font={T.fontSerif} color={T.ink} dim={T.ink3} /><span style={{ fontSize: 10.5, color: T.ink3, marginLeft: 5 }}>{q} pcs</span></div></div>
         <div style={{ flex: 1, minWidth: 0 }}>{l.cols.map(c => <HmColRow key={c[0]} T={T} c={c} rate={l.rate} web />)}</div>
       </div>;
@@ -276,13 +276,13 @@ function HmLines({ T, web }) {
         </div>
         <div style={{ marginTop: 6 }}>{l.cols.map(c => <HmColRow key={c[0]} T={T} c={c} rate={l.rate} />)}</div>
       </div>; })}
-    <div style={{ borderTop: `1px solid ${T.line2}`, padding: web ? '5px 14px' : '12px 14px', display: 'flex', alignItems: 'center', gap: 10, background: T.surface2 }}>
+    <div style={{ borderTop: `1px solid ${T.line2}`, padding: web ? '4px 14px' : '12px 14px', display: 'flex', alignItems: 'center', gap: 10, background: T.surface2 }}>
       <span style={{ flex: 1, minWidth: 0, display: web ? 'flex' : 'block', alignItems: 'center', gap: 8 }}><div style={{ fontSize: 12, color: T.ink3 }}>{HM_PCS} pcs · {HM_LINES.length} designs · GST extra</div><div style={{ marginTop: web ? 0 : 5 }}><Pill T={T} tone="warn" small>{HM_INSTOCK} of {HM_PCS} in stock</Pill></div></span>
       <PriceF v={HM_TOTAL} size={web ? 20 : 26} font={T.fontSerif} color={T.ink} dim={T.ink3} />
     </div>
   </HmCard>;
 }
-const HmNote = ({ T, by = 'Rohan Mehta', text = HM_NOTE, tight }) => <div style={{ display: 'flex', gap: 10, padding: tight ? '7px 12px' : '12px 14px', borderRadius: 16, background: T.chipBg, alignItems: tight ? 'center' : 'flex-start' }}><Ic name="message-square-text" size={16} color={T.ink3} style={{ marginTop: tight ? 0 : 2 }} />{tight
+const HmNote = ({ T, by = 'Rohan Mehta', text = HM_NOTE, tight }) => <div style={{ display: 'flex', gap: 10, padding: tight ? '5px 12px' : '12px 14px', borderRadius: 16, background: T.chipBg, alignItems: tight ? 'center' : 'flex-start' }}><Ic name="message-square-text" size={16} color={T.ink3} style={{ marginTop: tight ? 0 : 2 }} />{tight
   ? <span style={{ display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap', minWidth: 0 }}><Meta T={T} style={{ flex: 'none' }}>Note with this order · {by}</Meta><span style={{ fontFamily: T.fontUI, fontSize: 13.5, fontStyle: 'italic', color: T.ink }}>“{text}”</span></span>
   : <span><Meta T={T} style={{ display: 'block' }}>Note with this order · {by}</Meta><div style={{ fontFamily: T.fontUI, fontSize: 14, fontStyle: 'italic', color: T.ink, marginTop: 3, lineHeight: 1.3 }}>“{text}”</div></span>}</div>;
 /* the last three orders: tap Order, Invoice or Return to open that document */
@@ -307,14 +307,19 @@ const HmFoot = ({ T, primary = 'Approve', icon = 'check', note }) => <div style=
 /* ── P2 · queue ── */
 function HmQCard({ T, q, picked, web }) {
   const d = XD.byCode[q.d];
-  return <div className="press" style={{ display: 'flex', gap: web ? 10 : 12, padding: web ? '10px 12px' : 12, borderRadius: 20, background: T.surface, border: `1px solid ${picked ? T.accent : T.line}`, boxShadow: T.dark || picked ? 'none' : '0 6px 18px -14px rgba(36,23,18,.25)', minWidth: 0 }}>
-    <Thumb T={T} d={d} w={web ? 42 : 52} h={web ? 52 : 65} r={10} />
-    <div style={{ flex: 1, minWidth: 0 }}>
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}><span style={{ flex: 1, minWidth: 0, fontFamily: T.fontDisplay, fontSize: web ? 18 : 20, fontWeight: 600, color: T.ink, lineHeight: 1.1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{q.name}</span><PriceF v={q.amt} size={web ? 16 : 18} font={T.fontSerif} color={T.ink} dim={T.ink3} /></div>
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: 7, marginTop: 4 }}><Mono T={T} size={12}>{q.no}</Mono><Meta T={T} style={{ flex: 1, minWidth: 0 }}>{q.city}</Meta><Meta T={T} style={{ flex: 'none' }}>{q.pcs} pcs</Meta></div>
-      {q.flags.length > 0 && <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginTop: 7 }}>{q.flags.map(([tone, text]) => <Pill key={text} T={T} tone={tone} small>{text}</Pill>)}</div>}
-      <Meta T={T} style={{ display: 'block', marginTop: 6, fontSize: 11 }}>{q.by} · {q.on}</Meta>
-    </div>
+  const chips = q.flags.length > 0 && <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginTop: 7 }}>{q.flags.map(([tone, text]) => <Pill key={text} T={T} tone={tone} small>{text}</Pill>)}</div>;
+  const by = <Meta T={T} style={{ display: 'block', marginTop: 6, fontSize: 11 }}>{q.by} · {q.on}</Meta>;
+  const head = <div style={{ flex: 1, minWidth: 0 }}>
+    <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}><span style={{ flex: 1, minWidth: 0, fontFamily: T.fontDisplay, fontSize: web ? 18 : 20, fontWeight: 600, color: T.ink, lineHeight: 1.1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{q.name}</span><PriceF v={q.amt} size={web ? 16 : 18} font={T.fontSerif} color={T.ink} dim={T.ink3} /></div>
+    <div style={{ display: 'flex', alignItems: 'baseline', gap: 7, marginTop: 4 }}><Mono T={T} size={12}>{q.no}</Mono><Meta T={T} style={{ flex: 1, minWidth: 0 }}>{q.city}</Meta><Meta T={T} style={{ flex: 'none' }}>{q.pcs} pcs</Meta></div>
+  </div>;
+  const frame = { borderRadius: 20, background: T.surface, border: `1px solid ${picked ? T.accent : T.line}`, boxShadow: T.dark || picked ? 'none' : '0 6px 18px -14px rgba(36,23,18,.25)', minWidth: 0 };
+  if (web) return <div className="press" style={{ ...frame, padding: '9px 12px 8px' }}>
+    <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}><Thumb T={T} d={d} w={36} h={45} r={9} />{head}</div>{chips}{by}
+  </div>;
+  return <div className="press" style={{ ...frame, display: 'flex', gap: 12, padding: 12 }}>
+    <Thumb T={T} d={d} w={52} h={65} r={10} />
+    <div style={{ flex: 1, minWidth: 0 }}>{head}{chips}{by}</div>
   </div>;
 }
 function ScreenHmApprovals({ T }) {
@@ -401,19 +406,19 @@ function HmWebQueue({ T }) {
 function HmWebCard({ T, over: isOver, role = 'manager' }) {
   const open = isOver ? HM_OPEN.over : HM_OPEN.within, sub = role === 'subadmin';
   return <div style={{ flex: 1, minWidth: 0, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
-    <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', padding: '10px 16px 0' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, height: 28 }}><span style={{ fontFamily: T.fontMono, fontSize: 17, fontWeight: 600, color: T.ink }}>SO-3455</span><StatusPill T={T} s="Raised" /><span style={{ fontSize: 12, color: T.ink3, flex: 1, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>10/09/26 · In-cabin</span><Hit T={T} icon="printer" size={28} iconSize={14} style={{ background: T.chipBg }} /></div>
-      <div style={{ fontSize: 11.5, color: T.ink2, margin: '0 0 6px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Raised by Rohan Mehta · the salesperson can still edit or delete it until you act</div>
+    <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', padding: '8px 16px 0' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, height: 26 }}><span style={{ fontFamily: T.fontMono, fontSize: 17, fontWeight: 600, color: T.ink }}>SO-3455</span><StatusPill T={T} s="Raised" /><span style={{ fontSize: 12, color: T.ink3, flex: 1, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>10/09/26 · In-cabin</span><Hit T={T} icon="printer" size={28} iconSize={14} style={{ background: T.chipBg }} /></div>
+      <div style={{ fontSize: 11.5, color: T.ink2, margin: '0 0 5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Raised by Rohan Mehta · the salesperson can still edit or delete it until you act</div>
       <HmCustomer T={T} web />
-      <div style={{ marginTop: 6 }}><HmCredit T={T} open={open} web /></div>
-      <div style={{ marginTop: 6 }}><HmLines T={T} web /></div>
-      <div style={{ marginTop: 6 }}><HmNote T={T} tight /></div>
+      <div style={{ marginTop: 5 }}><HmCredit T={T} open={open} web /></div>
+      <div style={{ marginTop: 5 }}><HmLines T={T} web /></div>
+      <div style={{ marginTop: 5 }}><HmNote T={T} tight /></div>
     </div>
-    <div style={{ flex: 'none', display: 'flex', alignItems: 'center', gap: 8, padding: '5px 16px', borderTop: `1px solid ${T.line}`, background: T.surface }}>
+    <div style={{ flex: 'none', display: 'flex', alignItems: 'center', gap: 8, padding: '4px 16px', borderTop: `1px solid ${T.line}`, background: T.surface }}>
       <span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="press" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: T.fontUI, fontSize: 12.5, color: T.ink2, fontWeight: 500 }}>Mark for inspection<Ic name="arrow-right" size={13} />owner</span>{sub && <Meta T={T} style={{ fontSize: 11 }}>Over-the-line flags are cleared by admin</Meta>}</span>
       <span style={{ flex: 1 }} />
-      <T.Btn kind="secondary" style={{ height: 38 }}>Reject</T.Btn><T.Btn kind="secondary" style={{ height: 38 }}>Hold</T.Btn>
-      <T.Btn icon={sub ? 'send' : 'check'} style={{ height: 38, padding: '0 24px' }}>{sub ? 'Send to admin' : 'Approve'}</T.Btn>
+      <T.Btn kind="secondary" style={{ height: 36 }}>Reject</T.Btn><T.Btn kind="secondary" style={{ height: 36 }}>Hold</T.Btn>
+      <T.Btn icon={sub ? 'send' : 'check'} style={{ height: 36, padding: '0 24px' }}>{sub ? 'Send to admin' : 'Approve'}</T.Btn>
     </div>
   </div>;
 }
@@ -436,8 +441,8 @@ function HmWebApprovals({ T, over: isOver, role = 'manager' }) {
   const open = isOver ? HM_OPEN.over : HM_OPEN.within, over = Math.max(0, open + HM_TOTAL - HM_C.line);
   return <WebShell3 T={T} module="Home" crumb={['Home', 'Approvals', 'Sale orders', 'SO-3455']} section="Approvals" seg={Hm_SEG} active="Approvals" tabs={Hm_TABS('appr')} paneTitle="Ramleela Fashion" pane={<HmRecordPane T={T} open={open} />}>
     <ViewTabs T={T} tabs={Hm_APPR_TABS} active="Sale orders" />
-    <div style={{ padding: '8px 24px 0', flex: 'none' }}><HmFlags T={T} web flags={hmFlags(over, open)} /></div>
-    <div style={{ flex: 1, minHeight: 0, display: 'flex', marginTop: 8 }}><HmWebQueue T={T} /><HmWebCard T={T} over={isOver} role={role} /></div>
+    <div style={{ padding: '6px 24px 0', flex: 'none' }}><HmFlags T={T} web flags={hmFlags(over, open)} /></div>
+    <div style={{ flex: 1, minHeight: 0, display: 'flex', marginTop: 6 }}><HmWebQueue T={T} /><HmWebCard T={T} over={isOver} role={role} /></div>
   </WebShell3>;
 }
 const WebHmApprovals = ({ T }) => <HmWebApprovals T={T} />;
