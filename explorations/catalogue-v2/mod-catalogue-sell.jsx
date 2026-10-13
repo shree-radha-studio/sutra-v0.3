@@ -135,7 +135,16 @@ const CsInfoStrip = ({ T, icon, tone, children, meta }) => <div style={{ display
   <Ic name={icon} size={17} color={tone || T.ink2} style={{ marginTop: 1 }} />
   <span style={{ flex: 1, minWidth: 0 }}><div style={{ fontFamily: T.fontUI, fontSize: 13, lineHeight: 1.35, color: T.ink }}>{children}</div>{meta && <Meta T={T} style={{ display: 'block', whiteSpace: 'normal', marginTop: 3 }}>{meta}</Meta>}</span>
 </div>;
-const CsQueueStrip = ({ T }) => <CsInfoStrip T={T} icon="clock" tone={T.warn} meta="You can edit or delete it until it is approved."><div style={{ fontWeight: 600 }}>In the approval queue</div><div style={{ color: T.ink2, fontSize: 12.5, marginTop: 1 }}>Nalini (accounts) · since 10:42</div></CsInfoStrip>;
+/* IN QUEUE tag: StatusPill's shape, accent dot (the schema has no gold chips; the density decision restyles every status tag later) */
+const CsQueuePill = ({ T }) => <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, height: 22, padding: '0 8px', borderRadius: 999, background: T.chipBg, fontSize: 10.5, fontWeight: 600, letterSpacing: '.04em', textTransform: 'uppercase', color: T.ink2, whiteSpace: 'nowrap' }}><span style={{ width: 6, height: 6, borderRadius: 3, background: T.accent }} />In queue</span>;
+/* the sale order card of the Sale orders web screen (SOCard's markup) with the queue tag */
+const CsSOCard = ({ T, x, first }) => <div style={{ padding: '12px 14px', borderRadius: 18, background: T.surface, border: `1px solid ${first ? T.accentLine : T.line}`, boxShadow: first ? `0 0 0 2px ${T.accentSoft}` : 'none' }}>
+  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}><span style={{ fontFamily: T.fontMono, fontSize: 13, fontWeight: 600 }}>{x.no}</span>{x.status === 'In queue' ? <CsQueuePill T={T} /> : <StatusPill T={T} s={x.status} />}<span style={{ flex: 1 }} /><span style={{ fontSize: 11.5, color: T.ink3 }}>{x.date}</span></div>
+  <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginTop: 6 }}><span style={{ fontFamily: T.fontDisplay, fontSize: 19, fontWeight: 500, flex: 1, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{x.c.name}</span><span style={{ fontFamily: T.fontSerif, fontSize: 18, fontWeight: 600 }}>{money(x.bill)}</span></div>
+  <div style={{ fontSize: 11.5, color: T.ink3, marginTop: 2 }}>{x.c.city} · {x.c.tier} · {x.pcs} pcs · {x.designs} designs</div>
+  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 10 }}><T.Chip icon="user" style={{ height: 26, fontSize: 11 }}>{x.c.broker}</T.Chip><span style={{ flex: 1 }} /><Hit T={T} icon="printer" size={30} iconSize={14} style={{ background: T.chipBg }} /><Hit T={T} icon="share-2" size={30} iconSize={14} style={{ background: T.chipBg }} /></div>
+</div>;
+const CsQueueStrip = ({ T }) => <CsInfoStrip T={T} icon="clock" meta="You can edit or delete it until it is approved."><div style={{ fontWeight: 600 }}>In the approval queue</div><div style={{ color: T.ink2, fontSize: 12.5, marginTop: 1 }}>Nalini (accounts) · since 10:42</div></CsInfoStrip>;
 const csLines = () => groupsOf().map(g => ({ d: g.d, cols: g.cols }));
 const CsQueueButtons = ({ T }) => <div style={{ display: 'flex', gap: 8 }}><T.Btn kind="secondary" icon="trash-2" style={{ height: 48 }}>Delete</T.Btn><T.Btn icon="pencil" style={{ flex: 1, height: 48 }}>Edit order</T.Btn></div>;
 
@@ -220,7 +229,7 @@ function ScreenCsSubmitted({ T }) {
 function ScreenCsInQueue({ T }) {
   const o = csOrder();
   return frameF(T, <>
-    <div style={{ display: 'flex', alignItems: 'center', padding: '0 12px', height: 44, gap: 6 }}><Hit T={T} icon="chevron-left" size={40} /><span style={{ fontFamily: T.fontMono, fontSize: 15, fontWeight: 600, color: T.ink }}>{o.no}</span><StatusPill T={T} s={o.status} /><span style={{ flex: 1 }} /><span style={{ fontSize: 12, color: T.ink3 }}>{o.date}</span></div>
+    <div style={{ display: 'flex', alignItems: 'center', padding: '0 12px', height: 44, gap: 6 }}><Hit T={T} icon="chevron-left" size={40} /><span style={{ fontFamily: T.fontMono, fontSize: 15, fontWeight: 600, color: T.ink }}>{o.no}</span><CsQueuePill T={T} /><span style={{ flex: 1 }} /><span style={{ fontSize: 12, color: T.ink3 }}>{o.date}</span></div>
     <div style={{ margin: '4px 14px 0' }}><CsQueueStrip T={T} /></div>
     <div style={{ margin: '10px 14px 0' }}><CustomerBar T={T} c={o.c} compact /></div>
     <div style={{ margin: '10px 14px 0' }}><OrderLines T={T} o={o} lines={csLines()} /></div>
@@ -276,10 +285,10 @@ const ScreenCsGrid2Swiped = ({ T }) => <CsGrid2Frame T={T} away />;
 
 /* ═══════════════ web screens ═══════════════ */
 /* the Carts main area exactly as WebCarts draws it, with the chips row taking the pressed "+" */
-function CsWebCartsMain({ T, plusOn }) {
+function CsWebCartsMain({ T, plusOn, editing }) {
   const groups = groupsOf(); const pcs = groups.reduce((s, g) => s + g.pcs, 0);
   return <>
-    <div style={{ padding: '16px 24px 0' }}><div style={{ display: 'flex', alignItems: 'center', gap: 8 }}><CsCartChips T={T} cart="A" plusOn={plusOn} /><span style={{ flex: 1 }} /><T.Chip icon="user-plus" outline>New customer</T.Chip></div></div>
+    <div style={{ padding: '16px 24px 0' }}><div style={{ display: 'flex', alignItems: 'center', gap: 8 }}><CsCartChips T={T} cart="A" plusOn={plusOn} editing={editing} /><span style={{ flex: 1 }} /><T.Chip icon="user-plus" outline>New customer</T.Chip></div></div>
     <div style={{ margin: '14px 24px 0', borderRadius: 20, background: T.surface, border: `1px solid ${T.line}`, overflow: 'hidden' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px 12px' }}><span><div style={{ fontFamily: T.fontDisplay, fontSize: 22, fontWeight: 500 }}>Ramleela Fashion</div><div style={{ fontSize: 12, color: T.ink3, marginTop: 2 }}>Surat · Platinum · 30 days credit · {groups.length} designs · {pcs} pcs</div></span><span style={{ flex: 1 }} /><T.Chip icon="phone" outline>98152 23366</T.Chip><T.Chip icon="history" outline>Purchase history</T.Chip></div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>{groups.map((g, i) => <div key={g.d.code} style={{ borderRight: i % 2 === 0 ? `1px solid ${T.line}` : 0 }}><CartGroups T={T} groups={[g]} photo={64} /></div>)}</div>
@@ -291,21 +300,38 @@ const CsPane = ({ T, children, foot, fade }) => <div style={{ display: 'flex', f
   {foot && <div style={{ padding: '12px 16px 16px', borderTop: `1px solid ${T.line}` }}>{foot}</div>}
 </div>;
 const CsBack = ({ T, children }) => <span className="press" style={{ display: 'inline-flex', alignItems: 'center', gap: 5, height: 28, padding: '0 10px 0 6px', borderRadius: 999, background: T.chipBg, fontFamily: T.fontUI, fontSize: 12, color: T.ink2, marginBottom: 12 }}><Ic name="arrow-left" size={13} />{children}</span>;
-const CsWebShell = ({ T, plusOn, title, pane }) => <WebShell3 T={T} module="Catalogue" crumb={['Catalogue', 'Carts']} section="Carts" seg={CAT_SEG} active="Carts" mode="Customer mode" tabs={CS_TABS} paneTitle={title} pane={pane}><CsWebCartsMain T={T} plusOn={plusOn} /></WebShell3>;
+const CsWebShell = ({ T, plusOn, editing, title, pane }) => <WebShell3 T={T} module="Catalogue" crumb={['Catalogue', 'Carts']} section="Carts" seg={CAT_SEG} active="Carts" mode="Customer mode" tabs={CS_TABS} paneTitle={title} pane={pane}><CsWebCartsMain T={T} plusOn={plusOn} editing={editing} /></WebShell3>;
 
 const WebCsNewCart = ({ T }) => <CsWebShell T={T} plusOn title="New cart" pane={<CsPane T={T} foot={<CsStartBtn T={T} />}><CsNewCartBody T={T} /></CsPane>} />;
 const WebCsNewCustomer = ({ T }) => <CsWebShell T={T} plusOn title="New customer" pane={<CsPane T={T} foot={<CsAddBtn T={T} />}><CsBack T={T}>Customers</CsBack><CsNewCustBody T={T} /></CsPane>} />;
 const WebCsSubmit = ({ T }) => <CsWebShell T={T} title="Submit cart A" pane={<CsPane T={T} foot={<CsSubmitFoot T={T} />}><CsSubmitBody T={T} /></CsPane>} />;
 /* the Sale orders web screen (WebSO3's anatomy) with my queued order picked; the pane holds the strip, the order and Delete · Edit order */
-function WebCsInQueue({ T }) {
+function WebCsInQueue({ T, dialog }) {
   const o = csOrder(); const list = [o, ...ORDERS_F.filter(x => x.status !== 'Cancelled')]; const sum = list.reduce((a, x) => a + x.bill, 0);
   const tabs = [{ icon: 'layout-grid', label: 'Catalogue' }, { icon: 'receipt-text', label: 'Sale orders · Raised', on: true }];
   const pane = <CsPane T={T} fade foot={<CsQueueButtons T={T} />}><CsQueueStrip T={T} /><div style={{ margin: '12px 2px 10px' }}><div style={{ fontFamily: T.fontDisplay, fontSize: 21, fontWeight: 500, color: T.ink, lineHeight: 1.1 }}>{o.c.name}</div><Meta T={T} style={{ display: 'block', marginTop: 3 }}>{o.c.city} · {o.c.tier} · {o.pcs} pcs · {o.designs} designs</Meta></div><OrderLines T={T} o={o} lines={csLines()} /></CsPane>;
   return <WebShell3 T={T} module="Catalogue" crumb={['Catalogue', 'Sale orders', 'Raised']} section="Sale orders" seg={CAT_SEG} active="Sale orders" mode="Customer mode" tabs={tabs} paneTitle={o.no} pane={pane}>
     <ViewTabs T={T} tabs={SO_TABS2.map(([t, n]) => t === 'Raised' ? [t, n + 1] : [t, n])} active="Raised" extra={[['Analytics', null, 'bar-chart-3']]} right={<span style={{ display: 'inline-flex', padding: 3, borderRadius: 999, background: T.bg2 }}>{[['layout-list', 'cards'], ['table-2', 'table']].map(([ic, v]) => <span key={v} className="press" style={{ width: 34, height: 26, borderRadius: 999, display: 'grid', placeItems: 'center', background: v === 'cards' ? T.surface : 'transparent', color: v === 'cards' ? T.ink : T.ink3 }}><Ic name={ic} size={15} /></span>)}</span>} />
     <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '12px 24px 0' }}><T.Chip icon="search" outline>Order, customer, agent</T.Chip><T.Chip icon="calendar" x outline>This month</T.Chip><T.Chip icon="arrow-down-up" outline>Newest</T.Chip><span style={{ flex: 1 }} /><span style={{ fontSize: 12, color: T.ink3 }}>{list.length} orders · {money(sum)}</span><Hit T={T} icon="printer" size={34} iconSize={16} style={{ background: T.chipBg }} /><Hit T={T} icon="download" size={34} iconSize={16} style={{ background: T.chipBg }} /></div>
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0,1fr))', gap: 12, padding: '14px 24px' }}>{list.map((x, i) => <SOCard key={x.no} T={T} x={x} first={i === 0} />)}</div>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0,1fr))', gap: 12, padding: '14px 24px' }}>{list.map((x, i) => <CsSOCard key={x.no} T={T} x={x} first={i === 0} />)}</div>
+    {dialog && <><div style={{ position: 'absolute', inset: 0, background: T.dark ? 'rgba(0,0,0,.5)' : 'rgba(36,23,18,.30)', backdropFilter: 'blur(3px)', zIndex: 5 }} />{dialog}</>}
   </WebShell3>;
+}
+/* delete, in words: a centred dialog over nw-12 (the Dialog pattern of the dispatch web drafts) */
+const WebCsDelete = ({ T }) => <WebCsInQueue T={T} dialog={<div style={{ position: 'absolute', left: '50%', top: '42%', transform: 'translate(-50%,-50%)', width: 380, padding: 18, borderRadius: 18, background: T.surface, border: `1px solid ${T.line2}`, boxShadow: '0 30px 60px -20px rgba(0,0,0,.5)', zIndex: 6 }}>
+  <div style={{ fontFamily: T.fontDisplay, fontSize: 22, fontWeight: 500, color: T.ink }}>Delete SO-3456?</div>
+  <div style={{ fontFamily: T.fontUI, fontSize: 14, lineHeight: 1.5, color: T.ink2, marginTop: 6 }}>It leaves the queue. The customer’s picks come back as cart A, so you can start again.</div>
+  <div style={{ display: 'flex', gap: 8, marginTop: 16, justifyContent: 'flex-end' }}><T.Btn kind="secondary" style={{ height: 44 }}>Keep it</T.Btn><T.Btn icon="trash-2" style={{ height: 44 }}>Delete</T.Btn></div>
+</div>} />;
+/* editing SO-3456 as cart A: the Carts screen with the chip reading "SO-3456 · editing"; the pane carries the strip, the total and Discard changes · Send changes */
+function WebCsEditing({ T }) {
+  const { pcs, total } = csTotals();
+  const pane = <CsPane T={T} foot={<div style={{ display: 'flex', gap: 8 }}><T.Btn kind="secondary" style={{ height: 48 }}>Discard changes</T.Btn><T.Btn icon="send" style={{ flex: 1, height: 48 }}>Send changes</T.Btn></div>}>
+    <CsInfoStrip T={T} icon="pencil"><div style={{ fontWeight: 600 }}>Editing SO-3456</div><div style={{ color: T.ink2, fontSize: 12.5, marginTop: 1 }}>It goes back to the queue when you send</div></CsInfoStrip>
+    <div style={{ margin: '14px 2px 0' }}><div style={{ fontFamily: T.fontDisplay, fontSize: 21, fontWeight: 500, color: T.ink, lineHeight: 1.1 }}>Ramleela Fashion</div><Meta T={T} style={{ display: 'block', marginTop: 3 }}>Surat · {pcs} pcs · due 20 d</Meta><div style={{ marginTop: 10 }}><PriceF v={total} size={26} font={T.fontSerif} color={T.ink} dim={T.ink3} /></div></div>
+    <div style={{ marginTop: 14, paddingTop: 12, borderTop: `1px solid ${T.line}`, overflow: 'hidden' }}><CsDesigns T={T} /></div>
+  </CsPane>;
+  return <CsWebShell T={T} editing="SO-3456 · editing" title="SO-3456 · editing" pane={pane} />;
 }
 
 /* ═══════════════ registration ═══════════════ */
@@ -315,11 +341,11 @@ function WebCsInQueue({ T }) {
     web: [['Carts · new cart, customer picker in the pane', WebCsNewCart], ['Carts · new customer in the pane', WebCsNewCustomer]] },
   { name: 'Submit for approval', flow: 'summary → sent → in the queue → editing → delete, in words',
     phone: [['Cart · submit for approval sheet', ScreenCsSubmit], ['Cart · sent for approval', ScreenCsSubmitted], ['Sale orders · my order in the queue, edit or delete', ScreenCsInQueue], ['Sale orders · editing SO-3456 as cart A', ScreenCsEditing], ['Sale orders · delete, in words', ScreenCsDeleteConfirm]],
-    web: [['Cart · submit for approval in the pane', WebCsSubmit], ['Sale orders · my order in the queue, Edit and Delete in the pane', WebCsInQueue]] },
+    web: [['Cart · submit for approval in the pane', WebCsSubmit], ['Sale orders · my order in the queue, Edit and Delete in the pane', WebCsInQueue], ['Sale orders · editing SO-3456 as cart A', WebCsEditing], ['Sale orders · delete, in words', WebCsDelete]] },
   { name: 'Calmer grid header', flow: 'three rows → two rows → two rows after the first swipe, compare with the final',
     phone: [['Grid · three-row header (compare with final f-1)', ScreenCsGrid3], ['Grid · two-row header, lists scroll with the grid (compare with f-1)', ScreenCsGrid2], ['Grid · two-row header, after the first swipe', ScreenCsGrid2Swiped]],
     web: [] },
 ] });
 
 Object.assign(window, { CS_RECENT, CS_NEW, CS_CUST, CS_NOTE, CS_TABS, CS_QUICK, CS_ROW_H, csTotals, csOrder, csLines, CsSearch, CsSeg, CsChoice, CsField, CsOptRow, CsCustRow, CsLabel, CsDesigns, CsCartChips, CsNewCartBody, CsStartBtn, CsNewCustBody, CsAddBtn, CsSubmitBody, CsSubmitFoot, CsInfoStrip, CsQueueStrip, CsQueueButtons, CsSentCard, CsMergedRow, CsFilterCount, CsHeader, CsCount, CsGridCards, CsGrid2Frame, CsOverCarts, CsWebCartsMain, CsPane, CsBack, CsWebShell,
-  ScreenCsNewCart, ScreenCsNewCustomer, ScreenCsSubmit, ScreenCsSubmitted, ScreenCsInQueue, ScreenCsEditing, ScreenCsDeleteConfirm, ScreenCsGrid3, ScreenCsGrid2, ScreenCsGrid2Swiped, WebCsNewCart, WebCsNewCustomer, WebCsSubmit, WebCsInQueue });
+  ScreenCsNewCart, ScreenCsNewCustomer, ScreenCsSubmit, ScreenCsSubmitted, ScreenCsInQueue, ScreenCsEditing, ScreenCsDeleteConfirm, ScreenCsGrid3, ScreenCsGrid2, ScreenCsGrid2Swiped, WebCsNewCart, WebCsNewCustomer, WebCsSubmit, WebCsInQueue, WebCsDelete, WebCsEditing, CsQueuePill, CsSOCard });

@@ -30,6 +30,10 @@ Submit for approval (summary → sent → in the queue → editing → delete, i
 10. nw-11 `WebCsSubmit` · Cart · submit for approval in the pane.
 11. nw-12 `WebCsInQueue` · Sale orders · my order in the queue, Edit and Delete in the pane: the Sale orders web screen (WebSO3's anatomy) with SO-3456 picked, status tag IN QUEUE, pane with the strip, the order and the two buttons.
 
+12. nw-13 `WebCsEditing` · Sale orders · editing SO-3456 as cart A: the Carts web screen, chip "SO-3456 · editing"; the pane carries the editing strip, customer, total, design photos, Discard changes (outline) · Send changes (primary).
+13. nw-14 `WebCsDelete` · Sale orders · delete, in words: centred dialog (the dispatch web drafts' pattern) over nw-12, "Delete SO-3456?", Keep it · Delete.
+(nw-12, nw-13, nw-14 are in that order in the sub-menu; the grid frames below keep their numbers on phone.)
+
 Calmer grid header (phone only, compare with final f-1)
 12. n-16 `ScreenCsGrid3` · three rows: top bar, search island, one row (lists, hairline, quick chips); count as a Meta line in the body. About 10 px more grid than f-1.
 13. n-17 `ScreenCsGrid2` · two rows at rest: identity and search only; the lists-and-chips row is the first row of the grid body and the grid starts right under it (level with n-16).
@@ -75,6 +79,12 @@ final's chips plus a pressed "+", a sent state and an editing state), `CsNewCart
   and the chips are visible; at rest only the lists show and the chips are one swipe away.
 - **Filter count bubble**: counts the applied chips (4: Top 30, Delhi, Zari work, Wine), so it matches the row; the owner's note
   said "3" as the example. It is laid over the final's unchanged search island, not part of `T.SearchBar`.
+
+## Changed 13 Oct (lead's judgment notes)
+- Web counterparts added: nw-13 (editing) and nw-14 (delete dialog), registered after nw-12.
+- IN QUEUE tag no longer gold: `CsQueuePill` has StatusPill's shape with an accent dot and ink2 text; the queue strip's clock is ink2 too. Note: final.jsx's `StatusPill` draws RAISED in `T.warn` (gold) itself, so "the finals' RAISED tone" is gold; I followed the stated intent (no gold, accent dot). On nw-12 the other cards still show the final's gold RAISED/APPROVED tags until the density decision restyles them.
+- `CsSOCard` copies SOCard's markup (mod-appshell.jsx, not mine) only to carry the queue pill.
+- Filter count bubble stays "4"; grid frames untouched. Dark twins checked at --w 2700; console clean.
 
 ## Trade-offs for the owner
 - n-16 saves only about 10 px (the Meta line takes back most of the chips row). n-17 at rest is level with n-16; n-18 saves
