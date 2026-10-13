@@ -41,6 +41,31 @@ the BRD asks for it and no frame shows it.
 
 ## 2 · Feature tables
 
+### 2.0 Crowding, counted on the web frames
+
+Rows = control rows between the header and the first row of content (the view-tabs row counts; a content head does not).
+R2 §1.7 budgets two. Panes = main area, chat column, right pane, floating pane.
+
+| Frame | Rows | Panes | What to remove or fold |
+|---|---|---|---|
+| nw-1 Tracks | 1, then 1 more between the cards and the threads | 2 | Drop the Tracks · Designer tab row (§2.1). |
+| nw-2 Designer · set | 1, plus 4 stacked in the chat column and 1 on the stage | 3 | Chat to the spine once a set lands; pane on pick only; one thumbs; one template control (D33). |
+| nw-3 Designer · zone | as nw-2, plus the variations strip | 3 | Same; the zone pane's seven rows are the ceiling. |
+| nw-5 Designer · tuner | as nw-2 | 4 | The tuner replaces the pane while open. |
+| nw-6 Selector | 3 inside the dialog (head, tabs, chips) | dialog over 3 | Cut the head's sales-data switch; the rest is the BRD's. |
+| nw-8 Sample sheet | 0 | sheet over 3 | Cut the "Or" row. |
+| nw-9 Moodboard · Mine | 2 | 2 | Cut "By Stitch" (the switch does it). |
+| nw-10 Moodboard · Stitch's | 3 (tabs, bar, group head with its own three chips) | 2 | Cut the bar's Collected · Generated · Kept. |
+| nw-11 History | 2 | 2 | By day only; cut the tiles strip at the foot. |
+| nw-12 Memory · What works | 3 (tabs, chips, column heads; the KPI row is content) | 2 | Once D5 lands, the table takes the Desk density: filters on the column heads, the chip row goes. |
+| nw-13 Memory · Taste rules | 2 | 2 | Cut the chart; counts as one line. |
+| nw-14 Settings · Models | 1 | 2 | Cut the per-model bars and the Usage KPIs. |
+| nw-15 Settings · Defaults | 1 | 2 | Nothing. |
+
+Phone: every Studio list screen (n-1, n-8 … n-13) carries three or four rows of chrome (top bar, search, node scroller,
+and on most a tabs row) before the first picture, the same stack review 2 §1.1 measured on the catalogue; D1 fixes it in `T.Header` for every
+module and Studio inherits it. The terminal screens (n-2 … n-6) have two rows and the picture wins; nothing to fold.
+
 ### 2.1 Stitch › Tracks
 
 **Frames:** n-1 (nd-1) · nw-1 (nwd-1). **Flow:** category cards → the category's threads → start a thread from the
@@ -82,8 +107,8 @@ win. Target after Decision 33: the stage 780 wide with the chat as a spine and t
 | Compare v7 against v6 (50/50 slider) and the Version pane (prompt, context, template, sent, Views of v7, Discard · Make this the main · Keep v7) | nw-4 | ★★★★ | Keep | |
 | "Chat left · Chat right" segment on the view tabs row | nw-2 … nw-4 | ★ | Cut | The owner's rule: the user recognises the editing tools from memory, moving them "causes inefficiency" (O:4). A movable chat column contradicts it; the plan's §12.9 reading of "modular" is the drafter's, not the owner's. |
 | Tuner as a translucent pane (Templates · Workflow · Models · Usage · Memory), chat collapsed | nw-5, n-5 | ★★★★ | Simplify | S:1.5, tabs fixed (O:4). On nw-5 the tuner floats beside the Version pane: two panes. The tuner replaces the right pane while open (slides over it), so the stage never loses width twice. |
-| Stage head with "Stitch is drawing…" italic mood and the coloured glow while working | nw-2, n-6 | ★★ | Simplify | The glow is the listening aura of SCH §4 reused, defensible only while Stitch is working. The cycling mood line is a flourish; keep the orb breathing, drop the words. Decision 30. |
-| Phone chat with canvas cards, context strip, template chips, prompt tray | n-2 | ★★★★ | Keep | The phone's chat is the review surface: read the set, open the canvas, answer. |
+| Chat head with the cycling italic mood ("Stitch is drawing · looking at 8337 …") and the coloured glow under the stage while working | nw-2, n-2, n-6 | ★★ | Simplify | The glow is the listening aura of SCH §4 reused, defensible only while Stitch is working. The cycling mood line is a flourish; keep the orb breathing, drop the words. Decision 30. |
+| Phone chat with canvas cards, context strip, template chips, prompt tray | n-2 | ★★★★ | Keep | The phone's chat is the review surface: read the set, open the canvas, answer. The island is absent on n-2 … n-6, as on the full-screen viewer; acceptable for a tool screen, with a back chevron on every one. |
 | Phone canvas full screen with zone chips, version rail, Regenerate · Variants · Pane | n-3 | ★★★★ | Keep | |
 | Phone zone pane as a half sheet with the picture still visible | n-4 | ★★★ | Keep | The owner's phone rule (O:8); drawn as asked. Ships after the web terminal (Decision 32). |
 | Phone tuner as a half sheet | n-5 | ★★ | Later | Admin tunes at the desk. Keep the frame for reference; not in the phone's v1 (Decision 32). |
@@ -97,7 +122,7 @@ Moodboard → "Add n to context".
 | Feature | Frames | ★ | Call | Why |
 |---|---|---|---|---|
 | Glass dialog over the terminal, 900 × 640, the terminal visible behind | nw-6 | ★★★★★ | Keep | S:1.3 "pop up grid with filters and sorts". |
-| Hard tabs Products · Materials · Samples · WIP · Moodboard with counts | nw-6, n-7 | ★★★★★ | Keep | Samples added per the owner (O). Only Products and Materials are drawn: Draw the other three (gap 2). |
+| Hard tabs Products · Materials · Samples · WIP · Moodboard with counts | nw-6, n-7 | ★★★★★ | Keep | Samples added per the owner (O). The Samples, WIP and Moodboard grids exist in the code (`mod-studio.jsx` StSelGrid) but no frame shows them: register one frame each (gap 2). |
 | Product tiles: photo, band tag, code · score · 30 d pcs when sales data is on | nw-6, n-7 | ★★★★ | Keep | S:1.3; ₹ never on a tile (S:1.8), as drawn. "Never scored" and "as of last night" (S:1.3) are not shown on any tile: add one tile of each. |
 | Quick chips High demand · High growth · Category ▾ · Colour ▾ · Work · Recent; sort; Sort & filter | nw-6 | ★★★ | Keep | One row. |
 | Materials tab: swatches, name, code, finish, stock word; the sort & filter popover with Sort · Group · Finish · Stock · Supplier | nw-7 | ★★★★ | Keep | The shared sheet (D-0040) as a popover, right. |
@@ -205,7 +230,8 @@ button keep it, the rings go to ink.
 
 1. Designer · a second template on the stage: Design sheet 20 (5 × 4) and Colourways (2 × 3), web only. Only Cuts 4×3 is
    ever on the stage; the grid template (S:1.4) is unproven on the board.
-2. Context selector · Samples, WIP and Moodboard tabs (S:1.3), one web frame each; the phone sheet shares them.
+2. Context selector · Samples, WIP and Moodboard tabs (S:1.3), one web frame each (the grids are coded, only the
+   registration is missing); the phone sheet shares them.
 3. Hand-off · Save as sample on the phone, as a sheet reached from the swipe "up" and the History item (S:1.6, O:8).
 4. Settings · Usage (runs, images, failures, cost for admin) and Context (the five sources, web collection greyed) (S:1.2.3,
    S:1.5).
