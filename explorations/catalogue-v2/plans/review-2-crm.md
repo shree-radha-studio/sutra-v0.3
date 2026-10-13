@@ -190,3 +190,14 @@ Each line is something the screens imply that the BRD does not state.
 - Every gauge on the board uses the Customer score formula in DU (30 % payment, 30 % billing, 25 % GR inverse, 15 % market rating) and a Payment score formula that is still open.
 - Money is omitted server-side for the sale executive (M:121): FY billing, credit line, open book ₹ and bill amounts never reach the client for that role.
 - The credit line is a fact on the pane, never a block (owner, 13 Oct): over-the-line is a flag on the approver's card, not a pill on the CRM list.
+
+---
+
+## 7 · Exemplar drawn (13 Oct, at the lead's request)
+
+One compare pair for decision 15's recommended option, in `mod-crm-r2.jsx` (a second CRM band, "Review 2 exemplar"; the file is wired into `modules.js` at merge). Nothing else on the board changes.
+
+- **n-55 / nd-55 · Follow-ups · Today, picture-first, three-row header.** Three rows of chrome (top bar · search island · sub-menu scroller, decision 1), then the Today · Journey board · History tabs scroll with the list. Actions grouped Overdue · Today · Waking from snooze, oldest first; every row leads with two design thumbs (the attached designs, or the customer's last-bought designs when the step has none), then the customer, the due pill and the step line, and the channel button. The first picture sits at about 250 px of 844, against none on n-1 and n-9. Sale executive's view: no money anywhere. Compare with n-1 and n-9.
+- **nw-48 / nwd-48 · Follow-ups · Today with the step pane, one control row.** The same list on `WebShell3` with the view tabs carrying Mine · sort · filters as the only control row, a meta line, the grouped rows with three thumbs each, and the selected customer's step in the right pane (`StepWork`, unchanged). Compare with nw-1 (four control rows) and nw-8.
+
+Rendered as `.board-check/sheet-crm-review-2.png`; `board-check.sh crm` mounts 206 frames with a clean console.
