@@ -32,8 +32,8 @@ const CsField = ({ T, label, value, mono, chevron, h = 48, focus }) => <div styl
 </div>;
 /* optional rows: label left, value right, lighter than the required fields */
 const CsOptRow = ({ T, label, value }) => <div className="press" style={{ display: 'flex', alignItems: 'center', gap: 10, height: 44, borderTop: `1px solid ${T.line}` }}>
-  <span style={{ fontFamily: T.fontUI, fontSize: 13.5, color: T.ink2, flex: 'none' }}>{label}</span><span style={{ flex: 1 }} />
-  <span style={{ fontFamily: T.fontUI, fontSize: 13.5, color: value ? T.ink : T.ink3, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', minWidth: 0 }}>{value || 'Add'}</span>
+  <span style={{ fontFamily: T.fontUI, fontSize: 13, color: T.ink2, flex: 'none' }}>{label}</span><span style={{ flex: 1 }} />
+  <span style={{ fontFamily: T.fontUI, fontSize: 13, color: value ? T.ink : T.ink3, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', minWidth: 0 }}>{value || 'Add'}</span>
   <Ic name="chevron-right" size={15} color={T.ink3} />
 </div>;
 /* a customer in the picker: name is the head; selected = ink outline and a check, not maroon */
@@ -278,11 +278,11 @@ const WebCsSubmitBlocked = ({ T }) => <CsWebShell T={T} title="Submit cart A" pa
 /* ═══════════════ registration ═══════════════ */
 (window.NEW_DRAFT_MODULES = window.NEW_DRAFT_MODULES || []).push({ module: 'Catalogue · sell flow', note: 'the screens the sell flow was missing: new cart and customer, submit with the credit-line check, sent state; two calmer grid headers for compare (13 Oct, review 2)', subs: [
   { name: 'New cart & customer', flow: 'new cart → recent or new customer → start',
-    phone: [['New cart & customer · new cart sheet', ScreenCsNewCart], ['New cart & customer · new customer sheet', ScreenCsNewCustomer]],
-    web: [['New cart & customer · new cart, customer picker in the pane', WebCsNewCart], ['New cart & customer · new customer in the pane', WebCsNewCustomer]] },
+    phone: [['Carts · new cart sheet', ScreenCsNewCart], ['Carts · new customer sheet', ScreenCsNewCustomer]],
+    web: [['Carts · new cart, customer picker in the pane', WebCsNewCart], ['Carts · new customer in the pane', WebCsNewCustomer]] },
   { name: 'Submit for approval', flow: 'summary with credit line → fits / over the line → sent',
-    phone: [['Submit for approval · summary, credit line fits', ScreenCsSubmit], ['Submit for approval · over the credit line', ScreenCsSubmitBlocked], ['Submit for approval · sent', ScreenCsSubmitted]],
-    web: [['Submit for approval · summary in the pane', WebCsSubmit], ['Submit for approval · over the credit line in the pane', WebCsSubmitBlocked]] },
+    phone: [['Cart · submit for approval sheet', ScreenCsSubmit], ['Cart · over the credit line', ScreenCsSubmitBlocked], ['Cart · sent for approval', ScreenCsSubmitted]],
+    web: [['Cart · submit for approval in the pane', WebCsSubmit], ['Cart · over the credit line, in the pane', WebCsSubmitBlocked]] },
   { name: 'Calmer grid header', flow: 'three rows → two rows, compare with the final',
     phone: [['Grid · three-row header (compare with final f-1)', ScreenCsGrid3], ['Grid · two-row header, lists scroll with the grid (compare with f-1)', ScreenCsGrid2]],
     web: [] },

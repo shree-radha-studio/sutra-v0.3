@@ -49,6 +49,7 @@ const HM_AUTO = [
   { no: 'GT-260912-015', kind: 'Production issue', party: 'Noor Tailors', parcels: 3, st: 'Active' },
   { no: 'GT-260912-016', kind: 'Purchase inward', party: 'Surat Fabrics', parcels: 4, st: 'Active' },
   { no: 'GT-260912-017', kind: 'Sale invoice', party: 'Aneri Boutique', parcels: 1, st: 'Verified by Ramesh 12:05', ok: true },
+  { no: 'GT-260912-020', kind: 'Sale invoice', party: 'Preeti Fashion Hub', parcels: 3, st: 'Active' },
 ];
 const HM_MANUAL = [
   { no: 'GT-260912-021', kind: 'Sale return', party: 'Aneri Boutique', city: 'Anand', parcels: 1, stock: 'Finished goods', claimed: '2 pcs', st: 'Active', at: '14:05' },
@@ -79,18 +80,18 @@ const HmSeg = ({ T, items, active }) => <span style={{ display: 'inline-flex', p
 /* ── Home pieces ── */
 function HmNeed({ T, icon, title, sub, tone, tag }) {
   const bad = tone === 'danger';
-  return <div className="press" style={{ display: 'flex', alignItems: 'center', gap: 12, minHeight: 58, padding: '8px 12px', borderRadius: 18, background: T.surface, border: `1px solid ${bad ? T.danger + '66' : T.line}`, boxShadow: T.dark ? 'none' : '0 6px 18px -14px rgba(36,23,18,.25)', minWidth: 0 }}>
-    <span style={{ width: 40, height: 40, borderRadius: 14, background: bad ? T.danger + '1F' : T.chipBg, color: bad ? T.danger : T.ink2, display: 'grid', placeItems: 'center', flex: 'none' }}><Ic name={icon} size={19} sw={1.7} /></span>
+  return <div className="press" style={{ display: 'flex', alignItems: 'center', gap: 12, minHeight: 48, padding: '5px 12px', borderRadius: 18, background: T.surface, border: `1px solid ${bad ? T.danger + '66' : T.line}`, boxShadow: T.dark ? 'none' : '0 6px 18px -14px rgba(36,23,18,.25)', minWidth: 0 }}>
+    <span style={{ width: 38, height: 38, borderRadius: 13, background: bad ? T.danger + '1F' : T.chipBg, color: bad ? T.danger : T.ink2, display: 'grid', placeItems: 'center', flex: 'none' }}><Ic name={icon} size={19} sw={1.7} /></span>
     <span style={{ flex: 1, minWidth: 0 }}><div style={{ fontFamily: T.fontDisplay, fontSize: 18, fontWeight: 600, color: T.ink, lineHeight: 1.1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{title}</div><Meta T={T} style={{ display: 'block', marginTop: 2 }}>{sub}</Meta></span>
     {tag}<Ic name="chevron-right" size={16} color={T.ink3} />
   </div>;
 }
 const HmQuick = ({ T, icon, label, sub, h = 66 }) => <div className="press" style={{ height: h, borderRadius: 18, background: T.surface, border: `1px solid ${T.line}`, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 5, boxShadow: T.dark ? 'none' : '0 6px 18px -14px rgba(36,23,18,.25)' }}><Ic name={icon} size={22} sw={1.7} color={T.ink} /><span style={{ fontFamily: T.fontUI, fontSize: 12.5, color: T.ink2, fontWeight: 500 }}>{label}</span>{sub && <span style={{ fontFamily: T.fontUI, fontSize: 10.5, color: T.ink3, marginTop: -2 }}>{sub}</span>}</div>;
-function HmNotice({ T, kind, icon, tone, text, time, first }) {
+function HmNotice({ T, kind, icon, tone, text, time, first, compact }) {
   const bad = tone === 'danger';
-  return <div className="press" style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 0', borderTop: first ? 0 : `1px solid ${T.line}` }}>
-    <span style={{ width: 34, height: 34, borderRadius: 12, background: bad ? T.danger + '1F' : T.chipBg, color: bad ? T.danger : T.ink2, display: 'grid', placeItems: 'center', flex: 'none' }}><Ic name={icon} size={16} sw={1.7} /></span>
-    <span style={{ flex: 1, minWidth: 0 }}><div style={{ lineHeight: 1 }}><T.Tag tone={bad ? 'danger' : 'muted'}>{kind}</T.Tag></div><div style={{ fontFamily: T.fontUI, fontSize: 13, color: T.ink, marginTop: 3, lineHeight: 1.25 }}>{text}</div></span>
+  return <div className="press" style={{ display: 'flex', alignItems: 'center', gap: 10, padding: compact ? '4px 0' : '9px 0', borderTop: first ? 0 : `1px solid ${T.line}` }}>
+    <span style={{ width: compact ? 28 : 34, height: compact ? 28 : 34, borderRadius: 12, background: bad ? T.danger + '1F' : T.chipBg, color: bad ? T.danger : T.ink2, display: 'grid', placeItems: 'center', flex: 'none' }}><Ic name={icon} size={16} sw={1.7} /></span>
+    <span style={{ flex: 1, minWidth: 0 }}><div style={{ lineHeight: 1 }}><T.Tag tone={bad ? 'danger' : 'muted'}>{kind}</T.Tag></div><div style={{ fontFamily: T.fontUI, fontSize: compact ? 12.5 : 13, color: T.ink, marginTop: 3, lineHeight: 1.25, ...(compact ? { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' } : null) }}>{text}</div></span>
     <Meta T={T} style={{ flex: 'none' }}>{time}</Meta>
   </div>;
 }
@@ -98,28 +99,29 @@ const HM_QUICK = [['layout-grid', 'Catalogue', '612 designs'], ['shopping-basket
 
 /* ── P1 · phone landing, sale executive ── */
 function ScreenHmHome({ T }) {
+  const sc = { margin: '8px 0 4px' };
   return frameF(T, <>
     <HmHeader T={T} />
-    <HmBody pb={112}>
-      <Sect T={T} style={{ marginTop: 2 }} right={<Meta T={T}>updated 11:20</Meta>}>Today</Sect>
+    <HmBody pb={112} style={{ paddingTop: 4 }}>
+      <Sect T={T} style={{ ...sc, marginTop: 4 }} right={<Meta T={T}>updated 11:20</Meta>}>Today</Sect>
       <div style={{ display: 'flex', gap: 8 }}>
-        <T.Kpi label="Orders today" value="7" sub="5 yesterday" />
-        <T.Kpi label="Pieces" value="68" sub="9.7 per order" />
-        <T.Kpi label="Approvals" value="3" sub="waiting · oldest 2 d" />
+        <T.Kpi small label="Orders today" value="7" sub="5 yesterday" />
+        <T.Kpi small label="Pieces" value="68" sub="9.7 per order" />
+        <T.Kpi small label="Approvals" value="3" sub="waiting · oldest 2 d" />
       </div>
-      <Sect T={T} style={{ marginTop: 12 }}>Needs you</Sect>
-      <div style={{ display: 'grid', gap: 7 }}>
+      <Sect T={T} style={sc}>Needs you</Sect>
+      <div style={{ display: 'grid', gap: 6 }}>
         <HmNeed T={T} icon="clipboard-check" title="3 approvals waiting" sub="SO-3455 · SO-3451 · SO-3448" />
         <HmNeed T={T} icon="shopping-basket" title="2 carts open since yesterday" sub="Ramleela Fashion · RL Fashion" />
-        <HmNeed T={T} icon="octagon-alert" tone="danger" title="1 cart over the credit line" sub="RL Fashion · Meerut" tag={<Pill T={T} tone="danger" small>Needs admin</Pill>} />
+        <HmNeed T={T} icon="octagon-alert" tone="danger" title="1 cart over the credit line" sub="RL Fashion · Meerut · needs admin" />
       </div>
-      <Sect T={T} style={{ marginTop: 12 }}>Quick links</Sect>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0,1fr))', gap: 8 }}>{HM_QUICK.map(([ic, l]) => <HmQuick key={l} T={T} icon={ic} label={l} h={62} />)}</div>
-      <Sect T={T} style={{ marginTop: 12 }} right={<span className="press" style={{ fontSize: 12, color: T.ink2, fontWeight: 500 }}>All 5</span>}>Notifications</Sect>
-      <HmCard T={T} pad="2px 12px">
-        <HmNotice T={T} first kind="BAU" icon="circle-check" text="SO-3433 approved · Nalli Fashion Mart · 12 pcs" time="10:42" />
-        <HmNotice T={T} kind="Daily" icon="bar-chart-3" text="Yesterday 9 orders · 84 pcs" time="09:00" />
-        <HmNotice T={T} kind="Red alert" tone="danger" icon="triangle-alert" text="SO-2607 · Nalli Fashion Mart is 24 d past due" time="08:15" />
+      <Sect T={T} style={sc}>Quick links</Sect>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0,1fr))', gap: 6 }}>{HM_QUICK.map(([ic, l]) => <HmQuick key={l} T={T} icon={ic} label={l} h={46} />)}</div>
+      <Sect T={T} style={sc} right={<span className="press" style={{ fontSize: 12, color: T.ink2, fontWeight: 500 }}>All 5</span>}>Notifications</Sect>
+      <HmCard T={T} pad="0 12px">
+        <HmNotice T={T} first compact kind="BAU" icon="circle-check" text="SO-3433 approved · Nalli Fashion Mart" time="10:42" />
+        <HmNotice T={T} compact kind="Daily" icon="bar-chart-3" text="Yesterday 9 orders · 84 pcs" time="09:00" />
+        <HmNotice T={T} compact kind="Red alert" tone="danger" icon="triangle-alert" text="SO-2607 Nalli Fashion Mart is 24 d late" time="08:15" />
       </HmCard>
     </HmBody>
   </>, <T.Island active="Home" />);
@@ -184,14 +186,18 @@ const HmBlockedStrip = ({ T, over }) => <div style={{ flex: 'none', padding: '10
 </div></div>;
 /* the customer: name (display), where · tier · since, call chip, broker chip, purchase history */
 function HmCustomer({ T, c = HM_C, web }) {
-  return <HmCard T={T} pad={web ? '12px 14px' : 14}>
+  if (web) return <HmCard T={T} pad="9px 14px 10px">
+    <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}><span style={{ fontFamily: T.fontDisplay, fontSize: 20, fontWeight: 600, color: T.ink, lineHeight: 1.1 }}>{c.name}</span><Meta T={T}>{c.city} · {c.tier} · since {c.since}</Meta></div>
+    <div style={{ display: 'flex', gap: 6, marginTop: 7, overflow: 'hidden' }}><T.Chip icon="phone" style={{ height: 32 }}><span style={{ fontFamily: T.fontMono, fontSize: 12 }}>{c.phone}</span></T.Chip><T.Chip icon="user" style={{ height: 32 }}>{c.broker} · {c.agency}</T.Chip><span style={{ flex: 1 }} /><T.Chip icon="history" outline style={{ height: 32 }}>Purchase history</T.Chip></div>
+  </HmCard>;
+  return <HmCard T={T} pad={web ? '9px 14px 10px' : 14}>
     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-      <span style={{ flex: 1, minWidth: 0 }}><div style={{ fontFamily: T.fontDisplay, fontSize: 20, fontWeight: 600, color: T.ink, lineHeight: 1.1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{c.name}</div><Meta T={T} style={{ display: 'block', marginTop: 3 }}>{c.city}{c.market ? ' · ' + c.market : ''} · {c.tier} · since {c.since}</Meta></span>
-      <T.Chip icon="history" outline style={{ height: 34 }}>Purchase history</T.Chip>
+      <span style={{ flex: 1, minWidth: 0 }}><div style={{ fontFamily: T.fontDisplay, fontSize: 20, fontWeight: 600, color: T.ink, lineHeight: 1.1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{c.name}</div><Meta T={T} style={{ display: 'block', marginTop: 3 }}>{c.city} · {c.tier} · since {c.since}</Meta></span>
+      <T.Chip icon="history" outline style={{ height: web ? 32 : 34 }}>Purchase history</T.Chip>
     </div>
-    <div style={{ display: 'flex', gap: 6, marginTop: 10, overflow: 'hidden' }}>
-      <T.Chip icon="phone" style={{ height: 34 }}><span style={{ fontFamily: T.fontMono, fontSize: 12 }}>{c.phone}</span></T.Chip>
-      <T.Chip icon="user" style={{ height: 34 }}>{c.broker} · {c.agency}</T.Chip>
+    <div style={{ display: 'flex', gap: 6, marginTop: web ? 7 : 10, overflow: 'hidden' }}>
+      <T.Chip icon="phone" style={{ height: web ? 32 : 34 }}><span style={{ fontFamily: T.fontMono, fontSize: 12 }}>{c.phone}</span></T.Chip>
+      <T.Chip icon="user" style={{ height: web ? 32 : 34 }}>{c.broker} · {c.agency}</T.Chip>
     </div>
   </HmCard>;
 }
@@ -210,14 +216,15 @@ function HmCredit({ T, open, order = HM_TOTAL, line = HM_C.line, web }) {
   const total = open + order, over = total > line, free = Math.max(0, line - total), scale = Math.max(total, line);
   const w = v => (v / scale * 100) + '%';
   const b = { fontWeight: 600, color: T.ink };
-  return <HmCard T={T} pad={web ? '10px 14px 12px' : 14} style={over ? { borderColor: T.danger + '66' } : null}>
-    <div style={{ fontFamily: T.fontUI, fontSize: 12.5, color: T.ink3, lineHeight: 1.35 }}>Credit line <span style={b}>{money(line)}</span> · open <span style={b}>{money(open)}</span> · this order <span style={{ ...b, color: over ? T.danger : T.ink }}>{money(order)}</span></div>
-    <div style={{ position: 'relative', marginTop: over ? 24 : 12 }}>
-      <div style={{ height: 12, borderRadius: 6, background: T.chipBg, display: 'flex', overflow: 'hidden' }}><span style={{ width: w(open), background: T.ink3 }} /><span style={{ width: w(order), background: over ? T.danger : T.ink }} /></div>
-      {over && <><span style={{ position: 'absolute', left: w(line), top: -6, bottom: -6, width: 2, marginLeft: -1, background: T.ink, borderRadius: 1 }} /><span style={{ position: 'absolute', left: w(line), top: -22, transform: 'translateX(-100%)', paddingRight: 5, fontFamily: T.fontUI, fontSize: 10.5, color: T.ink2, whiteSpace: 'nowrap' }}>line {money(line)}</span></>}
+  const dot = c => <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: 4, background: c, margin: '0 3px 0 0' }} />;
+  const cur = over ? T.danger : T.ink;
+  return <HmCard T={T} pad={web ? '8px 14px 9px' : 14} style={over ? { borderColor: T.danger + '66' } : null}>
+    <div style={{ fontFamily: T.fontUI, fontSize: web ? 12 : 11.5, color: T.ink3, lineHeight: 1.45, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Credit line <span style={b}>{money(line)}</span> · {dot(T.ink3)}open <span style={b}>{money(open)}</span> · {dot(cur)}this order <span style={{ ...b, color: cur }}>{money(order)}</span></div>
+    <div style={{ position: 'relative', marginTop: over ? (web ? 12 : 24) : (web ? 8 : 10) }}>
+      <div style={{ height: 12, borderRadius: 6, background: T.chipBg, display: 'flex', overflow: 'hidden' }}><span style={{ width: w(open), background: T.ink3 }} /><span style={{ width: w(order), background: cur }} /></div>
+      {over && <><span style={{ position: 'absolute', left: w(line), top: -6, bottom: -6, width: 2, marginLeft: -1, background: T.ink, borderRadius: 1 }} />{!web && <span style={{ position: 'absolute', left: w(line), top: -22, transform: 'translateX(-100%)', paddingRight: 5, fontFamily: T.fontUI, fontSize: 10.5, color: T.ink2, whiteSpace: 'nowrap' }}>line {money(line)}</span>}</>}
     </div>
-    <div style={{ marginTop: 8 }}><Legend T={T} items={[['Open', T.ink3, money(open)], ['This order', over ? T.danger : T.ink, money(order)], ...(over ? [] : [['Free', T.line2, money(free)]])]} /></div>
-    <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginTop: 8, fontFamily: T.fontUI, fontSize: 13, fontWeight: 600, color: over ? T.danger : T.ok }}><Ic name={over ? 'octagon-alert' : 'circle-check'} size={16} />{over ? `Over the line by ${money(total - line)} · needs admin` : `Inside the line · ${money(free)} free after this order`}</div>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginTop: web ? 6 : 8, fontFamily: T.fontUI, fontSize: 13, fontWeight: 600, color: over ? T.danger : T.ok }}><Ic name={over ? 'octagon-alert' : 'circle-check'} size={16} />{over ? `Over the line by ${money(total - line)} · needs admin` : `Inside the line · ${money(free)} free after this order`}</div>
   </HmCard>;
 }
 /* appetite: what they usually buy, by price tier (BRD F:54) */
@@ -226,13 +233,13 @@ function HmAppetite({ T, tiers = [['High', 67], ['Mid', 25], ['Low', 8]], web })
   return <HmCard T={T} pad={web ? '10px 14px 12px' : 14}>
     <div style={{ display: 'flex', height: 14, borderRadius: 7, overflow: 'hidden', background: T.chipBg, gap: 2 }}>{tiers.map(([t, v], i) => <span key={t} style={{ width: v + '%', background: col[i], display: 'grid', placeItems: 'center', fontFamily: T.fontUI, fontSize: 9.5, fontWeight: 600, color: T.dark ? T.bg : '#fff' }}>{v >= 20 ? v : ''}</span>)}</div>
     <div style={{ marginTop: 8 }}><Legend T={T} items={tiers.map(([t, v], i) => [t, col[i], v + ' %'])} /></div>
-    <Meta T={T} style={{ display: 'block', marginTop: 5 }}>what they usually buy, by price tier</Meta>
+    {!web && <Meta T={T} style={{ display: 'block', marginTop: 5 }}>what they usually buy, by price tier</Meta>}
   </HmCard>;
 }
 /* order lines: photo, number head, a stepper per colour with "× rate" and the stock beside it */
 function HmColRow({ T, c, rate, web }) {
   const [n, q, st, last] = c; const short = q > st;
-  return <div style={{ display: 'flex', alignItems: 'center', gap: 10, minHeight: web ? 36 : 46, opacity: q ? 1 : .62 }}>
+  return <div style={{ display: 'flex', alignItems: 'center', gap: 10, minHeight: web ? 32 : 46, opacity: q ? 1 : .62 }}>
     <span style={{ width: 4, height: 20, borderRadius: 2, background: XD.cols[n], flex: 'none' }} />
     <span style={{ flex: 1, minWidth: 0 }}><div style={{ fontFamily: T.fontUI, fontSize: 13.5, fontWeight: 500, color: T.ink, lineHeight: 1.15 }}>{n}</div><Meta T={T} style={{ display: 'block', fontSize: 11, color: short ? T.warn : T.ink3 }}>{st} in stock{last ? ` · at last step ${last}` : ''}</Meta></span>
     <T.Step v={q} />
@@ -242,28 +249,32 @@ function HmColRow({ T, c, rate, web }) {
 function HmLines({ T, web }) {
   return <HmCard T={T} pad={0} style={{ overflow: 'hidden' }}>
     {HM_LINES.map((l, i) => { const d = XD.byCode[l.code]; const q = hmQty(l);
-      return <div key={l.code} style={{ borderTop: i ? `1px solid ${T.line}` : 0, padding: web ? '10px 14px 6px' : '12px 14px 8px', display: web ? 'flex' : 'block', gap: 12 }}>
-        {web && <Thumb T={T} d={d} w={48} h={60} r={10} />}
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            {!web && <Thumb T={T} d={d} w={56} h={70} r={12} />}
-            <span style={{ flex: 1, minWidth: 0 }}><div style={{ fontFamily: T.fontDisplay, fontSize: web ? 20 : 24, fontWeight: 600, color: T.ink, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{d.code}</div><Meta T={T} style={{ display: 'block', marginTop: 4 }}>{d.cat} · {d.name}</Meta></span>
-            <span style={{ textAlign: 'right', flex: 'none' }}><PriceF v={q * l.rate} size={web ? 17 : 19} font={T.fontSerif} color={T.ink} dim={T.ink3} /><div style={{ fontSize: 10.5, color: T.ink3, marginTop: 3 }}>{q} pcs</div></span>
-          </div>
-          <div style={{ marginTop: web ? 2 : 6 }}>{l.cols.map(c => <HmColRow key={c[0]} T={T} c={c} rate={l.rate} web={web} />)}</div>
+      if (web) return <div key={l.code} style={{ display: 'flex', gap: 10, padding: '5px 14px', borderTop: i ? `1px solid ${T.line}` : 0 }}>
+        <Thumb T={T} d={d} w={40} h={50} r={9} />
+        <div style={{ width: 108, flex: 'none' }}><div style={{ fontFamily: T.fontDisplay, fontSize: 20, fontWeight: 600, color: T.ink, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{d.code}</div><Meta T={T} style={{ display: 'block', marginTop: 3, fontSize: 11 }}>{d.cat} · {d.name}</Meta><div style={{ marginTop: 4 }}><PriceF v={q * l.rate} size={15} font={T.fontSerif} color={T.ink} dim={T.ink3} /><span style={{ fontSize: 10.5, color: T.ink3, marginLeft: 5 }}>{q} pcs</span></div></div>
+        <div style={{ flex: 1, minWidth: 0 }}>{l.cols.map(c => <HmColRow key={c[0]} T={T} c={c} rate={l.rate} web />)}</div>
+      </div>;
+      return <div key={l.code} style={{ borderTop: i ? `1px solid ${T.line}` : 0, padding: '12px 14px 8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <Thumb T={T} d={d} w={56} h={70} r={12} />
+          <span style={{ flex: 1, minWidth: 0 }}><div style={{ fontFamily: T.fontDisplay, fontSize: 24, fontWeight: 600, color: T.ink, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{d.code}</div><Meta T={T} style={{ display: 'block', marginTop: 4 }}>{d.cat} · {d.name}</Meta></span>
+          <span style={{ textAlign: 'right', flex: 'none' }}><PriceF v={q * l.rate} size={19} font={T.fontSerif} color={T.ink} dim={T.ink3} /><div style={{ fontSize: 10.5, color: T.ink3, marginTop: 3 }}>{q} pcs</div></span>
         </div>
+        <div style={{ marginTop: 6 }}>{l.cols.map(c => <HmColRow key={c[0]} T={T} c={c} rate={l.rate} />)}</div>
       </div>; })}
-    <div style={{ borderTop: `1px solid ${T.line2}`, padding: web ? '8px 14px' : '12px 14px', display: 'flex', alignItems: 'center', gap: 10, background: T.surface2 }}>
-      <span style={{ flex: 1, minWidth: 0 }}><div style={{ fontSize: 12, color: T.ink3 }}>{HM_PCS} pcs · {HM_LINES.length} designs · GST extra</div><div style={{ marginTop: 5 }}><Pill T={T} tone="warn" small>{HM_INSTOCK} of {HM_PCS} in stock</Pill></div></span>
-      <PriceF v={HM_TOTAL} size={web ? 22 : 26} font={T.fontSerif} color={T.ink} dim={T.ink3} />
+    <div style={{ borderTop: `1px solid ${T.line2}`, padding: web ? '5px 14px' : '12px 14px', display: 'flex', alignItems: 'center', gap: 10, background: T.surface2 }}>
+      <span style={{ flex: 1, minWidth: 0, display: web ? 'flex' : 'block', alignItems: 'center', gap: 8 }}><div style={{ fontSize: 12, color: T.ink3 }}>{HM_PCS} pcs · {HM_LINES.length} designs · GST extra</div><div style={{ marginTop: web ? 0 : 5 }}><Pill T={T} tone="warn" small>{HM_INSTOCK} of {HM_PCS} in stock</Pill></div></span>
+      <PriceF v={HM_TOTAL} size={web ? 20 : 26} font={T.fontSerif} color={T.ink} dim={T.ink3} />
     </div>
   </HmCard>;
 }
-const HmNote = ({ T, by = 'Rohan Mehta', text = HM_NOTE }) => <div style={{ display: 'flex', gap: 10, padding: '12px 14px', borderRadius: 16, background: T.chipBg }}><Ic name="message-square-text" size={16} color={T.ink3} style={{ marginTop: 2 }} /><span><Meta T={T} style={{ display: 'block' }}>Note with this order · {by}</Meta><div style={{ fontFamily: T.fontUI, fontSize: 14, fontStyle: 'italic', color: T.ink, marginTop: 3, lineHeight: 1.3 }}>“{text}”</div></span></div>;
+const HmNote = ({ T, by = 'Rohan Mehta', text = HM_NOTE, tight }) => <div style={{ display: 'flex', gap: 10, padding: tight ? '7px 12px' : '12px 14px', borderRadius: 16, background: T.chipBg, alignItems: tight ? 'center' : 'flex-start' }}><Ic name="message-square-text" size={16} color={T.ink3} style={{ marginTop: tight ? 0 : 2 }} />{tight
+  ? <span style={{ display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap', minWidth: 0 }}><Meta T={T} style={{ flex: 'none' }}>Note with this order · {by}</Meta><span style={{ fontFamily: T.fontUI, fontSize: 13.5, fontStyle: 'italic', color: T.ink }}>“{text}”</span></span>
+  : <span><Meta T={T} style={{ display: 'block' }}>Note with this order · {by}</Meta><div style={{ fontFamily: T.fontUI, fontSize: 14, fontStyle: 'italic', color: T.ink, marginTop: 3, lineHeight: 1.3 }}>“{text}”</div></span>}</div>;
 /* the last three orders: tap Order, Invoice or Return to open that document */
-const HmHistory = ({ T, rows = HM_HIST, tight }) => <HmCard T={T} pad={tight ? '2px 12px' : '2px 14px'}>{rows.map(([no, made, done], i) => <div key={no} style={{ padding: '9px 0', borderTop: i ? `1px solid ${T.line}` : 0 }}>
+const HmHistory = ({ T, rows = HM_HIST, tight }) => <HmCard T={T} pad={tight ? '2px 12px' : '2px 14px'}>{rows.map(([no, made, done], i) => <div key={no} style={{ padding: tight ? '6px 0' : '9px 0', borderTop: i ? `1px solid ${T.line}` : 0 }}>
   <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}><Mono T={T} size={13}>{no}</Mono><Meta T={T}>created {made}</Meta><span style={{ flex: 1 }} /><Meta T={T}>done {done}</Meta></div>
-  <div style={{ display: 'flex', gap: 6, marginTop: 7 }}>{['Order', 'Invoice', 'Return'].map(k => <T.Chip key={k} outline style={{ height: 30, fontSize: 12, padding: '0 14px' }}>{k}</T.Chip>)}</div>
+  <div style={{ display: 'flex', gap: 6, marginTop: tight ? 5 : 7 }}>{['Order', 'Invoice', 'Return'].map(k => <T.Chip key={k} outline style={{ height: tight ? 28 : 30, fontSize: 12, padding: '0 14px' }}>{k}</T.Chip>)}</div>
 </div>)}</HmCard>;
 /* orders vs payments: orders accent, payments ok dashed (BRD F:55–56) */
 const HmChart = ({ T, title, d, h = 66, mini }) => <HmCard T={T} pad={mini ? '10px 10px 8px' : '12px 14px 10px'}>
@@ -286,7 +297,8 @@ function HmQCard({ T, q, picked, web }) {
     <div style={{ flex: 1, minWidth: 0 }}>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}><span style={{ flex: 1, minWidth: 0, fontFamily: T.fontDisplay, fontSize: web ? 18 : 20, fontWeight: 600, color: T.ink, lineHeight: 1.1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{q.name}</span><PriceF v={q.amt} size={web ? 16 : 18} font={T.fontSerif} color={T.ink} dim={T.ink3} /></div>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 7, marginTop: 4 }}><Mono T={T} size={12}>{q.no}</Mono><Meta T={T} style={{ flex: 1, minWidth: 0 }}>{q.city}</Meta><Meta T={T} style={{ flex: 'none' }}>{q.pcs} pcs</Meta></div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 7, minHeight: 22 }}>{q.flag ? <Pill T={T} tone={q.flag[0]} small>{q.flag[1]}</Pill> : null}<span style={{ flex: 1 }} /><Meta T={T} style={{ fontSize: 11, flex: 'none' }}>{q.by} · {q.on}</Meta></div>
+      {web ? <><div style={{ marginTop: 6, minHeight: 20 }}>{q.flag ? <Pill T={T} tone={q.flag[0]} small>{q.flag[1]}</Pill> : null}</div><Meta T={T} style={{ display: 'block', marginTop: 4, fontSize: 11 }}>{q.by} · {q.on}</Meta></>
+        : <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 7, minHeight: 22 }}>{q.flag ? <Pill T={T} tone={q.flag[0]} small>{q.flag[1]}</Pill> : null}<span style={{ flex: 1 }} /><Meta T={T} style={{ fontSize: 11, flex: 'none' }}>{q.by} · {q.on}</Meta></div>}
     </div>
   </div>;
 }
@@ -331,11 +343,11 @@ const ScreenHmApproveSO = ({ T }) => <HmApprovalSO T={T} />;
 const ScreenHmApproveSOBlocked = ({ T }) => <HmApprovalSO T={T} blocked />;
 
 /* ── P5 · sale return card ── */
-function ScreenHmApproveReturn({ T }) {
+function ScreenHmApproveReturn({ T, scroll }) {
   const r = HM_RET, c = r.c, pcs = r.lines.reduce((s, l) => s + l[2], 0);
   return frameF(T, <>
     <HmDocHead T={T} no={r.no} meta={`${r.on} · Sale return · raised by ${r.by}`} />
-    <HmBody pb={146}>
+    <HmBody pb={146} scroll={scroll}>
       <HmCustomer T={T} c={c} />
       <Sect T={T}>Their record</Sect>
       <HmStanding T={T} items={[['Customer score', '95', 'high band'], ['Payment score', '88', 'out of 100'], ['GR ratio', '9 %', '11 % with this'], ['FY billing', money(680000), 'this year'], ['Overdue', '₹0', 'nothing due', 'ok'], ['Open bills', '1', money(48000) + ' open']]} />
@@ -372,33 +384,34 @@ function HmWebCard({ T, blocked }) {
   const open = blocked ? HM_OPEN.blocked : HM_OPEN.within, over = open + HM_TOTAL - HM_C.line;
   return <div style={{ flex: 1, minWidth: 0, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
     <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', padding: '12px 16px 0' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}><span style={{ fontFamily: T.fontMono, fontSize: 17, fontWeight: 600, color: T.ink }}>SO-3455</span><StatusPill T={T} s="Raised" /><span style={{ fontSize: 12, color: T.ink3, flex: 1, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>10/09/26 · In-cabin · raised by Rohan Mehta</span><Hit T={T} icon="printer" size={32} iconSize={15} style={{ background: T.chipBg }} /></div>
-      {blocked && <div style={{ display: 'flex', gap: 10, padding: '8px 12px', borderRadius: 14, background: T.danger + '1A', border: `1px solid ${T.danger}66`, marginBottom: 8, alignItems: 'center' }}><Ic name="octagon-alert" size={18} color={T.danger} /><span style={{ fontSize: 12.5, color: T.ink2, lineHeight: 1.35 }}><b style={{ color: T.ink, fontWeight: 600 }}>Over the credit line by {money(over)}.</b> Only admin can approve. Reject, hold, or send to admin.</span></div>}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 5, height: 28 }}><span style={{ fontFamily: T.fontMono, fontSize: 17, fontWeight: 600, color: T.ink }}>SO-3455</span><StatusPill T={T} s="Raised" /><span style={{ fontSize: 12, color: T.ink3, flex: 1, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>10/09/26 · In-cabin · raised by Rohan Mehta</span><Hit T={T} icon="printer" size={30} iconSize={15} style={{ background: T.chipBg }} /></div>
+      {blocked && <div style={{ display: 'flex', gap: 10, padding: '6px 12px', borderRadius: 14, background: T.danger + '1A', border: `1px solid ${T.danger}66`, marginBottom: 6, alignItems: 'center' }}><Ic name="octagon-alert" size={18} color={T.danger} /><span style={{ fontSize: 12.5, color: T.ink2, lineHeight: 1.35 }}><b style={{ color: T.ink, fontWeight: 600 }}>Over the credit line by {money(over)}.</b> Only admin can approve.</span></div>}
       <HmCustomer T={T} web />
-      <div style={{ marginTop: 8 }}><HmCredit T={T} open={open} web /></div>
-      <div style={{ marginTop: 8 }}><HmLines T={T} web /></div>
-      <div style={{ marginTop: 8 }}><HmNote T={T} /></div>
+      <div style={{ marginTop: 6 }}><HmCredit T={T} open={open} web /></div>
+      <div style={{ marginTop: 6 }}><HmLines T={T} web /></div>
+      <div style={{ marginTop: 6 }}><HmNote T={T} tight /></div>
     </div>
-    <div style={{ flex: 'none', display: 'flex', alignItems: 'center', gap: 8, padding: '10px 16px', borderTop: `1px solid ${T.line}`, background: T.surface }}>
+    <div style={{ flex: 'none', display: 'flex', alignItems: 'center', gap: 8, padding: '6px 16px', borderTop: `1px solid ${T.line}`, background: T.surface }}>
       <span className="press" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: T.fontUI, fontSize: 12.5, color: T.ink2, fontWeight: 500 }}>Mark for inspection<Ic name="arrow-right" size={13} />owner</span>
       <span style={{ flex: 1 }} />
-      <T.Btn kind="secondary" style={{ height: 44 }}>Reject</T.Btn><T.Btn kind="secondary" style={{ height: 44 }}>Hold</T.Btn>
-      <T.Btn icon={blocked ? 'send' : 'check'} style={{ height: 44, padding: '0 24px' }}>{blocked ? 'Send to admin' : 'Approve'}</T.Btn>
+      <T.Btn kind="secondary" style={{ height: 40 }}>Reject</T.Btn><T.Btn kind="secondary" style={{ height: 40 }}>Hold</T.Btn>
+      <T.Btn icon={blocked ? 'send' : 'check'} style={{ height: 40, padding: '0 24px' }}>{blocked ? 'Send to admin' : 'Approve'}</T.Btn>
     </div>
   </div>;
 }
 /* right pane: the customer's standing, appetite, history and the two charts */
 function HmRecordPane({ T, open }) {
-  const items = hmStanding(open); items[3] = ['FY billing', lakh(450000), 'this year'];
+  const items = hmStanding(open).map(([l, v, , tone]) => [l, v, null, tone]); items[3] = ['FY billing', lakh(450000), null];
+  const lab = { margin: '9px 0 4px' };
   return <div style={{ padding: '0 14px', height: '100%', overflow: 'hidden' }}>
-    <HmLab T={T} style={{ marginTop: 10 }}>Their record</HmLab>
+    <div style={{ height: 12 }} />
     <HmStanding T={T} items={items} />
-    <HmLab T={T}>Appetite</HmLab>
+    <HmLab T={T} style={lab}>Appetite</HmLab>
     <HmAppetite T={T} web />
-    <HmLab T={T} right={<Meta T={T}>last 3 orders</Meta>}>Order history</HmLab>
+    <HmLab T={T} style={lab} right={<Meta T={T}>last 3 orders</Meta>}>Order history</HmLab>
     <HmHistory T={T} tight />
-    <HmLab T={T}>Orders and payments</HmLab>
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}><HmChart T={T} mini title="Ramleela Fashion" d={HM_CH.cust} h={50} /><HmChart T={T} mini title="Raghani Co. (agency)" d={HM_CH.agency} h={50} /></div>
+    <HmLab T={T} style={lab}>Orders and payments</HmLab>
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}><HmChart T={T} mini title="Ramleela Fashion" d={HM_CH.cust} h={54} /><HmChart T={T} mini title="Raghani Co. (agency)" d={HM_CH.agency} h={54} /></div>
   </div>;
 }
 function HmWebApprovals({ T, blocked }) {
@@ -429,10 +442,10 @@ function ScreenHmGate({ T }) {
     <div style={hmLift(T)}>
       <div style={{ display: 'flex', alignItems: 'center', padding: '0 10px 0 12px', height: 44 }}><T.Lockup /><span style={{ flex: 1 }} /><span style={{ fontFamily: T.fontUI, fontSize: 12, color: T.ink3, marginRight: 4 }}>Guard</span><Hit T={T} icon="ellipsis-vertical" size={40} /></div>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, padding: '4px 16px 0' }}><span style={{ fontFamily: T.fontDisplay, fontSize: 26, fontWeight: 500, color: T.ink }}>Gate pass</span><Meta T={T}>main gate · 12/09/26</Meta></div>
-      <HmTabsRow T={T} tabs={[['Auto', 4], ['Manual', 4]]} active="Auto" />
+      <HmTabsRow T={T} tabs={[['Auto', 5], ['Manual', 4]]} active="Auto" />
     </div>
     <HmBody pb={118}>
-      <Meta T={T} style={{ display: 'block', margin: '2px 2px 8px' }}>2 verified · 2 still to come through the gate</Meta>
+      <Meta T={T} style={{ display: 'block', margin: '2px 2px 8px' }}>2 verified · 3 still to come through the gate</Meta>
       <div style={{ display: 'grid', gap: 9 }}>{HM_AUTO.map(t => <HmTokenRow key={t.no} T={T} t={t} />)}</div>
     </HmBody>
   </>, <div style={{ position: 'absolute', left: 14, right: 14, bottom: 22, display: 'flex', alignItems: 'center', gap: 10, padding: 8, borderRadius: T.rDock, ...glass(T) }}>
@@ -440,19 +453,19 @@ function ScreenHmGate({ T }) {
     <T.Btn icon="plus" style={{ height: 48 }}>New manual token</T.Btn>
   </div>);
 }
-const HM_COLS = [['Token', 150], ['Kind', 138], ['Party', 0], ['Parcels', 62], ['Claimed', 78], ['Status', 168], ['Time', 46]];
+const HM_COLS = [['Token', 142], ['Kind', 118], ['Party', 0], ['Parcels', 52], ['Claimed', 70], ['Status', 152], ['Time', 44]];
 function HmTokenTable({ T, rows, pick }) {
   const cell = (w, style) => ({ width: w || undefined, flex: w ? 'none' : 1, minWidth: 0, ...style });
   return <div style={{ borderRadius: 18, background: T.surface, border: `1px solid ${T.line}`, overflow: 'hidden' }}>
     <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 14px', background: T.surface2, borderBottom: `1px solid ${T.line}` }}>{HM_COLS.map(([c, w]) => <span key={c} style={{ ...cell(w), fontFamily: T.fontUI, fontSize: 10, letterSpacing: '.06em', textTransform: 'uppercase', color: T.ink3, textAlign: c === 'Parcels' || c === 'Time' ? 'right' : 'left' }}>{c}</span>)}</div>
     {rows.map((t, i) => { const on = t.no === pick; return <div key={t.no} className="press" style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 14px', borderTop: i ? `1px solid ${T.line}` : 0, background: on ? T.accentSoft : 'transparent', boxShadow: on ? `inset 3px 0 0 ${T.accent}` : 'none' }}>
-      <span style={{ ...cell(150), display: 'flex', alignItems: 'center', gap: 9 }}><HmKindDisc T={T} kind={t.kind} s={32} /><Mono T={T} size={12.5}>{t.no}</Mono></span>
-      <span style={{ ...cell(138), fontSize: 12.5, color: T.ink2 }}>{t.kind}{t.stock.includes('no PO') ? <span style={{ color: T.ink3 }}> · no PO</span> : null}</span>
+      <span style={{ ...cell(142), display: 'flex', alignItems: 'center', gap: 8 }}><HmKindDisc T={T} kind={t.kind} s={28} /><Mono T={T} size={12.5}>{t.no}</Mono></span>
+      <span style={{ ...cell(118), fontSize: 12.5, color: T.ink2, lineHeight: 1.2 }}>{t.kind}{t.stock.includes('no PO') ? <div style={{ color: T.ink3, fontSize: 11 }}>no PO</div> : null}</span>
       <span style={cell(0)}><div style={{ fontFamily: T.fontDisplay, fontSize: 17, fontWeight: 600, color: T.ink, lineHeight: 1.1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t.party}</div><Meta T={T}>{t.city}</Meta></span>
-      <span style={{ ...cell(62), textAlign: 'right', fontSize: 13, color: T.ink, fontVariantNumeric: 'tabular-nums' }}>{t.parcels}</span>
-      <span style={{ ...cell(78), fontSize: 12.5, color: T.ink2 }}>{t.claimed}</span>
-      <span style={{ ...cell(168), display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 12, fontWeight: 600, color: t.ok ? T.ok : T.warn }}><Ic name={t.ok ? 'circle-check' : 'clock'} size={14} /><span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t.st}</span></span>
-      <span style={{ ...cell(46), textAlign: 'right', fontSize: 12, color: T.ink3, fontVariantNumeric: 'tabular-nums' }}>{t.at}</span>
+      <span style={{ ...cell(52), textAlign: 'right', fontSize: 13, color: T.ink, fontVariantNumeric: 'tabular-nums' }}>{t.parcels}</span>
+      <span style={{ ...cell(70), fontSize: 12.5, color: T.ink2 }}>{t.claimed}</span>
+      <span style={{ ...cell(152), display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 12, fontWeight: 600, color: t.ok ? T.ok : T.warn }}><Ic name={t.ok ? 'circle-check' : 'clock'} size={14} /><span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t.st}</span></span>
+      <span style={{ ...cell(44), textAlign: 'right', fontSize: 12, color: T.ink3, fontVariantNumeric: 'tabular-nums' }}>{t.at}</span>
     </div>; })}
   </div>;
 }
@@ -476,7 +489,7 @@ function HmTokenPane({ T, t }) {
 function WebHmGate({ T }) {
   const pick = HM_MANUAL[0];
   return <WebShell3 T={T} module="Home" crumb={['Home', 'Gate pass', 'Manual']} section="Gate pass" seg={Hm_SEG} active="Gate pass" tabs={Hm_TABS('gate')} paneTitle={pick.no} pane={<HmTokenPane T={T} t={pick} />}>
-    <ViewTabs T={T} tabs={[['Auto', 6, 'zap'], ['Manual', 4, 'hand']]} active="Manual" />
+    <ViewTabs T={T} tabs={[['Auto', 5, 'zap'], ['Manual', 4, 'hand']]} active="Manual" />
     <div style={{ padding: '14px 24px 0', flex: 1, minHeight: 0, overflow: 'hidden' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12 }}><T.Chip icon="search" outline>Token, party</T.Chip><T.Chip icon="calendar" x outline>Today</T.Chip><T.Chip on>Active 2</T.Chip><T.Chip outline>Done 2</T.Chip><span style={{ flex: 1 }} /><T.Btn icon="plus" style={{ height: 40 }}>New manual token</T.Btn></div>
       <HmTokenTable T={T} rows={HM_MANUAL} pick={pick.no} />
@@ -500,3 +513,11 @@ function WebHmGate({ T }) {
 
 Object.assign(window, { Hm_SEG, Hm_TABS, Hm_APPR_TABS, HM_C, HM_LINES, HM_TOTAL, HM_PCS, HM_QUEUE, HM_RET, HM_AUTO, HM_MANUAL, HmCard, HmBody, HmHeader, HmPageHead, HmTabsRow, HmSeg, HmNeed, HmQuick, HmNotice, HmNoticePane, HmDocHead, HmBlockedStrip, HmCustomer, HmStanding, HmCredit, HmAppetite, HmColRow, HmLines, HmNote, HmHistory, HmChart, HmFoot, HmQCard, HmApprovalSO, HmLab, HmWebQueue, HmWebCard, HmRecordPane, HmWebApprovals, HmKindDisc, HmTokenRow, HmTokenTable, HmTokenPane,
   ScreenHmHome, WebHmHome, ScreenHmApprovals, ScreenHmApproveSO, ScreenHmApproveSOBlocked, ScreenHmApproveReturn, WebHmApprovals, WebHmApproveBlocked, ScreenHmGate, WebHmGate });
+
+/*TMPSTART*/
+(window.NEW_DRAFT_MODULES = window.NEW_DRAFT_MODULES || []).push({ module: 'Home · tmp', note: 'tmp', subs: [{ name: 'tmp', flow: 'tmp', phone: [
+  ['so 480', ({ T }) => <HmApprovalSO T={T} scroll={480} />], ['so 960', ({ T }) => <HmApprovalSO T={T} scroll={960} />], ['so 1440', ({ T }) => <HmApprovalSO T={T} scroll={1440} />],
+  ['blocked 480', ({ T }) => <HmApprovalSO T={T} blocked scroll={480} />],
+  ['ret 480', ({ T }) => <ScreenHmApproveReturn T={T} scroll={480} />], ['ret 960', ({ T }) => <ScreenHmApproveReturn T={T} scroll={960} />],
+], web: [] }] });
+/*TMPEND*/
