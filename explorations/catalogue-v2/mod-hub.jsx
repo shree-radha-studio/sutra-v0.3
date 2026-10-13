@@ -4,7 +4,8 @@
    Stack, Ic, T.Btn, T.Chip, T.Tag, T.PhotoTag, T.Bars, T.Kpi, T.Island, WebShell3, ViewTabs (see COMPONENTS.md).
    Production's Field / Swatch / PShell are not on this page (modules.js loads only base + this file), so the form
    atoms below (HbField, HbSwatch) mirror them with the same fields and the same look.
-   Hub is where masters are created; Production › Process setting only links here. */
+   Hub is where masters are created; Production › Process setting only links here.
+   Review-2 second pass (13 Oct, 15:xx): decisions 4, 10, 11, 12 applied as provisional drafts; n-4 FAB overlap fixed. */
 
 /* ── module data (fictional; the designs, colours and codes the board already uses) ── */
 const HB_SEG = [['Masters'], ['Upload centre'], ['Import'], ['Reports'], ['Report builder'], ['Compare']];
@@ -185,7 +186,7 @@ function ScreenHbMasters({ T }) { return frameF(T, <HbMastersBodyP T={T} />, <><
 
 /* ── P2 · new product sheet: the phone's job is the photo, so every colour has a camera ── */
 function ScreenHbNewProduct({ T }) {
-  return frameF(T, <HbMastersBodyP T={T} />, <>{scrimF(T)}<Sheet T={T} h={640} title="New product" foot={<div style={{ display: 'flex', gap: 8 }}><OutBtn T={T} style={{ height: 46, padding: '0 20px' }}>Save</OutBtn><T.Btn icon="camera" style={{ flex: 1, height: 46 }}>Save and add photos</T.Btn></div>}>
+  return frameF(T, <HbMastersBodyP T={T} />, <>{scrimF(T)}<Sheet T={T} h={736} title="New product" foot={<div style={{ display: 'flex', gap: 8 }}><OutBtn T={T} style={{ flex: 1, height: 46, justifyContent: 'center', padding: '0 12px' }}>Save and set recipe</OutBtn><T.Btn icon="camera" style={{ flex: 1.15, height: 46 }}>Save and add photos</T.Btn></div>}>
     <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', paddingTop: 2 }}>
       <HbThumb T={T} d={{}} w={64} h={80} r={12} />
       <div style={{ flex: 1, minWidth: 0 }}><HbField T={T} label="Design no" value="8591" mono /><Meta T={T} style={{ display: 'block', marginTop: 6 }}>next in the Lehenga series</Meta></div>
@@ -199,7 +200,8 @@ function ScreenHbNewProduct({ T }) {
       <Hit T={T} icon="camera" size={44} iconSize={20} style={{ border: `1px solid ${T.line2}`, background: T.surface2 }} />
     </div>)}</div>
     <OutBtn T={T} small icon="plus" style={{ marginTop: 8 }}>Add colour</OutBtn>
-    <Meta T={T} style={{ display: 'block', marginTop: 12, whiteSpace: 'normal' }}>Work, price, HSN and GST are filled on the desk; price is admin's.</Meta>
+    <HbField T={T} label={<span>Price<HbLock T={T} /></span>} ph="TBD until costing" dim small lock style={{ marginTop: 12 }} />
+    <Meta T={T} style={{ display: 'block', marginTop: 8, whiteSpace: 'normal', lineHeight: 1.35 }}>Price is admin's, after costing. Work, HSN and GST are filled on the desk. Set recipe opens Production › Process setting pre-filled.</Meta>
   </Sheet></>);
 }
 
@@ -266,10 +268,9 @@ function WebHbNewProduct({ T }) {
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 22px', borderTop: `1px solid ${T.line}`, background: T.surface2 }}>
-          <Meta T={T}>Draft master · not in the catalogue yet</Meta><span style={{ flex: 1 }} />
-          <OutBtn T={T} style={{ height: 42 }}>Save</OutBtn>
-          <OutBtn T={T} style={{ height: 42 }}>Save and set recipe<Ic name="arrow-right" size={14} />Production</OutBtn>
-          <T.Btn icon="camera" style={{ height: 42 }}>Save and add photos</T.Btn>
+          <span style={{ minWidth: 0, flex: 1 }}><Meta T={T} style={{ display: 'block' }}>Draft master · price TBD until costing</Meta><Meta T={T} style={{ display: 'block', marginTop: 2, whiteSpace: 'normal', lineHeight: 1.3 }}>Set recipe opens Production › Process setting pre-filled with 8591 and its 3 colours; add photos opens the Upload centre.</Meta></span>
+          <OutBtn T={T} style={{ height: 42, flex: 'none' }}>Save and set recipe<Ic name="arrow-right" size={14} />Process setting</OutBtn>
+          <T.Btn icon="camera" style={{ height: 42, flex: 'none' }}>Save and add photos</T.Btn>
         </div>
       </div>
     </div>
@@ -417,7 +418,7 @@ function ScreenHbUploadQueue({ T }) {
         <div style={{ display: 'flex', gap: 6, marginTop: 10 }}>{[['All', 104], ['Mine', 31], ['New today', 3]].map(([l, n], i) => <T.Chip key={l} on={i === 0} style={{ height: 30 }}>{l}<span style={{ opacity: .7, fontWeight: 600, fontSize: 12 }}>{n}</span></T.Chip>)}</div>
       </div>
     </HbHeaderP>
-    <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', padding: '12px 14px 0' }}>{HB_QUEUE.map((d, i) => <HbQueueRow key={d.code} T={T} d={d} next={i === 0} />)}</div>
+    <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', padding: '12px 14px 0', WebkitMaskImage: 'linear-gradient(180deg, #000 calc(100% - 175px), transparent calc(100% - 95px))', maskImage: 'linear-gradient(180deg, #000 calc(100% - 175px), transparent calc(100% - 95px))' }}>{HB_QUEUE.map((d, i) => <HbQueueRow key={d.code} T={T} d={d} next={i === 0} />)}</div>
   </>, <><HbFab T={T} label="Start with 8591" icon="camera" /><T.Island active="More" /></>);
 }
 
@@ -432,7 +433,9 @@ const HbSteps = ({ T, on }) => <div style={{ display: 'flex', alignItems: 'cente
     </span>
   </React.Fragment>; })}
 </div>;
-const HbDisabledBtn = ({ T, icon, children }) => <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, height: 48, padding: '0 22px', borderRadius: 999, border: `1px solid ${T.ink3}`, color: T.ink3, fontFamily: T.fontUI, fontSize: 14, fontWeight: 500, whiteSpace: 'nowrap', boxSizing: 'border-box' }}>{icon && <Ic name={icon} size={16} />}{children}</span>;
+const HbDisabledBtn = ({ T, icon, children, style }) => <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, height: 48, padding: '0 22px', borderRadius: 999, border: `1px solid ${T.ink3}`, color: T.ink3, fontFamily: T.fontUI, fontSize: 14, fontWeight: 500, whiteSpace: 'nowrap', boxSizing: 'border-box', flex: 'none', ...style }}>{icon && <Ic name={icon} size={16} />}{children}</span>;
+/* the dry run said in words: one ruled row under the counts, phone and web */
+const HbDryRow = ({ T, small, style }) => <div style={{ display: 'flex', alignItems: 'flex-start', gap: 9, padding: small ? '8px 12px' : '9px 14px', borderRadius: 12, border: `1px solid ${T.line}`, background: T.surface, fontFamily: T.fontUI, fontSize: small ? 12 : 13, color: T.ink, lineHeight: 1.35, boxSizing: 'border-box', ...style }}><Ic name="clipboard-check" size={small ? 14 : 15} color={T.ink2} style={{ marginTop: 2, flex: 'none' }} /><span style={{ flex: 1, minWidth: 0 }}><b style={{ fontWeight: 600 }}>Dry run</b> · 212 rows read · 180 would be created · 30 updated · 2 need fixing · <b style={{ fontWeight: 600 }}>0 written</b>{!small && <span style={{ color: T.ink3 }}> · writing it in is a second step, admin only</span>}</span></div>;
 const HB_TEMPLATE_COLS = [['Design no', 'required'], ['Colour', 'required · from the colour master'], ['Category', 'required'], ['Name', ''], ['Work', ''], ['Price', 'admin only'], ['HSN code', 'open U33'], ['GST %', 'open U33'], ['Book / firm', '']];
 function HbTemplatePane({ T }) {
   return <div style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box' }}>
@@ -455,23 +458,22 @@ const HB_IMPORT_ROWS = [
   { row: 88, code: '2006', colour: 'Lavender', cat: 'Saree', price: '49 95', err: "Price '49 95' is not a number" },
   { row: 2, code: '8591', colour: 'Rani', cat: 'Lehenga', price: null, kind: 'Create' },
   { row: 3, code: '8591', colour: 'Firozi', cat: 'Lehenga', price: null, kind: 'Create' },
-  { row: 4, code: '8591', colour: 'Mehroon', cat: 'Lehenga', price: null, kind: 'Create' },
   { row: 5, code: '2798', colour: 'Sky', cat: 'Plazo set', price: 4995, kind: 'Update' },
-  { row: 9, code: '6002', colour: 'Lilac', cat: 'Lehenga', price: 4995, kind: 'Update' },
 ];
 const HB_IMP_GRID = '44px 168px 128px 104px 84px minmax(0, 1fr)';
 function WebHbImport({ T }) {
-  const tile = (n, l, tone) => <span key={l} style={{ flex: 1, minWidth: 0, padding: '10px 16px', borderRadius: 16, background: T.surface2, border: `1px solid ${tone === 'danger' ? T.danger + '66' : T.line}` }}><div style={{ fontFamily: T.fontDisplay, fontSize: 34, fontWeight: 600, lineHeight: 1, color: tone === 'danger' ? T.danger : tone === 'dim' ? T.ink3 : T.ink, fontVariantNumeric: 'lining-nums' }}>{n}</div><div style={{ fontFamily: T.fontUI, fontSize: 12, color: T.ink3, marginTop: 4 }}>{l}</div></span>;
+  const tile = (n, l, tone) => <span key={l} style={{ flex: 1, minWidth: 0, padding: '7px 16px', borderRadius: 16, background: T.surface2, border: `1px solid ${tone === 'danger' ? T.danger + '66' : T.line}` }}><div style={{ fontFamily: T.fontDisplay, fontSize: 30, fontWeight: 600, lineHeight: 1, color: tone === 'danger' ? T.danger : tone === 'dim' ? T.ink3 : T.ink, fontVariantNumeric: 'lining-nums' }}>{n}</div><div style={{ fontFamily: T.fontUI, fontSize: 12, color: T.ink3, marginTop: 4 }}>{l}</div></span>;
   return <HbShell T={T} section="Import" crumb={['Hub', 'Import', 'Products & SKUs', 'Check the file']} tabs={hbTabs(HB_T_MASTERS, { icon: 'file-spreadsheet', label: 'Import · products-oct.xlsx', on: true })} paneTitle="Template" pane={<HbTemplatePane T={T} />}>
     <HbSteps T={T} on={3} />
-    <div style={{ flex: 1, minHeight: 0, padding: '12px 24px 14px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+    <div style={{ flex: 1, minHeight: 0, padding: '12px 24px 36px', display: 'flex', flexDirection: 'column', gap: 10 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 9, height: 38, padding: '0 14px 0 11px', borderRadius: 12, border: `1px solid ${T.line2}`, background: T.surface, fontFamily: T.fontUI, fontSize: 13.5, color: T.ink }}><Ic name="file-spreadsheet" size={17} color={T.ok} /><b style={{ fontWeight: 500 }}>products-oct.xlsx</b><span style={{ color: T.ink3 }}>· 212 rows</span></span>
         <OutBtn T={T} icon="refresh-cw">Replace file</OutBtn><span style={{ flex: 1 }} /><Pill T={T} tone="blue">Dry run · nothing written yet</Pill>
       </div>
       <div style={{ display: 'flex', gap: 10 }}>{tile(180, 'creates')}{tile(30, 'updates')}{tile(2, 'errors', 'danger')}{tile(0, 'skipped', 'dim')}</div>
+      <HbDryRow T={T} />
       <div style={{ ...hbCardStyle(T), borderRadius: 18, overflow: 'hidden', flex: 'none' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '9px 14px' }}>{[['All', 212, 0], ['Errors', 2, 1], ['Creates', 180, 0], ['Updates', 30, 0]].map(([l, n], i) => <T.Chip key={l} on={i === 1 ? false : i === 0} outline={i !== 0} style={{ height: 28 }}>{l}<span style={{ opacity: l === 'Errors' ? 1 : .7, fontWeight: 600, fontSize: 12, color: l === 'Errors' ? T.danger : undefined }}>{n}</span></T.Chip>)}<span style={{ flex: 1 }} /><Meta T={T}>7 of 212 shown · errors first</Meta></div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '9px 14px' }}>{[['All', 212, 0], ['Errors', 2, 1], ['Creates', 180, 0], ['Updates', 30, 0]].map(([l, n], i) => <T.Chip key={l} on={i === 1 ? false : i === 0} outline={i !== 0} style={{ height: 28 }}>{l}<span style={{ opacity: l === 'Errors' ? 1 : .7, fontWeight: 600, fontSize: 12, color: l === 'Errors' ? T.danger : undefined }}>{n}</span></T.Chip>)}<span style={{ flex: 1 }} /><Meta T={T}>5 of 212 shown · errors first</Meta></div>
         <div style={{ display: 'grid', gridTemplateColumns: HB_IMP_GRID, gap: 10, padding: '6px 14px', borderTop: `1px solid ${T.line}`, fontFamily: T.fontUI, fontSize: 10, letterSpacing: '.06em', textTransform: 'uppercase', color: T.ink3 }}><span>Row</span><span>Design no</span><span>Colour</span><span>Category</span><span>Price</span><span>Result</span></div>
         {HB_IMPORT_ROWS.map(r => { const bad = !!r.err, d = hbD(r.code), cell = { minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' };
           return <div key={r.row + r.colour} style={{ position: 'relative', display: 'grid', gridTemplateColumns: HB_IMP_GRID, gap: 10, alignItems: 'center', padding: '5px 14px', minHeight: 44, boxSizing: 'border-box', borderTop: `1px solid ${T.line}`, background: bad ? T.danger + '12' : 'transparent', fontFamily: T.fontUI, fontSize: 13, color: T.ink }}>
@@ -486,8 +488,8 @@ function WebHbImport({ T }) {
       </div>
       <span style={{ flex: 1 }} />
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-        <OutBtn T={T} icon="file-down" style={{ height: 42 }}>Download errors</OutBtn><Meta T={T}>2 rows, each with the error in words</Meta><span style={{ flex: 1 }} />
-        <Meta T={T} style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}><Ic name="lock" size={12} color={T.ink3} />fix 2 rows first · admin only</Meta><HbDisabledBtn T={T}>Write it in</HbDisabledBtn>
+        <T.Btn icon="file-down" style={{ height: 42 }}>Download errors</T.Btn><Meta T={T}>2 rows, errors in words</Meta><span style={{ flex: 1 }} />
+        <Meta T={T}>fix 2 rows first</Meta><HbDisabledBtn T={T} icon="lock" style={{ height: 42 }}>Write it in · admin</HbDisabledBtn>
       </div>
     </div>
   </HbShell>;
@@ -518,9 +520,9 @@ function WebHbImportPick({ T }) {
 /* ── W6 · new material, a sibling of the new product form ── */
 function WebHbNewMaterial({ T }) {
   const items = [[true, 'Code, name, group and unit', 'MAT-MONONET · Mono net · m'], [true, '3 shades', 'Mono · Sky · Purple'], [true, 'Supplier and source city', 'Surat Textiles · Surat'], [true, 'Purchase rate', '₹120 a metre · money roles only'], [false, 'Photo', 'optional · a raw material can have none'], [false, 'Reorder level not set', 'open U34 · none in the BRD yet']];
-  const exist = [['Santoon', 'Peach', 'm'], ['BKS 41 beads kali set', 'Sky', 'pc']];
+  const last = [['Santoon', 'Peach', '120 m', '02/10/26'], ['BKS 41 beads kali set', 'Sky', '40 pc', '28/09/26']];   /* last purchases from the same supplier: qty and date, no rate */
   const shades = [['MN01', 'Mono'], ['MN02', 'Sky'], ['MN03', 'Purple']];
-  return <HbShell T={T} crumb={['Hub', 'Masters', 'Materials', 'New material']} tabs={hbTabs({ icon: 'library', label: 'Masters · Materials' }, { icon: 'plus', label: 'New material', on: true })} paneTitle="Checklist" pane={<HbChecklist T={T} items={items} foot="A material can be saved with gaps. It lands in the catalogue as 'no inward yet' until the first purchase is received." extra={<><HbLab T={T} style={{ marginTop: 16, marginBottom: 2 }}>Already in the master · check before you add</HbLab>{exist.map(([n, c, u], i) => <div key={n} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '7px 0', borderTop: i ? `1px solid ${T.line}` : 0 }}><HbSwatch n={c} w={28} h={28} r={8} /><span style={{ flex: 1, fontFamily: T.fontUI, fontSize: 13, color: T.ink }}>{n}</span><Meta T={T}>{u}</Meta></div>)}</>} />}>
+  return <HbShell T={T} crumb={['Hub', 'Masters', 'Materials', 'New material']} tabs={hbTabs({ icon: 'library', label: 'Masters · Materials' }, { icon: 'plus', label: 'New material', on: true })} paneTitle="Checklist" pane={<HbChecklist T={T} items={items} foot="A material can be saved with gaps. It lands in the catalogue as 'no inward yet' until the first purchase is received." extra={<><HbLab T={T} style={{ marginTop: 16, marginBottom: 2 }} right={<span style={{ letterSpacing: 0, textTransform: 'none', fontSize: 10.5 }}>Surat Textiles</span>}>Stock · last purchases</HbLab><div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '7px 0' }}><HbSwatch n="Mono" tex="net" w={28} h={28} r={8} /><span style={{ flex: 1, fontFamily: T.fontUI, fontSize: 13, color: T.ink }}>Mono net · stock</span><Meta T={T}>0 m · no inward yet</Meta></div>{last.map(([n, c, q, d]) => <div key={n} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '7px 0', borderTop: `1px solid ${T.line}` }}><HbSwatch n={c} w={28} h={28} r={8} /><span style={{ flex: 1, minWidth: 0, fontFamily: T.fontUI, fontSize: 13, color: T.ink, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{n}</span><Meta T={T}>{q} · {d}</Meta></div>)}</>} />}>
     <HbFormTabs T={T} on="New material" />
     <div style={{ flex: 1, minHeight: 0, padding: '14px 24px 16px', display: 'flex' }}>
       <div style={{ ...hbCardStyle(T), flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
@@ -580,22 +582,23 @@ function ScreenHbImportCheckP({ T }) {
   const tile = (n, l, tone) => <span key={l} style={{ flex: 1, minWidth: 0, padding: '8px 12px', borderRadius: 14, background: T.surface2, border: `1px solid ${tone === 'danger' ? T.danger + '66' : T.line}` }}><div style={{ fontFamily: T.fontDisplay, fontSize: 28, fontWeight: 600, lineHeight: 1, color: tone === 'danger' ? T.danger : tone === 'dim' ? T.ink3 : T.ink, fontVariantNumeric: 'lining-nums' }}>{n}</div><div style={{ fontFamily: T.fontUI, fontSize: 11.5, color: T.ink3, marginTop: 3 }}>{l}</div></span>;
   const errs = HB_IMPORT_ROWS.filter(r => r.err);
   return frameF(T, <>
-    <HbHeaderP T={T} title="Import" back right={<Meta T={T}>step 3 of 4</Meta>}><HbStepsP T={T} on={3} /></HbHeaderP>
+    <HbHeaderP T={T} title="Import" back right={<Hit T={T} icon="refresh-cw" size={38} iconSize={18} />}><HbStepsP T={T} on={3} /></HbHeaderP>
     <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', padding: '12px 14px 0' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px 8px 10px', borderRadius: 14, border: `1px solid ${T.line2}`, background: T.surface }}>
         <Ic name="file-spreadsheet" size={20} color={T.ok} /><span style={{ flex: 1, minWidth: 0 }}><div style={{ fontFamily: T.fontUI, fontSize: 13.5, fontWeight: 500, color: T.ink }}>products-oct.xlsx</div><Meta T={T}>212 rows · from WhatsApp · Products & SKUs</Meta></span><Pill T={T} tone="blue" small>Dry run</Pill>
       </div>
       <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>{tile(180, 'creates')}{tile(30, 'updates')}</div>
       <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>{tile(2, 'errors', 'danger')}{tile(0, 'skipped', 'dim')}</div>
-      <HbLab T={T} style={{ marginTop: 14 }} right={<span style={{ letterSpacing: 0, textTransform: 'none', fontSize: 10.5 }}>nothing is written yet</span>}>Rows to fix · 2</HbLab>
+      <HbDryRow T={T} small style={{ marginTop: 8 }} />
+      <HbLab T={T} style={{ marginTop: 12 }} right={<span style={{ letterSpacing: 0, textTransform: 'none', fontSize: 10.5 }}>nothing is written yet</span>}>Rows to fix · 2</HbLab>
       {errs.map(r => { const d = hbD(r.code); return <div key={r.row} style={{ position: 'relative', display: 'flex', gap: 11, padding: '9px 10px 9px 14px', marginBottom: 7, borderRadius: 14, background: T.danger + '12', border: `1px solid ${T.danger}40`, overflow: 'hidden' }}>
         <span style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 3, background: T.danger }} />
         <HbThumb T={T} d={d} w={36} h={46} r={9} />
         <span style={{ flex: 1, minWidth: 0 }}><div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}><span style={{ fontFamily: T.fontDisplay, fontSize: 20, fontWeight: 600, color: T.ink, fontVariantNumeric: 'tabular-nums' }}>{r.code}</span><Meta T={T}>row {r.row} · {r.colour}</Meta></div><div style={{ fontFamily: T.fontUI, fontSize: 12.5, color: T.danger, lineHeight: 1.3, marginTop: 2 }}>{r.err}</div></span>
       </div>; })}
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 9, marginTop: 10, padding: '10px 12px', borderRadius: 14, border: `1px dashed ${T.line2}`, color: T.ink2, fontFamily: T.fontUI, fontSize: 12, lineHeight: 1.35 }}><Ic name="lock" size={14} color={T.ink3} style={{ marginTop: 1, flex: 'none' }} /><span>Writing it in is done at the desk, by admin or owner. Fix the 2 rows in the sheet and send it again.</span></div>
+      <Meta T={T} style={{ display: 'block', marginTop: 4, whiteSpace: 'normal', lineHeight: 1.35 }}>Fix the 2 rows in the sheet and send it again; the file button above takes the new one. Only an admin or the owner can write it in.</Meta>
     </div>
-  </>, <><div style={{ position: 'absolute', left: 14, right: 14, bottom: 98, display: 'flex', gap: 8, padding: 8, borderRadius: 24, ...glass(T) }}><OutBtn T={T} icon="refresh-cw" style={{ flex: 1, justifyContent: 'center', height: 44 }}>New file</OutBtn><T.Btn icon="file-down" style={{ flex: 1.3, height: 44 }}>Download errors</T.Btn></div><T.Island active="More" /></>);
+  </>, <><div style={{ position: 'absolute', left: 14, right: 14, bottom: 98, display: 'flex', gap: 8, padding: 8, borderRadius: 24, ...glass(T) }}><T.Btn icon="file-down" style={{ flex: 1, height: 44 }}>Download errors</T.Btn><HbDisabledBtn T={T} icon="lock" style={{ height: 44, padding: '0 14px', fontSize: 13 }}>Write it in · admin</HbDisabledBtn></div><T.Island active="More" /></>);
 }
 
 /* ── phone: new material, same field order as Production's new-material sheet ── */
@@ -614,13 +617,13 @@ function ScreenHbNewMaterial({ T }) {
 /* ── board registration: captions and order are what the owner reads ── */
 (window.NEW_DRAFT_MODULES = window.NEW_DRAFT_MODULES || []).push({ module: 'Hub', note: 'masters shell with the census · new product master · image upload centre with the per-colour checklist and the no-photo queue · xlsx import with a dry run · new material (13 Oct, review 2)', subs: [
   { name: 'Masters', flow: 'census → alerts → grid → dossier', phone: [['Masters · products list on the phone', ScreenHbMasters]], web: [['Masters · products grid, census chips, alerts', WebHbMasters]] },
-  { name: 'New product', flow: 'form → checklist → photos', phone: [['New product · master sheet on the phone', ScreenHbNewProduct]], web: [['New product · master form and checklist', WebHbNewProduct]] },
-  { name: 'Upload centre', flow: 'queue → capture → checklist', phone: [['Upload centre · capture per colour', ScreenHbUploadPhone], ['Upload centre · the no-photo queue', ScreenHbUploadQueue]], web: [['Upload centre · product 8591, checklist per colour', WebHbUpload]] },
-  { name: 'Import', flow: 'pick the master → fill → check the file → write it in', web: [['Import · check the file (dry run)', WebHbImport], ['Import · pick the master', WebHbImportPick]], phone: [['Import · pick the master', ScreenHbImportPickP], ['Import · check the file', ScreenHbImportCheckP]] },
-  { name: 'New material', flow: 'form → checklist', web: [['New material · master form and checklist', WebHbNewMaterial]], phone: [['New material · master sheet on the phone', ScreenHbNewMaterial]] },
+  { name: 'New product', flow: 'form → checklist → set recipe or add photos', phone: [['New product · master sheet on the phone; Save and set recipe · Save and add photos, price TBD until costing · provisional, pending decision 10', ScreenHbNewProduct]], web: [['New product · the Hub creates, Production links; Save and set recipe (Process setting, pre-filled) · Save and add photos (Upload centre), price TBD until costing · provisional, pending decision 10', WebHbNewProduct]] },
+  { name: 'Upload centre', flow: 'queue → capture → checklist', phone: [['Upload centre · capture per colour, slots as drawn · provisional, pending decision 11', ScreenHbUploadPhone], ['Upload centre · the no-photo queue, list fades above the button · provisional, pending decision 11', ScreenHbUploadQueue]], web: [['Upload centre · product 8591, slots per colour: primary · side profiles × 4 · AI shoot · real-world shoot · video · provisional, pending decision 11', WebHbUpload]] },
+  { name: 'Import', flow: 'pick the master → fill → check the file (dry run) → write it in (admin)', web: [['Import · check the file: dry run said in words, Write it in · admin · provisional, pending decision 12', WebHbImport], ['Import · pick the master; the check is a dry run · provisional, pending decision 12', WebHbImportPick]], phone: [['Import · pick the master; the check is a dry run · provisional, pending decision 12', ScreenHbImportPickP], ['Import · check the file: dry run said in words, Write it in · admin · provisional, pending decision 12', ScreenHbImportCheckP]] },
+  { name: 'New material', flow: 'form in the main area → checklist, stock and last purchases in the pane', web: [['New material · form in the main area; pane with the checklist, stock and last purchases · provisional, pending decision 4', WebHbNewMaterial]], phone: [['New material · master sheet on the phone', ScreenHbNewMaterial]] },
 ] });
 
 Object.assign(window, { HB_SEG, HB_ITEMS, HB_LEDGERS, HB_ALERTS, HB_DOSSIER, HB_CATS, HB_WORKS, HB_NEW, HB_QUEUE, HB_REQ, HB_STEPS, HB_MASTERS, HB_TEMPLATE_COLS, HB_IMPORT_ROWS, hbD, hbPic, hbShade, hbTabs, hbCardStyle,
   HbLab, HbField, HbRadio, HbSwitch, HbTick, HbThumb, HbDot, HbSwatch, HbLock, HbFacts, HbShell, HbFam, HbEnt, HbCensus, HbAlerts, HbTool, HbToolbar, HbCard, HbProductPane, HbHeaderP, HbAlertP, HbRowP, HbFab, HbMastersBodyP,
-  HbSlotAdd, HbColourRow, HbChecklist, HbFormTabs, HbPicStyle, HbSlot, HbSlotWide, HbColourTabs, HbUp, HbProgressPane, HbCorner, HbQueueRow, HbSteps, HbDisabledBtn, HbTemplatePane,
+  HbSlotAdd, HbColourRow, HbChecklist, HbFormTabs, HbPicStyle, HbSlot, HbSlotWide, HbColourTabs, HbUp, HbProgressPane, HbCorner, HbQueueRow, HbSteps, HbDisabledBtn, HbDryRow, HbTemplatePane,
   ScreenHbMasters, ScreenHbNewProduct, ScreenHbUploadPhone, ScreenHbUploadQueue, ScreenHbImportPickP, ScreenHbImportCheckP, ScreenHbNewMaterial, HbViewTabs, HbStepsP, HbSect, WebHbMasters, WebHbNewProduct, WebHbUpload, WebHbImport, WebHbImportPick, WebHbNewMaterial });

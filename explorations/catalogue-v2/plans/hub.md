@@ -4,6 +4,9 @@ Drawn in `mod-hub.jsx` (module id `hub`, components `Hb…`). Page: `board.html?
 Sources: M:line = `design-system/research/brd-masters.txt`, F:line = `brd-final.txt`, B:line = `uploads/Business Req.txt`.
 Frame ids are 1-based and count within the page: phone `n-1…n-7` (dark `nd-…`), web `nw-1…nw-6` (dark `nwd-…`).
 Phone order: n-1 Masters · n-2 New product · n-3 capture · n-4 no-photo queue · n-5 Import pick · n-6 Import check · n-7 New material.
+Web order: nw-1 Masters · nw-2 New product · nw-3 Upload centre · nw-4 Import check · nw-5 Import pick · nw-6 New material.
+Second pass (13 Oct, 15:25, branch `claude/kind-goldberg-txzrb5-hub2`): decisions 4, 10, 11, 12 applied as provisional drafts, see §2.7.
+Everything stays a draft; nothing in finals.jsx.
 
 ## 0. Shape of the module
 
@@ -60,6 +63,39 @@ Per line: purpose · who · web right pane · phone sheets · money.
 - **n-6 · Import · check the file** — products-oct.xlsx from WhatsApp, four counts (180 · 30 · 2 · 0), the two error rows in words with the design photo, "Download errors" primary, "New file"; a note that writing it in is the desk's, admin or owner.
 - **n-7 · New material · master sheet on the phone** — Production's field order (photo, name, group, supplier, unit, shades with codes, reorder level, tags); rate, alias and tax category stay on the desk.
 
+### 2.7 Review-2 second pass (13 Oct 2026): decisions 4, 10, 11, 12 applied as provisional drafts
+
+The lead's provisional answers (plans/review-2-template-and-sell-flow.md §8) applied to this module's drafts only, no sweep
+across screens, every changed caption ending "· provisional, pending decision n". Frame ids did not move.
+
+Captions as they are now:
+
+- n-1 · Masters · products list on the phone (unchanged) · nw-1 · Masters · products grid, census chips, alerts (unchanged).
+- n-2 · New product · master sheet on the phone; Save and set recipe · Save and add photos, price TBD until costing · provisional, pending decision 10.
+- nw-2 · New product · the Hub creates, Production links; Save and set recipe (Process setting, pre-filled) · Save and add photos (Upload centre), price TBD until costing · provisional, pending decision 10.
+- n-3 · Upload centre · capture per colour, slots as drawn · provisional, pending decision 11.
+- n-4 · Upload centre · the no-photo queue, list fades above the button · provisional, pending decision 11.
+- nw-3 · Upload centre · product 8591, slots per colour: primary · side profiles × 4 · AI shoot · real-world shoot · video · provisional, pending decision 11.
+- n-5 · Import · pick the master; the check is a dry run · provisional, pending decision 12 · nw-5 the same.
+- n-6 · Import · check the file: dry run said in words, Write it in · admin · provisional, pending decision 12 · nw-4 the same.
+- n-7 · New material · master sheet on the phone (unchanged, as the lead asked).
+- nw-6 · New material · form in the main area; pane with the checklist, stock and last purchases · provisional, pending decision 4.
+
+What changed per decision:
+
+- **10 · Product master: the Hub creates, Production links.** nw-2's foot is two actions, not three: "Save and set recipe → Process setting" (ink outline) and "Save and add photos" (the one maroon line); the plain "Save" went, since a master saved with gaps is what both do. The foot note says in words that set recipe opens Production › Process setting pre-filled with 8591 and its 3 colours, and add photos opens the Upload centre; price reads "TBD until costing". n-2 gets the same two buttons, a locked, dimmed price line "TBD until costing" and the note; the sheet grew to 736 so the price line sits above the foot.
+- **4 · Forms: more than four fields takes the main area; the pane helps.** nw-6 was already a main-area form, so it was not moved. The pane now helps the way the decision says: under the checklist, "Stock · last purchases" shows the new material's stock (0 m · no inward yet) and the last two purchases from the same supplier (Santoon 120 m · 02/10/26, BKS 41 beads kali set 40 pc · 28/09/26) as quantity and date only, no rate, so the block is safe for every role. n-7 left as it was.
+- **11 · Upload centre slots: as drawn.** nw-3 / nwd-3, n-3 and n-4 checked in light and dark: primary · side profiles × 4 · AI shoot · real-world shoot (optional) · video, the per-colour counts, the uploading slots and the "104 designs with no photo yet" queue card all read; nothing was broken, so nothing changed but the captions.
+- **12 · xlsx import: dry run first; commit by admin only.** `HbDryRow`, one ruled row under the four counts on both nw-4 and n-6: "Dry run · 212 rows read · 180 would be created · 30 updated · 2 need fixing · 0 written" (web adds "writing it in is a second step, admin only"). The button reads "Write it in · admin" with a lock, drawn disabled (ink3 outline) because 2 rows still need fixing; on the phone it joins the glass bar beside "Download errors", and "New file" moved to the header as a refresh icon. On nw-4 "Download errors" is now the frame's one maroon line (as it already was on n-6); the table shows five rows on first view (the two errors, two of 8591's creates, one update) so the button row stays in the frame.
+- **n-4 FAB overlap fixed.** The queue list fades out over its last 175 px (a mask), so "Start with 8591" floats over a fading row instead of a hard one. n-1 was not touched (no sweep).
+
+What waits:
+
+- The owner's answers on the deck for 4, 10, 11, 12; any of them can overturn the above, which is why nothing moved into finals.jsx.
+- Decision 10 on the Production side: Process setting opening pre-filled from the Hub is a caption note here, not drawn in Production.
+- The import dry-run count row and "Write it in · admin" on frames of other modules that import (none drawn yet).
+- Whether the phone should show "Write it in · admin" at all (drawn disabled on n-6, since the earlier note said writing it in is the desk's); and open questions 1 to 7 below still stand.
+
 ## 3. Found in the BRD
 
 - Census as navigation, family switch, entity chips with live counts, deep link per entity: M:8–14. Counts used: Products 612 · Materials 22 · WIP 14 | Customers 318 · Broker agencies 12 · Brokers 41 · Karigars 27 · Transporters 19 · Suppliers 34 · Team 48.
@@ -98,7 +134,7 @@ Per line: purpose · who · web right pane · phone sheets · money.
 - Photos of 8591 are stand-ins: the board's own lehenga shot (6002), flipped and cropped. 3661, 1457, 1243 and D9107 have no photo in the board data and show as "No photo yet"; 1320 comes from the v0.2 screenshot.
 - Per-colour stock for 2798 (free 9 / 2 / 5 / 4) is made up so it adds up to the card (20 free · 22 FG · 30 in production); demand score and sold are from the Catalogue sales view.
 - Import template columns (nine) and the "Recent imports" list are drawn from the products master, not from a BRD list.
-- Import and New material now have phone frames (n-5, n-6, n-7), but the phone only picks, checks and reads results: "Write it in" is not on the phone.
+- Import and New material now have phone frames (n-5, n-6, n-7); the phone picks, checks and reads results. "Write it in · admin" is drawn on n-6 since the second pass, disabled with a lock until the rows are fixed.
 - n-7 uses Production's sample material (Nidha satin) so the two sheets match; the desk frame nw-6 uses Mono net.
 - Phone Import: the file reaching the phone from WhatsApp or the drive is assumed.
 - The viewfinder hint "Whole piece in the frame, plain wall behind" is placeholder guidance.
