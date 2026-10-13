@@ -444,11 +444,9 @@ function HmWebCard({ T, over: isOver, role = 'manager' }) {
       <div style={{ marginTop: 7 }}><HmCharts T={T} h={44} /></div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 7, marginTop: 7 }}><HmFold T={T} icon="message-square-text" label="Note" /><HmFold T={T} icon="history" label="History" sub="last 3 orders" /></div>
     </div>
-    <div style={{ flex: 'none', display: 'flex', alignItems: 'center', gap: 8, padding: '4px 16px', borderTop: `1px solid ${T.line}`, background: T.surface }}>
-      <span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="press" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: T.fontUI, fontSize: 12.5, color: T.ink2, fontWeight: 500 }}>Mark for inspection<Ic name="arrow-right" size={13} />owner</span>{sub && <Meta T={T} style={{ fontSize: 11 }}>Over-the-line flags are cleared by admin</Meta>}</span>
-      <span style={{ flex: 1 }} />
-      <T.Btn kind="secondary" style={{ height: 36 }}>Reject</T.Btn><T.Btn kind="secondary" style={{ height: 36 }}>Hold</T.Btn>
-      <T.Btn icon={sub ? 'send' : 'check'} style={{ height: 36, padding: '0 24px' }}>{sub ? 'Send to admin' : 'Approve'}</T.Btn>
+    <div style={{ flex: 'none', padding: '4px 16px 8px', borderTop: `1px solid ${T.line}`, background: T.surface }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, minHeight: 26 }}><span className="press" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: T.fontUI, fontSize: 12.5, color: T.ink2, fontWeight: 500, whiteSpace: 'nowrap' }}>Mark for inspection<Ic name="arrow-right" size={13} />owner</span><span style={{ flex: 1 }} />{sub && <Meta T={T} style={{ fontSize: 11 }}>Over-the-line flags are cleared by admin</Meta>}</div>
+      <div style={{ display: 'flex', gap: 8 }}><T.Btn kind="secondary" style={{ height: 36, padding: '0 16px' }}>Reject</T.Btn><T.Btn kind="secondary" style={{ height: 36, padding: '0 16px' }}>Hold</T.Btn><T.Btn icon={sub ? 'send' : 'check'} style={{ height: 36, flex: 1, minWidth: 0 }}>{sub ? 'Send to admin' : 'Approve'}</T.Btn></div>
     </div>
   </div>;
 }
