@@ -2,7 +2,8 @@
 
 Drawn in `mod-hub.jsx` (module id `hub`, components `Hb…`). Page: `board.html?m=hub` (index.html?m=hub to review).
 Sources: M:line = `design-system/research/brd-masters.txt`, F:line = `brd-final.txt`, B:line = `uploads/Business Req.txt`.
-Frame ids are 1-based and count within the page: phone `n-1…n-4` (dark `nd-…`), web `nw-1…nw-6` (dark `nwd-…`).
+Frame ids are 1-based and count within the page: phone `n-1…n-7` (dark `nd-…`), web `nw-1…nw-6` (dark `nwd-…`).
+Phone order: n-1 Masters · n-2 New product · n-3 capture · n-4 no-photo queue · n-5 Import pick · n-6 Import check · n-7 New material.
 
 ## 0. Shape of the module
 
@@ -51,6 +52,14 @@ Per line: purpose · who · web right pane · phone sheets · money.
 
 - **nw-6 · New material · master form and checklist** — the fields Production's new-material form already has (code, name, group, unit, shades with swatch, supplier, source city, purchase rate, reorder level), laid out like nw-2. Accountant, analyst. Right pane "Checklist" plus "Already in the master" (Santoon, BKS 41 beads kali set) to stop doubles. Money: purchase rate is for money roles, locked.
 
+### 2.6 Review-2 changes (13 Oct 2026, first pass)
+
+- One maroon line per screen: `HbViewTabs` (ink marker) replaces the shared `ViewTabs` on nw-2 and nw-6; the upload centre colour tabs (nw-3) are ink too; `HbSect` (ink tick) replaces the shared `Sect`, whose tick is maroon. The primary button keeps the maroon. What is still maroon on the web frames is shared shell chrome (active rail icon, header scan button), not Hub's.
+- Phone head reads "Masters" (n-1, n-2, n-7), as the web. "Master views" is the BRD's name for the reporting twin, not drawn.
+- **n-5 · Import · pick the master** — eight masters as rows, Products & SKUs picked, "Next" in the glass bar; step bar of four.
+- **n-6 · Import · check the file** — products-oct.xlsx from WhatsApp, four counts (180 · 30 · 2 · 0), the two error rows in words with the design photo, "Download errors" primary, "New file"; a note that writing it in is the desk's, admin or owner.
+- **n-7 · New material · master sheet on the phone** — Production's field order (photo, name, group, supplier, unit, shades with codes, reorder level, tags); rate, alias and tax category stay on the desk.
+
 ## 3. Found in the BRD
 
 - Census as navigation, family switch, entity chips with live counts, deep link per entity: M:8–14. Counts used: Products 612 · Materials 22 · WIP 14 | Customers 318 · Broker agencies 12 · Brokers 41 · Karigars 27 · Transporters 19 · Suppliers 34 · Team 48.
@@ -89,6 +98,8 @@ Per line: purpose · who · web right pane · phone sheets · money.
 - Photos of 8591 are stand-ins: the board's own lehenga shot (6002), flipped and cropped. 3661, 1457, 1243 and D9107 have no photo in the board data and show as "No photo yet"; 1320 comes from the v0.2 screenshot.
 - Per-colour stock for 2798 (free 9 / 2 / 5 / 4) is made up so it adds up to the card (20 free · 22 FG · 30 in production); demand score and sold are from the Catalogue sales view.
 - Import template columns (nine) and the "Recent imports" list are drawn from the products master, not from a BRD list.
-- Import and New material have no phone frames: they are desk jobs. The phone's Hub jobs are the list, the new-product sheet and the photos.
+- Import and New material now have phone frames (n-5, n-6, n-7), but the phone only picks, checks and reads results: "Write it in" is not on the phone.
+- n-7 uses Production's sample material (Nidha satin) so the two sheets match; the desk frame nw-6 uses Mono net.
+- Phone Import: the file reaching the phone from WhatsApp or the drive is assumed.
 - The viewfinder hint "Whole piece in the frame, plain wall behind" is placeholder guidance.
 - `modules.js` loads only base and `mod-hub.jsx` for this page, so Production's `Field`, `Swatch` and `PShell` are not available; `HbField` and `HbSwatch` mirror them. Add the Production files to the `hub` line if the owner wants the originals reused.

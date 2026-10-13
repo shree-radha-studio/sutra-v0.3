@@ -32,6 +32,8 @@ const hbTabs = (...t) => t;
 const HB_T_MASTERS = { icon: 'library', label: 'Masters · Products' };
 
 /* ── atoms ── */
+/* section head with an ink tick (the shared Sect's tick is maroon, and the primary button is the screen's one maroon line) */
+const HbSect = ({ T, children, right, style }) => <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, margin: '14px 0 6px', ...style }}><span style={{ width: 3, height: 12, borderRadius: 2, background: T.ink, alignSelf: 'center' }} /><span style={{ fontFamily: T.fontDisplay, fontSize: 16, fontWeight: 600, color: T.ink }}>{children}</span><span style={{ flex: 1 }} />{right}</div>;
 const HbLab = ({ T, children, right, style }) => <div style={{ display: 'flex', alignItems: 'baseline', fontFamily: T.fontUI, fontSize: 10, letterSpacing: '.06em', textTransform: 'uppercase', color: T.ink3, marginBottom: 5, ...style }}>{children}<span style={{ flex: 1 }} />{right}</div>;
 /* a form field as displayed: label, value or placeholder, optional caret / lock / right slot */
 const HbField = ({ T, label, value, ph, caret, icon, right, w, mono, small, dim, lock, style }) => <div style={{ width: w, flex: w ? 'none' : 1, minWidth: 0, ...style }}>
@@ -167,7 +169,7 @@ const HbFab = ({ T, label = 'New product', icon = 'plus' }) => <div style={{ pos
 function HbMastersBodyP({ T }) {
   const list = ['2798', '6002', '2006', '4566', '3661', '1457'].map(hbD);
   return <>
-    <HbHeaderP T={T} title="Master views" right={<><Hit T={T} icon="search" size={38} iconSize={18} /><Hit T={T} icon="sliders-horizontal" size={38} iconSize={18} /></>}>
+    <HbHeaderP T={T} title="Masters" right={<><Hit T={T} icon="search" size={38} iconSize={18} /><Hit T={T} icon="sliders-horizontal" size={38} iconSize={18} /></>}>
       <div style={{ padding: '2px 14px 0' }}><HbFam T={T} on={0} w="100%" /></div>
       <div style={{ display: 'flex', gap: 6, padding: '10px 14px 0', overflow: 'hidden' }}>{HB_ITEMS.map(([l, n]) => <HbEnt key={l} T={T} label={l} n={n} on={l === 'Products'} />)}</div>
       <div style={{ display: 'flex', gap: 6, padding: '10px 0 0 14px', overflow: 'hidden', WebkitMaskImage: 'linear-gradient(90deg, #000 86%, transparent)', maskImage: 'linear-gradient(90deg, #000 86%, transparent)' }}>{HB_ALERTS.map(([n, , l, ic]) => <HbAlertP key={l} T={T} n={n} label={l} ic={ic} />)}</div>
@@ -220,7 +222,14 @@ function HbChecklist({ T, items, foot, extra }) {
     <Meta T={T} style={{ display: 'block', whiteSpace: 'normal', lineHeight: 1.35 }}>{foot}</Meta>
   </div>;
 }
-function HbFormTabs({ T, on }) { return <ViewTabs T={T} back="Products" tabs={[['New product', null, 'shirt'], ['New material', null, 'layers']]} active={on} />; }
+/* ViewTabs with an ink marker: the screen's one maroon line is the primary button */
+function HbViewTabs({ T, tabs, active, back }) {
+  return <div style={{ display: 'flex', alignItems: 'center', gap: 2, padding: '4px 24px 0', borderBottom: `1px solid ${T.line}`, flex: 'none' }}>
+    {back && <span className="press" style={{ display: 'inline-flex', alignItems: 'center', gap: 5, height: 30, padding: '0 10px 0 6px', borderRadius: 999, background: T.chipBg, fontFamily: T.fontUI, fontSize: 12, color: T.ink2, marginRight: 8 }}><Ic name="arrow-left" size={13} />{back}</span>}
+    {tabs.map(([t, , ic]) => { const on = t === active; return <span key={t} className="press" style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', gap: 6, padding: '10px 12px 12px', fontFamily: T.fontUI, fontSize: 14, fontWeight: on ? 600 : 400, color: on ? T.ink : T.ink3, whiteSpace: 'nowrap' }}>{ic && <Ic name={ic} size={14} />}{t}{on && <span style={{ position: 'absolute', left: 12, right: 12, bottom: 0, height: 2, background: T.ink, borderRadius: 1 }} />}</span>; })}
+  </div>;
+}
+function HbFormTabs({ T, on }) { return <HbViewTabs T={T} back="Products" tabs={[['New product', null, 'shirt'], ['New material', null, 'layers']]} active={on} />; }
 function WebHbNewProduct({ T }) {
   const items = [[true, 'Design no and category', '8591 · Lehenga'], [true, '3 colours', 'Rani · Firozi · Mehroon'], [false, '0 photos', 'a primary photo per colour comes first'], [false, 'Recipe not set', 'Production › Process setting'], [false, 'Price TBD', 'admin sets it after costing'], [false, 'HSN and GST', 'to be decided · open U33']];
   return <HbShell T={T} crumb={['Hub', 'Masters', 'Products', 'New product']} tabs={hbTabs(HB_T_MASTERS, { icon: 'plus', label: 'New product · 8591', on: true })} paneTitle="Checklist" pane={<HbChecklist T={T} items={items} foot="A master can be saved with gaps. Only design no, category and one colour are needed; the rest stays on this list until it is closed." />}>
@@ -229,7 +238,7 @@ function WebHbNewProduct({ T }) {
       <div style={{ ...hbCardStyle(T), flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         <div style={{ flex: 1, minHeight: 0, display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: 30, padding: '14px 22px 0' }}>
           <div style={{ minWidth: 0 }}>
-            <Sect T={T} style={{ margin: '0 0 10px' }}>Identity</Sect>
+            <HbSect T={T} style={{ margin: '0 0 10px' }}>Identity</HbSect>
             <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
               <HbThumb T={T} d={{}} w={64} h={80} r={12} />
               <div style={{ width: 150, flex: 'none' }}><HbField T={T} label="Design no" value="8591" mono /><Meta T={T} style={{ display: 'block', marginTop: 5 }}>next in the Lehenga series</Meta></div>
@@ -240,13 +249,13 @@ function WebHbNewProduct({ T }) {
             <HbLab T={T} style={{ marginTop: 12 }}>Work</HbLab>
             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>{HB_WORKS.map(c => <T.Chip key={c} on={c === 'Zari'}>{c}</T.Chip>)}</div>
             <HbField T={T} label="Book / firm" value="SRS" caret small w={200} style={{ marginTop: 12 }} />
-            <Sect T={T} style={{ margin: '14px 0 8px' }} right={<><Meta T={T}>one colour = one SKU</Meta><OutBtn T={T} small icon="plus" style={{ marginLeft: 6 }}>Add colour</OutBtn></>}>Colours</Sect>
+            <HbSect T={T} style={{ margin: '14px 0 8px' }} right={<><Meta T={T}>one colour = one SKU</Meta><OutBtn T={T} small icon="plus" style={{ marginLeft: 6 }}>Add colour</OutBtn></>}>Colours</HbSect>
             <div style={{ borderRadius: 16, border: `1px solid ${T.line}`, background: T.surface2, overflow: 'hidden' }}>
               {HB_NEW.colours.map((n, i) => <HbColourRow key={n} T={T} name={n} primary={i === 0} first={i === 0} />)}
             </div>
           </div>
           <div style={{ minWidth: 0 }}>
-            <Sect T={T} style={{ margin: '0 0 10px' }}>Price and tax</Sect>
+            <HbSect T={T} style={{ margin: '0 0 10px' }}>Price and tax</HbSect>
             <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end' }}><HbField T={T} label={<span>Price<HbLock T={T} /></span>} ph="TBD until costing" dim /><OutBtn T={T} icon="lock" style={{ height: 40 }}>Set price</OutBtn></div>
             <Meta T={T} style={{ display: 'block', marginTop: 5 }}>admin only · costing comes first</Meta>
             <div style={{ display: 'flex', gap: 8, marginTop: 14 }}><HbField T={T} label="HSN code" ph="not set" /><HbField T={T} label="GST %" ph="not set" caret w={110} /></div>
@@ -289,7 +298,7 @@ const HbSlotWide = ({ T, ic, title, meta, tag }) => <div className="press" style
 </div>;
 const HbColourTabs = ({ T, tabs, on }) => <div style={{ display: 'flex', alignItems: 'center', gap: 2, padding: '4px 24px 0', borderBottom: `1px solid ${T.line}`, flex: 'none' }}>
   <span style={{ fontFamily: T.fontUI, fontSize: 10.5, letterSpacing: '.09em', textTransform: 'uppercase', color: T.ink3, marginRight: 6 }}>Colour</span>
-  {tabs.map(([n, d]) => { const o = n === on; return <span key={n} className="press" style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 12px 12px', fontFamily: T.fontUI, fontSize: 14, fontWeight: o ? 600 : 400, color: o ? T.ink : T.ink3, whiteSpace: 'nowrap' }}><HbDot n={n} s={11} />{n}<span style={{ fontSize: 11.5, color: T.ink3, fontVariantNumeric: 'tabular-nums', fontWeight: 400 }}>{d} of {HB_REQ}</span>{o && <span style={{ position: 'absolute', left: 12, right: 12, bottom: 0, height: 2, background: T.accent, borderRadius: 1 }} />}</span>; })}
+  {tabs.map(([n, d]) => { const o = n === on; return <span key={n} className="press" style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 12px 12px', fontFamily: T.fontUI, fontSize: 14, fontWeight: o ? 600 : 400, color: o ? T.ink : T.ink3, whiteSpace: 'nowrap' }}><HbDot n={n} s={11} />{n}<span style={{ fontSize: 11.5, color: T.ink3, fontVariantNumeric: 'tabular-nums', fontWeight: 400 }}>{d} of {HB_REQ}</span>{o && <span style={{ position: 'absolute', left: 12, right: 12, bottom: 0, height: 2, background: T.ink, borderRadius: 1 }} />}</span>; })}
 </div>;
 const HbUp = ({ T, name, pct, pic }) => <span style={{ display: 'inline-flex', alignItems: 'center', gap: 9, height: 36, padding: '0 11px 0 5px', borderRadius: 999, border: `1px solid ${T.line2}`, background: T.surface, fontFamily: T.fontUI, fontSize: 12, color: T.ink, whiteSpace: 'nowrap' }}>
   <HbThumb T={T} src={hbPic('6002')} w={24} h={28} r={7} /><span style={{ fontFamily: T.fontMono, fontSize: 11.5 }}>{name}</span>
@@ -327,7 +336,7 @@ function WebHbUpload({ T }) {
     <HbColourTabs T={T} tabs={[['Rani', 3], ['Firozi', 0], ['Mehroon', 0]]} on="Rani" />
     <div style={{ flex: 1, minHeight: 0, padding: '12px 24px 14px', display: 'flex', flexDirection: 'column', gap: 10 }}>
       <div style={{ ...hbCardStyle(T), padding: '10px 18px 14px', flex: 'none' }}>
-        <Sect T={T} style={{ margin: '0 0 8px' }} right={<Meta T={T}>3 of 7 done · real-world shoot is optional</Meta>}>Required pictures · Rani</Sect>
+        <HbSect T={T} style={{ margin: '0 0 8px' }} right={<Meta T={T}>3 of 7 done · real-world shoot is optional</Meta>}>Required pictures · Rani</HbSect>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, minmax(0, 1fr))', gap: '0 12px' }}>
           <HbLab T={T} style={{ gridColumn: '1' }}>Primary · model shoot</HbLab>
           <HbLab T={T} style={{ gridColumn: '2 / span 4' }} right={<span style={{ letterSpacing: 0, textTransform: 'none', fontSize: 10.5 }}>2 of 4 · 2 uploading</span>}>Side profiles × 4</HbLab>
@@ -517,7 +526,7 @@ function WebHbNewMaterial({ T }) {
       <div style={{ ...hbCardStyle(T), flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         <div style={{ flex: 1, minHeight: 0, display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: 30, padding: '14px 22px 0' }}>
           <div style={{ minWidth: 0 }}>
-            <Sect T={T} style={{ margin: '0 0 10px' }}>Identity</Sect>
+            <HbSect T={T} style={{ margin: '0 0 10px' }}>Identity</HbSect>
             <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
               <span className="press" style={{ width: 64, height: 80, borderRadius: 12, border: `1px dashed ${T.line2}`, background: T.bg2, display: 'grid', placeItems: 'center', color: T.ink2, flex: 'none', boxSizing: 'border-box' }}><span style={{ textAlign: 'center', fontFamily: T.fontUI, fontSize: 10 }}><Ic name="camera" size={18} /><div>photo</div></span></span>
               <div style={{ width: 176, flex: 'none' }}><HbField T={T} label="Code" value="MAT-MONONET" mono /><Meta T={T} style={{ display: 'block', marginTop: 5 }}>made from the name · editable</Meta></div>
@@ -528,11 +537,11 @@ function WebHbNewMaterial({ T }) {
               <div style={{ flex: 'none' }}><HbLab T={T}>Unit</HbLab><div style={{ display: 'flex', gap: 6, height: 40, alignItems: 'center' }}>{['m', 'pc', 'kg'].map(u => <T.Chip key={u} on={u === 'm'} style={{ height: 34, minWidth: 42, justifyContent: 'center' }}>{u}</T.Chip>)}</div></div>
             </div>
             <div style={{ display: 'flex', gap: 12, marginTop: 12 }}><HbField T={T} label="Supplier" value="Surat Textiles" caret /><HbField T={T} label="Source city" value="Surat" caret w={150} /></div>
-            <Sect T={T} style={{ margin: '14px 0 8px' }} right={<><Meta T={T}>code is automatic</Meta><OutBtn T={T} small icon="plus" style={{ marginLeft: 6 }}>Add a shade</OutBtn></>}>Shades</Sect>
+            <HbSect T={T} style={{ margin: '14px 0 8px' }} right={<><Meta T={T}>code is automatic</Meta><OutBtn T={T} small icon="plus" style={{ marginLeft: 6 }}>Add a shade</OutBtn></>}>Shades</HbSect>
             <div style={{ borderRadius: 16, border: `1px solid ${T.line}`, background: T.surface2, overflow: 'hidden' }}>{shades.map(([c, n], i) => <div key={c} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '6px 12px', borderTop: i ? `1px solid ${T.line}` : 0 }}><HbSwatch n={n} tex="net" w={34} h={34} r={10} /><Mono T={T} size={12}>{c}</Mono><span style={{ flex: 1, minWidth: 0, fontFamily: T.fontUI, fontSize: 14, color: T.ink }}>{n}</span><Ic name="x" size={14} color={T.ink3} /></div>)}</div>
           </div>
           <div style={{ minWidth: 0 }}>
-            <Sect T={T} style={{ margin: '0 0 10px' }}>Price and stock</Sect>
+            <HbSect T={T} style={{ margin: '0 0 10px' }}>Price and stock</HbSect>
             <HbField T={T} label={<span>Purchase rate<HbLock T={T} /></span>} value="₹120" right={<span style={{ fontSize: 12, color: T.ink3 }}>a metre</span>} />
             <Meta T={T} style={{ display: 'block', marginTop: 5 }}>money roles only · the floor never sees it</Meta>
             <HbField T={T} label="Reorder level" ph="not set" right={<span style={{ fontSize: 12, color: T.ink3 }}>m</span>} style={{ marginTop: 14 }} />
@@ -550,16 +559,68 @@ function WebHbNewMaterial({ T }) {
   </HbShell>;
 }
 
+
+/* ── phone: Import. The file arrives from WhatsApp or the drive; the check is a dry run; "Write it in" is the desk's, admin and owner only ── */
+const HbStepsP = ({ T, on }) => <div style={{ display: 'flex', gap: 4, padding: '4px 14px 0' }}>{HB_STEPS.map((s, i) => <span key={s} style={{ flex: 1, minWidth: 0 }}><span style={{ display: 'block', height: 3, borderRadius: 2, background: i + 1 <= on ? T.ink : T.line2 }} /><Meta T={T} style={{ display: 'block', marginTop: 3, fontSize: 10, color: i + 1 === on ? T.ink : T.ink3, fontWeight: i + 1 === on ? 600 : 400, overflow: 'hidden', textOverflow: 'ellipsis' }}>{i + 1} · {s}</Meta></span>)}</div>;
+function ScreenHbImportPickP({ T }) {
+  return frameF(T, <>
+    <HbHeaderP T={T} title="Import" back right={<Meta T={T}>step 1 of 4</Meta>}><HbStepsP T={T} on={1} /></HbHeaderP>
+    <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', padding: '12px 14px 0' }}>
+      <div style={{ fontFamily: T.fontDisplay, fontSize: 21, fontWeight: 600, color: T.ink, lineHeight: 1.15 }}>Which master are you bringing in?</div>
+      <Meta T={T} style={{ display: 'block', marginTop: 2, whiteSpace: 'normal' }}>Each master has its own template. The check is a dry run.</Meta>
+      <div style={{ marginTop: 8 }}>{HB_MASTERS.map(([ic, l, m]) => { const on = l === 'Products & SKUs'; return <div key={l} className="press" style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px 8px 8px', marginBottom: 6, borderRadius: 16, background: on ? T.surface : T.surface2, border: on ? `2px solid ${T.ink}` : `1px solid ${T.line}`, boxSizing: 'border-box' }}>
+        <span style={{ width: 38, height: 38, borderRadius: 12, background: on ? T.ink : T.chipBg, color: on ? T.bg : T.ink2, display: 'grid', placeItems: 'center', flex: 'none' }}><Ic name={ic} size={19} /></span>
+        <span style={{ flex: 1, minWidth: 0 }}><div style={{ fontFamily: T.fontDisplay, fontSize: 17, fontWeight: 600, color: T.ink, lineHeight: 1.1 }}>{l}</div><Meta T={T} style={{ display: 'block', marginTop: 1 }}>{m}</Meta></span>
+        {on ? <HbTick T={T} done /> : <Ic name="chevron-right" size={15} color={T.ink3} />}
+      </div>; })}</div>
+    </div>
+  </>, <><div style={{ position: 'absolute', left: 14, right: 14, bottom: 98, display: 'flex', alignItems: 'center', gap: 8, padding: 8, borderRadius: 24, ...glass(T) }}><Meta T={T} style={{ paddingLeft: 8, flex: 1 }}>Products & SKUs · 9 columns</Meta><T.Btn icon="arrow-right" style={{ height: 44 }}>Next</T.Btn></div><T.Island active="More" /></>);
+}
+function ScreenHbImportCheckP({ T }) {
+  const tile = (n, l, tone) => <span key={l} style={{ flex: 1, minWidth: 0, padding: '8px 12px', borderRadius: 14, background: T.surface2, border: `1px solid ${tone === 'danger' ? T.danger + '66' : T.line}` }}><div style={{ fontFamily: T.fontDisplay, fontSize: 28, fontWeight: 600, lineHeight: 1, color: tone === 'danger' ? T.danger : tone === 'dim' ? T.ink3 : T.ink, fontVariantNumeric: 'lining-nums' }}>{n}</div><div style={{ fontFamily: T.fontUI, fontSize: 11.5, color: T.ink3, marginTop: 3 }}>{l}</div></span>;
+  const errs = HB_IMPORT_ROWS.filter(r => r.err);
+  return frameF(T, <>
+    <HbHeaderP T={T} title="Import" back right={<Meta T={T}>step 3 of 4</Meta>}><HbStepsP T={T} on={3} /></HbHeaderP>
+    <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', padding: '12px 14px 0' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px 8px 10px', borderRadius: 14, border: `1px solid ${T.line2}`, background: T.surface }}>
+        <Ic name="file-spreadsheet" size={20} color={T.ok} /><span style={{ flex: 1, minWidth: 0 }}><div style={{ fontFamily: T.fontUI, fontSize: 13.5, fontWeight: 500, color: T.ink }}>products-oct.xlsx</div><Meta T={T}>212 rows · from WhatsApp · Products & SKUs</Meta></span><Pill T={T} tone="blue" small>Dry run</Pill>
+      </div>
+      <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>{tile(180, 'creates')}{tile(30, 'updates')}</div>
+      <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>{tile(2, 'errors', 'danger')}{tile(0, 'skipped', 'dim')}</div>
+      <HbLab T={T} style={{ marginTop: 14 }} right={<span style={{ letterSpacing: 0, textTransform: 'none', fontSize: 10.5 }}>nothing is written yet</span>}>Rows to fix · 2</HbLab>
+      {errs.map(r => { const d = hbD(r.code); return <div key={r.row} style={{ position: 'relative', display: 'flex', gap: 11, padding: '9px 10px 9px 14px', marginBottom: 7, borderRadius: 14, background: T.danger + '12', border: `1px solid ${T.danger}40`, overflow: 'hidden' }}>
+        <span style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 3, background: T.danger }} />
+        <HbThumb T={T} d={d} w={36} h={46} r={9} />
+        <span style={{ flex: 1, minWidth: 0 }}><div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}><span style={{ fontFamily: T.fontDisplay, fontSize: 20, fontWeight: 600, color: T.ink, fontVariantNumeric: 'tabular-nums' }}>{r.code}</span><Meta T={T}>row {r.row} · {r.colour}</Meta></div><div style={{ fontFamily: T.fontUI, fontSize: 12.5, color: T.danger, lineHeight: 1.3, marginTop: 2 }}>{r.err}</div></span>
+      </div>; })}
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 9, marginTop: 10, padding: '10px 12px', borderRadius: 14, border: `1px dashed ${T.line2}`, color: T.ink2, fontFamily: T.fontUI, fontSize: 12, lineHeight: 1.35 }}><Ic name="lock" size={14} color={T.ink3} style={{ marginTop: 1, flex: 'none' }} /><span>Writing it in is done at the desk, by admin or owner. Fix the 2 rows in the sheet and send it again.</span></div>
+    </div>
+  </>, <><div style={{ position: 'absolute', left: 14, right: 14, bottom: 98, display: 'flex', gap: 8, padding: 8, borderRadius: 24, ...glass(T) }}><OutBtn T={T} icon="refresh-cw" style={{ flex: 1, justifyContent: 'center', height: 44 }}>New file</OutBtn><T.Btn icon="file-down" style={{ flex: 1.3, height: 44 }}>Download errors</T.Btn></div><T.Island active="More" /></>);
+}
+
+/* ── phone: new material, same field order as Production's new-material sheet ── */
+function ScreenHbNewMaterial({ T }) {
+  const shades = [['NS01', 'Wine'], ['NS03', 'Mehroon'], ['NS04', 'Rani']];
+  return frameF(T, <HbMastersBodyP T={T} />, <>{scrimF(T)}<Sheet T={T} h={680} title="New material" foot={<div style={{ display: 'flex', gap: 8, alignItems: 'center' }}><Meta T={T}>lands as "no inward yet"</Meta><span style={{ flex: 1 }} /><T.Btn style={{ height: 44 }} icon="check">Save · 3 shades</T.Btn></div>}>
+    <div style={{ display: 'flex', gap: 10 }}><span className="press" style={{ width: 84, height: 96, borderRadius: 14, border: `1px dashed ${T.line2}`, background: T.chipBg, display: 'grid', placeItems: 'center', color: T.ink2, flex: 'none' }}><span style={{ textAlign: 'center', fontFamily: T.fontUI, fontSize: 10.5 }}><Ic name="camera" size={18} /><div>photo</div></span></span><span style={{ flex: 1, minWidth: 0, display: 'grid', gap: 8 }}><HbField T={T} label="Material name" value="Nidha satin" /><HbField T={T} label="Group" value="Base fabric" caret /></span></div>
+    <div style={{ display: 'flex', gap: 8, marginTop: 8 }}><HbField T={T} label="Supplier" value="Surat Textiles" caret /><HbField T={T} label="Unit" value="m" caret w={80} /></div>
+    <HbLab T={T} style={{ marginTop: 12 }}>Shades · one master each</HbLab>
+    <div style={{ borderRadius: 14, border: `1px solid ${T.line}`, background: T.surface, overflow: 'hidden' }}>{shades.map(([c, n], i) => <div key={c} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', borderTop: i ? `1px solid ${T.line}` : 0 }}><HbSwatch n={n} tex="net" w={32} h={32} r={8} /><Mono T={T} size={11.5}>{c}</Mono><span style={{ flex: 1, fontFamily: T.fontUI, fontSize: 13, color: T.ink }}>{n}</span><Ic name="x" size={13} color={T.ink3} /></div>)}<div style={{ padding: '6px 10px', borderTop: `1px solid ${T.line}` }}><OutBtn T={T} small icon="plus">Add a shade</OutBtn></div></div>
+    <div style={{ display: 'flex', gap: 8, marginTop: 10 }}><HbField T={T} label="Reorder level" value="100 m" /><HbField T={T} label="Tags" value="satin · lining" caret /></div>
+    <Meta T={T} style={{ display: 'block', marginTop: 8, whiteSpace: 'normal' }}>rate, alias, tax category stay on the desk (Hub › Masters)</Meta>
+  </Sheet></>);
+}
+
 /* ── board registration: captions and order are what the owner reads ── */
 (window.NEW_DRAFT_MODULES = window.NEW_DRAFT_MODULES || []).push({ module: 'Hub', note: 'masters shell with the census · new product master · image upload centre with the per-colour checklist and the no-photo queue · xlsx import with a dry run · new material (13 Oct, review 2)', subs: [
   { name: 'Masters', flow: 'census → alerts → grid → dossier', phone: [['Masters · products list on the phone', ScreenHbMasters]], web: [['Masters · products grid, census chips, alerts', WebHbMasters]] },
   { name: 'New product', flow: 'form → checklist → photos', phone: [['New product · master sheet on the phone', ScreenHbNewProduct]], web: [['New product · master form and checklist', WebHbNewProduct]] },
   { name: 'Upload centre', flow: 'queue → capture → checklist', phone: [['Upload centre · capture per colour', ScreenHbUploadPhone], ['Upload centre · the no-photo queue', ScreenHbUploadQueue]], web: [['Upload centre · product 8591, checklist per colour', WebHbUpload]] },
-  { name: 'Import', flow: 'pick the master → fill → check the file → write it in', web: [['Import · check the file (dry run)', WebHbImport], ['Import · pick the master', WebHbImportPick]], phone: [] },
-  { name: 'New material', flow: 'form → checklist', web: [['New material · master form and checklist', WebHbNewMaterial]], phone: [] },
+  { name: 'Import', flow: 'pick the master → fill → check the file → write it in', web: [['Import · check the file (dry run)', WebHbImport], ['Import · pick the master', WebHbImportPick]], phone: [['Import · pick the master', ScreenHbImportPickP], ['Import · check the file', ScreenHbImportCheckP]] },
+  { name: 'New material', flow: 'form → checklist', web: [['New material · master form and checklist', WebHbNewMaterial]], phone: [['New material · master sheet on the phone', ScreenHbNewMaterial]] },
 ] });
 
 Object.assign(window, { HB_SEG, HB_ITEMS, HB_LEDGERS, HB_ALERTS, HB_DOSSIER, HB_CATS, HB_WORKS, HB_NEW, HB_QUEUE, HB_REQ, HB_STEPS, HB_MASTERS, HB_TEMPLATE_COLS, HB_IMPORT_ROWS, hbD, hbPic, hbShade, hbTabs, hbCardStyle,
   HbLab, HbField, HbRadio, HbSwitch, HbTick, HbThumb, HbDot, HbSwatch, HbLock, HbFacts, HbShell, HbFam, HbEnt, HbCensus, HbAlerts, HbTool, HbToolbar, HbCard, HbProductPane, HbHeaderP, HbAlertP, HbRowP, HbFab, HbMastersBodyP,
   HbSlotAdd, HbColourRow, HbChecklist, HbFormTabs, HbPicStyle, HbSlot, HbSlotWide, HbColourTabs, HbUp, HbProgressPane, HbCorner, HbQueueRow, HbSteps, HbDisabledBtn, HbTemplatePane,
-  ScreenHbMasters, ScreenHbNewProduct, ScreenHbUploadPhone, ScreenHbUploadQueue, WebHbMasters, WebHbNewProduct, WebHbUpload, WebHbImport, WebHbImportPick, WebHbNewMaterial });
+  ScreenHbMasters, ScreenHbNewProduct, ScreenHbUploadPhone, ScreenHbUploadQueue, ScreenHbImportPickP, ScreenHbImportCheckP, ScreenHbNewMaterial, HbViewTabs, HbStepsP, HbSect, WebHbMasters, WebHbNewProduct, WebHbUpload, WebHbImport, WebHbImportPick, WebHbNewMaterial });
