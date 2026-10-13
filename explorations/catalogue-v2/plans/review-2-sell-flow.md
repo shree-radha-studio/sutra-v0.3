@@ -39,7 +39,12 @@ Approvals in one place (decision 6; compare with final f-18 and its web twin)
 17. n-17 `ScreenCsQueueList` · Sale executive · queue list, RAISED and IN QUEUE, no flags: the final's Sale orders list with my queued order first. Flags are the approver's, so none show here.
 18. nw-15 `WebCsOrderState` · the web counterpart: the Sale orders list (same no-flag cards, so it also serves as the web queue list) with the order pane carrying the state card, the order and Edit · Delete.
 `CsStateCard` takes `viewer='manager'` to add the approver's flags (HmFlags from the Home draft) in words and drop the Edit text; not drawn as a frame yet.
-(Ids shift by the frames added above them: the grid frames are now n-18 to n-20 on phone, the island exemplar n-21.)
+16b. n-17 `ScreenCsOrderStateMgr` · Sale orders · opened, in the queue · manager (flags, link to Approvals): same page, "Look twice" flags in words (overdue, GR ratio, edited after submit; copied from Home's wording as `CsFlags`), the link to Approvals, only print and share docked. nw-16 `WebCsOrderStateMgr` is its web twin. The executive's n-16 / nw-15 sit right before them.
+
+## Final frame id map (catalogue page; `nd-`/`nwd-` are the dark twins)
+Phone: n-9 new cart · n-10 new customer · n-11 submit · n-12 sent · n-13 in the queue (edit or delete) · n-14 editing · n-15 delete, in words · n-16 state + link to Approvals (executive) · n-17 same, manager (flags) · n-18 executive queue list, no flags · n-19 grid three rows · n-20 grid two rows · n-21 grid two rows after the swipe · n-22 island for a sale executive.
+Web: nw-9 new cart · nw-10 new customer · nw-11 submit · nw-12 in the queue · nw-13 editing · nw-14 delete dialog · nw-15 state + link (executive) · nw-16 same, manager (flags).
+(Numbers 17 and 18 in the list above are older; this map is current. The grid compare frames are n-19 to n-21, so "n-16 / n-17 / n-18" in older notes means n-19 / n-20 / n-21.)
 
 Calmer grid header (phone only, compare with final f-1)
 12. n-16 `ScreenCsGrid3` · three rows: top bar, search island, one row (lists, hairline, quick chips); count as a Meta line in the body. About 10 px more grid than f-1.
