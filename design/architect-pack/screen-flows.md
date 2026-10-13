@@ -285,3 +285,12 @@ Not drawn: Photoshoots; the phone's Save as sample; a design-team role.
 - Hub: the map's Master views, Reports, Report builder and Compare are not drawn; instead Masters (census, dossier pane), New product, Upload centre, Import and New material are.
 - Channels: still not drawn.
 - Shell: login, firm selector, user menu and phone search remain gaps (review 1).
+
+## Contact sheets
+
+One PNG per module (Home, Hub, Catalogue, Dispatch) or per sub-menu (Production, CRM, Studio), every frame light and
+dark at scale 0.4 with its id in the caption, rendered on 13/10/26 by the board's own script. The sampler is one
+phone and web pair per module. Open them beside the tables above; the ids match.
+
+- `sheets/sheet-sampler.png`, `sheets/sheet-home.png`, `sheets/sheet-hub.png`, `sheets/sheet-catalogue.png`, `sheets/sheet-dispatch.png`
+- `sheets/sheet-production-<sub-menu>.png`, `sheets/sheet-crm-<sub-menu>.png`, `sheets/sheet-studio-<sub-menu>.png`, `sheets/sheet-appshell.png` (those present were rendered in time; any missing one is rendered with `bash .claude/skills/sutra-mockups/scripts/contact-sheet.sh <module>`)
