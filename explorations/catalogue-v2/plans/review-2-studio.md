@@ -311,3 +311,19 @@ marked ◀.
   per provider with a test call, usage and cost per run (cost visible to admin only).
 - **Permissions are the server's answer.** Studio edit (admin, sub-admin), view + save (production manager, merchandiser),
   view (office manager), none (sales, dispatch); a locked screen offers the time-boxed request of F:26.
+
+---
+
+## 7 · Exemplar drawn (13 Oct, after the lead's ask)
+
+One compare pair so the owner judges decisions 30 to 33 from a picture: the designer terminal in the house language with
+the picture first, and the phone review companion of the same state. File `mod-studio-r2.jsx`, registered as the Studio
+band "Review 2 · exemplar"; the lead adds it to `modules.js` at merge. Nothing else on the board changed.
+
+| Frame | What it shows | Compare against |
+|---|---|---|
+| nw-16 / nwd-16 · "Review 2 · terminal in the house language · spine, stage, pane as a handle" | Six header buttons (Memory ▾ holds Settings, D31) and the search field intact; the chat as a 56 px spine with the orb, the thread's name and the context thumbs (D33); the set on a white card 640 wide on the sunken sand stage; one thumbs pair, Compare · Full screen · Share; the version strip; the prompt box with the template chips and Grid ▾; the right pane a 30 px handle "Set options · pick a cell" until a cell is picked; the tuner would slide over that pane. One maroon line: Send. No deep space, no coloured thread, no glow (D30 option b or c). | nw-2 / nwd-2 |
+| n-14 / nd-14 · "Review 2 · phone review companion · the set as a card, keep / discard / save" | The thread as a chat on sand: the prompt in one line, Stitch's reply in the display face, the set as a card with quiet cell numbers and the AI-render mark, "Open on the canvas", then Discard · Save · Keep (Keep the one maroon line); the prompt tray with four template chips above the island (D32). | n-2 / nd-2 and n-6 / nd-6 |
+
+Renders: `.board-check/sheet-studio-review-2.png` (the four frames at scale 0.8) and `.board-check/sheet-studio-frames.png`
+(n-14, nd-14 at scale 1). Board check on Studio after the addition: 60 frames, console clean.
