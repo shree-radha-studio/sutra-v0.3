@@ -104,9 +104,353 @@ follow-up list, journey and step, track and version (Studio).
 | `nw-4` / `n-6` | Import · check the file (dry run) | the file, counts (creates · updates · errors · skipped), per-row per-field errors in words | Download errors; Write it in (admin only, desk only, disabled until errors are fixed) | admin or owner | yes · price column visible to the admin importer |
 | `nw-6` / `n-7` | New material · master form and checklist | code, name, group, unit, shades with swatch, supplier, source city, purchase rate, reorder level (open U34), tags; "Already in the master" pane to stop doubles | Save | accountant, analyst | yes · purchase rate locked to money roles; not on the phone |
 
-## Production and Dispatch
+## Production
 
-Tables pending; being derived from the component bodies and added in the next push.
+### Phone
+
+**Overview**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| n-1 ScreenPOverview | Overview · tiles, due today, arrivals, high growth | production order, job card, PO, karigar, design, sample | none (read only) | production manager (assumed) | no · note says dues live on the desk |
+| n-2 ScreenPLocked | Production · locked for a sales role | user/role, approval request (implied) | asks admin for access | sales executive | no |
+
+**Purchase**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| n-3 ScreenPPOList | Purchase orders · list | PO, supplier, material, production order | none (read only); opens new PO | warehouse executive / merchandiser (assumed) | no |
+| n-4 ScreenPNewPO | Purchase · new PO sheet | PO, supplier, material, production order | raises PO; attaches WhatsApp photos | merchandiser (assumed) | yes · money roles only (rate per line, locked) |
+| n-5 ScreenPInward | Purchase · inward capture with lot photo | PO, supplier, material lot, gate token | logs inward with lot photo; sends to approval | warehouse executive | no · "rates on the desk" |
+| n-6 ScreenPReturn | Purchase · return sheet | material lot (GRN), supplier, credit note | logs purchase return; prints delivery note | warehouse executive | no · credit note built by accounts on desk |
+
+**Materials**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| n-7 ScreenPMaterials | Materials · catalogue grid | material, material lot / dye WIP, supplier, stock (material) | none (read only) | everyone in Production (assumed) | no |
+| n-8 ScreenPMaterial | Material · detail, ledger, used in | material, stock (material), design, supplier, dye WIP | adds to recipe; raises PO; adds photo | production (assumed) | no |
+| n-9 ScreenPNewMaterial | Materials · new material sheet | material, supplier | creates material with shades | warehouse / merchandiser (assumed) | no · rate stays on desk |
+| n-10 ScreenPDyeReceive | Dye · receive a cut order | dye WIP (cut order), karigar (dyer), material, gate token, production order | logs dye lot receive; prints lot label | dye desk / warehouse executive (assumed) | no |
+| n-11 ScreenPDyers | Dye · dyer balances | karigar (dyer), material lot / dye WIP, stock (material) | none (read only); opens bulk issue | dye desk (assumed) | no |
+| n-12 ScreenPBulkIssue | Dye · bulk issue sheet | karigar (dyer), material, gate token | issues undyed fabric to dyer | dye desk (assumed) | no |
+| n-13 ScreenPCutOrder | Dye · new cut order sheet | karigar (dyer), material, dye WIP, production order, gate token | raises cut order | dye desk (assumed) | no · rate set on desk |
+
+**Process setting**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| n-14 ScreenPSetting | Process setting · sequence, steps | design, colour, recipe, material | saves recipe sequence | production manager (assumed) | no |
+| n-15 ScreenPRecipe | Recipe · view per colour | design, colour, recipe, material, dye WIP, production order | none (read only) | production (assumed) | no |
+| n-16 ScreenPAverages | Averages · edit | recipe, material, colour | edits averages per piece | production manager (assumed) | no |
+| n-17 ScreenPBom | BOM · per process, one colour | recipe, material, dye WIP, colour | ticks BOM cells; copies colour | production manager (assumed) | no |
+
+**Orders & lifecycle**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| n-18 ScreenPOrders | Orders · list | production order, design, colour, job card | none (read only); orders raised on desk | production (assumed) | no |
+| n-19 ScreenPNewOrder | New production order sheet | production order, design, colour, recipe, material, karigar | saves draft; submits for approval | production manager | no · rates set on desk |
+| n-20 ScreenPLifecycle | Lifecycle · timeline, process accordion | production order, job card, karigar, colour | opens issue; opens assign | warehouse executive / PM (assumed) | no |
+| n-21 ScreenPAssign | Assign karigar sheet | job card, karigar, production order, dye WIP | assigns karigar; sets tranches; splits job | production manager (assumed) | no · rate on desk |
+| n-22 ScreenPIssue | Issue · pieces to issue for | job card, karigar, material, dye WIP, colour, stock (material) | issues material against job; scans lot | warehouse executive | no |
+| n-23 ScreenPReceive | Receive · pcs by colour, loss, rejection | job card, colour, dye WIP | logs receive with rejection and loss | warehouse executive | no |
+| n-24 ScreenPReceiveFG | Receive · finished goods, verification | job card, colour, stock (FG) | logs final receive as finished goods | warehouse executive | no |
+| n-25 ScreenPScan | Scan a job QR → issue or receive | job card, production order, material lot | opens issue or receive | warehouse executive (floor) | no |
+| n-26 ScreenPJobber | Jobber · the karigar records on his phone | job card, karigar, colour | records pieces (unverified) with lot photo | karigar (jobber) | no |
+| n-27 ScreenPPrint | Print · sticker, printer, share | job card, gate token | prints job card or stickers | floor / desk (assumed) | no · floor copy prints without rate |
+
+**Job cards**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| n-28 ScreenPJobs | Job cards · list | job card, production order, design, karigar | none (read only) | floor roles (assumed) | no |
+| n-29 ScreenPJobsFilters | Job cards · sort & filter sheet | job card filters, saved views (implied) | saves view; applies filters | floor roles (assumed) | no |
+| n-30 ScreenPJob | Job card · opened, issue / receive | job card, production order, karigar, colour, gate token (history) | opens issue or receive | warehouse executive (assumed) | no |
+| n-31 ScreenPSwimlanes | Job cards · swimlanes | job card, karigar | moves card by long-press (implied) | production (assumed) | no |
+| n-32 ScreenPGantt | Job cards · timeline | job card, production order, karigar | none (read only) | production manager (assumed) | no |
+| n-33 ScreenPCalendar | Job cards · calendar | job card, dye WIP (cut order), karigar, design | none (read only) | production (assumed) | no |
+
+**Samples**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| n-34 ScreenPSamples | Samples · list | sample, design, karigar | none (read only); opens new sample | design team / PM (assumed) | no · "Price TBD" chip only |
+| n-35 ScreenPSample | Sample · lifecycle, moves | sample, karigar, material, dye WIP | opens new move; opens receive; adds photo | design team / PM (assumed) | no |
+| n-36 ScreenPNewMove | Sample · new move sheet | sample, karigar, material, dye WIP, colour, gate token | issues a sample move | design team / floor (assumed) | no · rate set on desk |
+| n-37 ScreenPSampleReceive | Sample · receive a move | sample, karigar, dye WIP, material, gate token | logs move receive; names WIP; logs loss | floor / design team (assumed) | no |
+| n-38 ScreenPNewSample | Sample · new sample sheet | sample, colour, user (designer) | creates sample | design team (assumed) | no · target price on desk |
+| n-39 ScreenPSampleDeployed | Sample · deployed, 15-day reading | sample, design, demand reading (implied) | re-reads; makes product | production manager (assumed) | no |
+| n-40 ScreenPFinalise | Sample → product sheet | sample, design, recipe, material, dye WIP, karigar | creates product and recipe | production manager (assumed) | no · costing stays on desk |
+
+**Costing**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| n-41 ScreenPCosting | Costing · list (manager phone) | design, sample, production order, costing (implied) | none (read only) | manager | yes · manager only (cost, margin, price) |
+| n-42 ScreenPCostBreakdown | Costing · breakdown sheet | design, material, job card rates, costing | approves price; sets own price | manager | yes · manager only |
+
+**Karigars**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| n-43 ScreenPKarigars | Karigars · list | karigar, job card | none (read only); opens new karigar | production manager (assumed) | no |
+| n-44 ScreenPKarigar | Karigar · detail, jobs, chart | karigar, job card, material (with them), ledger | raises payment; verifies entry; WhatsApp | manager (lock glyph) | yes · manager only (dues, pay) |
+| n-45 ScreenPKarigarVerify | Karigar · verify an entry | karigar, job card, colour, gate token | verifies or rejects jobber entry | floor / PM (assumed) | no |
+| n-46 ScreenPNewKarigar | Karigars · new karigar sheet | karigar, firm (GST), skills (process master) | adds karigar | production manager (assumed) | no · rate card "desk", locked |
+
+### Web
+
+**Overview**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| nw-1 WebPOverview | Overview · tiles, arrivals, recommendations, dues pane | production order, job card, PO, karigar, design, sample, stock (FG) | none (read only); links out | production manager | yes · money roles (karigar dues pane) |
+| nw-2 WebPLocked | Production · locked for this role | user/role | asks admin for access | sales executive | no |
+
+**Purchase**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| nw-3 WebPPurchaseOrders | Purchase orders · calendar, PO pane | PO, supplier, material, production order | none (read only) | merchandiser (assumed) | yes · money roles (PO pane rate × qty, locked) |
+| nw-4 WebPPOList | Purchase orders · list | PO, supplier, material, production order | none (read only) | merchandiser (assumed) | yes · money roles (PO pane, locked) |
+| nw-5 WebPPONew | Purchase orders · new PO pane | PO, supplier, material, firm (book), production order | raises PO | merchandiser (assumed) | yes · money roles (rates) |
+| nw-6 WebPInward | Purchase inward · from a PO, variance, accounts card, supplier pane | PO, supplier, material lot, firm (consignee), supplier invoice | takes inward; saves draft; sends to approval | warehouse executive; accounts approves | yes · money roles (rate, value, locked) |
+| nw-7 WebPInwardPast | Purchase inward · past, GRN pane | material lot (GRN), supplier, PO, gate token | re-prints; starts return | warehouse executive / accounts (assumed) | yes · money roles (value, locked) |
+| nw-8 WebPReturn | Purchase return · credit note pane | material lot (GRN), supplier, credit note, PO | raises purchase return; prints CN and delivery note | warehouse executive / accounts | yes · money roles (rate, value, credit) |
+
+**Materials**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| nw-9 WebPMaterials | Materials · catalogue, material pane | material, dye WIP, supplier, stock (material), design (used in) | none (read only) | production; sales view (assumed) | yes · money roles (rate avg in pane, locked) |
+| nw-10 WebPMaterialNew | Materials · list, new material pane | material, supplier, stock (material) | creates material | merchandiser (assumed) | yes · money roles (rate column, purchase rate, locked) |
+| nw-11 WebPDye | Dye ledger · open cut orders, new cut order pane | dye WIP (cut order), karigar (dyer), material, design, production order | raises cut order | dye desk / merchandiser (assumed) | yes · money roles (rate per m, locked) |
+| nw-12 WebPDyeBulk | Dye ledger · bulk balances, movements, bulk issue pane | karigar (dyer), material lot / dye WIP, gate token | issues bulk undyed fabric | dye desk (assumed) | no |
+| nw-13 WebPDyeReceived | Dye ledger · received lots as dye WIP | dye WIP, material, karigar (dyer), supplier | none (read only) | dye desk (assumed) | yes · money roles (material pane rate, locked) |
+| nw-14 WebPDyeReceive | Dye ledger · receive a lot, what it unblocks | dye WIP (cut order), karigar (dyer), production order, job card, gate token | logs lot receive; unblocks job | dye desk (assumed) | yes · money roles (dyer due, locked) |
+
+**Process setting**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| nw-15 WebPSetting1 | Process setting · product, sequence, steps, materials pane | design, colour, recipe, material, stock (material) | sets product and sequence | production manager (assumed) | no |
+| nw-16 WebPSetting2 | Process setting · materials & averages, colour scope | recipe, material, dye WIP, colour, stock (material) | edits averages and colour scope | production manager (assumed) | no |
+| nw-17 WebPSetting3 | Process setting · BOM grid Sky, BOMs pane | recipe, material, dye WIP, colour | ticks BOM per process | production manager (assumed) | no |
+| nw-18 WebPSetting4 | Process setting · Peach copied, locked, search pane | recipe, colour, production order (lock), other designs' recipes | copies colour; saves incomplete recipe | production manager (assumed) | no |
+| nw-19 WebPSetting5 | Process setting · imported from S-0412 for review | recipe, sample, material, dye WIP, karigar, design | reviews and saves recipe | production manager (assumed) | no |
+
+**Orders & lifecycle**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| nw-20 WebPOrders | Orders · cards with draft and awaiting states, lifecycle pane | production order, design, colour, job card, karigar | none (read only) | production manager (assumed) | no |
+| nw-21 WebPOrdersList | Orders · list | production order, design, colour, job card | none (read only); column chooser | production manager (assumed) | no |
+| nw-22 WebPNewOrder | New production order · assignment, tranches, readiness pane | production order, design, recipe, material, stock (material), karigar, firm, user | saves draft; submits; previews job cards | production manager | yes · money roles (rate per pc, cost preview) |
+| nw-23 WebPLifecycle | Lifecycle · head, timeline, job panels, this-job pane | production order, job card, karigar, colour, material, dye WIP, gate token | opens issue / receive; stop | production manager / warehouse (assumed) | yes · money roles (job rate, due, locked) |
+| nw-24 WebPAssign | Lifecycle · assign a karigar pane | job card, karigar, dye WIP | assigns karigar; sets rate and tranches | production manager (assumed) | yes · money roles (rate per pc, locked) |
+| nw-25 WebPIssue | Lifecycle · issue pane, by pieces or by material | job card, karigar, material, dye WIP, colour, stock (material), gate token | issues material against job | warehouse executive (assumed) | no |
+| nw-26 WebPIssueDirect | Lifecycle · issue on a Direct order (Ready production) | production order (Direct book), karigar, colour, gate token | issues Direct order pieces | production manager (assumed) | yes · money roles (rate per pc, locked) |
+| nw-27 WebPReceive | Lifecycle · receive pane, rejection, loss, over-receive | job card, karigar, colour, dye WIP, gate token | logs receive with rejection and loss | warehouse executive (assumed) | yes · money roles (karigar due, locked) |
+| nw-28 WebPReceiveFG | Lifecycle · receive finished goods, verification, transfer | job card, karigar, colour, stock (FG), firm (transfer) | logs final receive as FG; verifies | warehouse executive (assumed) | yes · money roles (locked) |
+| nw-29 WebPPrint | Print · job card A4, issue and receive stickers | job card, production order, karigar, gate token | prints; re-prints challan | desk | yes · job card for money roles; floor copy no rate |
+
+**Job cards**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| nw-30 WebPJobCards | Job cards · cards, lifecycle pane | job card, production order, design, karigar | none (read only) | production (assumed) | no |
+| nw-31 WebPJobFilters | Job cards · all filters drawer, saved views | job card filters, saved views (implied) | saves view; applies filters | production (assumed) | no |
+| nw-32 WebPSwimlanes | Job cards · swimlanes by journey state | job card, karigar | drags card to reassign or issue (implied) | production (assumed) | no |
+| nw-33 WebPJobTable | Job cards · table, pane collapsed | job card, production order, design, karigar | exports; chooses columns | production (assumed) | no |
+| nw-34 WebPGantt | Job cards · gantt, today line, tranche marks | job card, production order, karigar | drags bar end to move tranche date (implied) | production manager (assumed) | no |
+| nw-35 WebPCalendar | Job cards · calendar of tranche and dye dates, day pane | job card, dye WIP (cut order), karigar, design | none (read only) | production (assumed) | no |
+
+**Samples**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| nw-36 WebPSamples | Samples · board, moves pane | sample, design, karigar, material | none (read only) | design team / PM (assumed) | yes · money roles (target, cost so far in pane) |
+| nw-37 WebPSamplesDeployed | Samples · deployed, 15-day reading pane | sample, design, demand reading (implied) | re-reads; drops; makes product | production manager (assumed) | yes · money roles (target price) |
+| nw-38 WebPSampleNew | Samples · new sample pane | sample, colour, user (designer) | creates sample | design team (assumed) | yes · money roles (target price, locked) |
+| nw-39 WebPSample | Sample · lifecycle, moves, new move pane | sample, karigar, material, dye WIP, colour, gate token | issues move; deploys; sends to costing | design team / PM (assumed) | yes · money roles (rate, cost so far, locked) |
+| nw-40 WebPSampleReceive | Sample · receive a move pane | sample, karigar, dye WIP, material, gate token | logs move receive | floor / design team (assumed) | yes · money roles (cost this move, locked) |
+| nw-41 WebPFinalise | Sample → product · derived sequence, averages, BOM preview | sample, design, recipe, material, dye WIP, karigar | creates product and recipe | production manager (assumed) | yes · money roles (costing draft) |
+
+**Costing**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| nw-42 WebPCosting | Costing · cards, margins, breakdown pane | design, sample, production order, material, job card rates, costing | approves and syncs price; edits default margins (admin) | production manager / admin | yes · money roles only |
+
+**Karigars**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| nw-43 WebPKarigars | Karigars · list, karigar pane | karigar, job card, material (with them), ledger | none (read only) | manager | yes · manager roles (due, locked) |
+| nw-44 WebPKarigarLedger | Karigars · ledger pane, payments planned | karigar, job card, ledger / vouchers, payments | raises payment voucher; prints statement | manager / accounts (assumed) | yes · manager roles |
+| nw-45 WebPKarigarVerify | Karigars · unverified entries, verify pane | karigar, job card, production order, colour, gate token | verifies or rejects jobber entry | floor / PM (assumed) | no |
+| nw-46 WebPKarigarNew | Karigars · new karigar pane | karigar, firm (GST), skills, rate card | adds karigar; sends app invite | production manager (assumed) | yes · money roles (rate card, locked) |
+| nw-47 WebPKarigarAnalytics | Karigars · analytics | karigar, job card, material (with them) | none (read only) | production manager (assumed) | yes · money roles (material at cost KPI) |
+
+## Dispatch
+
+### Phone
+
+**Ready orders**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| n-1 ScreenDReady | Ready · customer cards, priority ring | customer, sale order, design, colour, stock (FG) | PACK (flips orders to packing) | manager on floor (assumed) | no |
+| n-2 ScreenDReadyFilters | Ready · sort & filter sheet | filters (due, stock, tier, priority) | applies sort and filter | manager (assumed) | no |
+
+**Pending orders**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| n-3 ScreenDPending | Pending · manager (₹) | customer, sale order, design, colour, stock (FG) | none (read only) | manager | yes · manager (rate, amount, total) |
+| n-4 ScreenDPendingPacker | Pending · packer (no ₹) | customer, sale order, design, colour, stock (FG) | none (read only) | packer | no |
+
+**Packing**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| n-5 ScreenDPicker | Packing · picker (customer → box) | customer, sale order, parcel (shipment box), invoice state | opens box; creates new box | packer | no · "no rates on this phone" |
+| n-6 ScreenDScan | Packing · scan, tally, accepted | parcel, SKU (piece serial), design, colour | scans piece into box | packer | no |
+| n-7 ScreenDScanRejected | Packing · scan rejected | parcel, SKU serial, customer, rejection reason | none (scan again) | packer | no |
+| n-8 ScreenDReview | Packing · review box, remove confirm | parcel, design, colour | removes line; closes parcel | packer | no |
+| n-9 ScreenDInvoiced | Packing · box invoiced | parcel, invoice | none (read only) | packer | no |
+
+**Billed**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| n-10 ScreenDBilled | Billed · invoices · manager (₹) | invoice, sale order, customer, design, colour | starts return; re-prints | manager | yes · manager (amounts, totals) |
+| n-11 ScreenDBilledPacker | Billed · invoices · packer | invoice, sale order, customer, design, colour | starts return; re-prints | packer | no · "amounts hidden for your role" |
+| n-12 ScreenDInvoiceSheet | Billed · invoice sheet · manager | invoice, customer (score, broker), shipment (delivered) | starts return; re-prints A4 | manager | yes · manager |
+| n-13 ScreenDInvoiceSheetPacker | Billed · invoice sheet · packer | invoice, customer, shipment | starts return; re-prints A4 | packer | no |
+| n-14 ScreenDShipments | Billed · shipments history | shipment, customer (consignee), transporter, broker, invoice, gate token | re-prints transport doc (implied) | manager (assumed) | no |
+
+**Out of stock**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| n-15 ScreenDOOS | Out of stock · order and restock cards | design, colour, sale order shortage, job card, karigar, restock suggestion | none (read only); links to Production | dispatch / production manager (assumed) | no |
+| n-16 ScreenDOOSFilters | Out of stock · sort & filter sheet | filters (sourcing, karigar, production state) | applies sort and filter | same (assumed) | no |
+
+**Warehouse stock**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| n-17 ScreenDStockFG | Stock · finished goods | SKU (design + colour), stock (FG), production order | none (read only) | manager / warehouse (assumed) | no |
+| n-18 ScreenDStockMat | Stock · material | material, stock (material), supplier, PO | none (read only) | warehouse executive (assumed) | no |
+| n-19 ScreenDStockWIP | Stock · work in progress | design, colour, job card, karigar, stock (WIP) | none (read only) | production roles (assumed) | no |
+| n-20 ScreenDFGInward | Stock · FG inward, verify | job card, karigar, design, colour, gate token, stock (FG) | verifies finished goods into stock | warehouse / dispatch (assumed) | no |
+
+**Sale return**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| n-21 ScreenDRet1 | Return · 1 customer, boxes, bills | customer, parcel count, invoice, sale order | saves draft; picks bills | manager (assumed) | no |
+| n-22 ScreenDRet2 | Return · 2 pieces, scan | SKU serial, design, colour, invoice | scans or taps pieces; edits qty | manager (assumed) | yes · order price in scan toast (lines hidden) |
+| n-23 ScreenDRet3 | Return · 3 preview · manager (₹) | return lines, invoice, blockers | raises credit note; adds note | manager | yes · manager |
+| n-24 ScreenDRet3Packer | Return · 3 preview · packer | return lines, invoice, blockers | raises credit note; adds note | packer | no |
+| n-25 ScreenDRet4 | Return · 4 credit note · manager | credit note, invoice, parcel, approval state | prints note; next return | manager | yes · manager |
+| n-26 ScreenDRet4Packer | Return · 4 credit note · packer | credit note, invoice, parcel | prints note; next return | packer | no |
+
+**Structured · Ready**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| n-27 ScreenDsReady | Ready · rows, priority tag, PACK | customer, sale order, design, colour, stock (FG) | PACK | floor (assumed) | no |
+
+**Structured · Pending**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| n-28 ScreenDsPending | Pending · packer (no ₹) | customer, sale order, design, colour, stock (FG) | none (read only) | packer | no |
+| n-29 ScreenDsPendingMgr | Pending · manager (₹) | customer, sale order, design, colour | none (read only) | manager | yes · manager (rate, amount) |
+
+**Structured · Packing**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| n-30 ScreenDsScan | Packing · scan, tally | parcel, SKU serial, sale order, design, colour | scans piece into box; types serial | packer (assumed) | no |
+| n-31 ScreenDsReview | Packing · review box | parcel, design, colour | adds line; keeps; confirms and closes box | packer (assumed) | no |
+
+### Web
+
+**Ready orders**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| nw-1 WebDReady | Ready · queue rail, cards, pending pane | customer, sale order, design, colour, stock (FG) | PACK; sorts and filters | dispatch manager (assumed) | yes · pending pane only (rates); none on board |
+
+**Pending orders**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| nw-2 WebDPending | Pending · full node, queue rail, customer pane | customer (score, open book), sale order, design, colour, stock (FG) | none (read only); links to OOS and dossier | manager | yes · manager roles (rate, amount, ₹ total) |
+
+**Packing**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| nw-3 WebDPacking | Packing · terminal, live invoice | customer, sale order, parcel, design, colour, invoice (live) | packs pieces; adds parcel; closes parcel | dispatch manager (desk) | yes · right pane only (live invoice) |
+| nw-4 WebDPackingScan | Packing · scan armed, rejected, remove confirm | parcel, SKU serial, design, colour, invoice | scans; removes line after confirm | dispatch manager (desk) | yes · right pane only |
+| nw-5 WebDInvoiceReview | Packing · invoice review (bill-to, GST) | invoice, customer (bill-to ledgers), firm (GST), parcel | edits qty and rate; confirms invoice | dispatch manager (desk) | yes · desk (editable rates, GST) |
+| nw-6 WebDInvoiceDone | Packing · invoice done, select for shipment | invoice, parcel, gate token (implied) | selects parcels; creates shipment; prints | dispatch manager (desk) | yes · desk (totals) |
+| nw-7 WebDShipmentSheet | Packing · close shipment sheet | shipment, customer (consignee), transporter, broker, parcel, invoice | issues transport document | dispatch manager (desk) | yes · pane dimmed under sheet; none on sheet |
+| nw-8 WebDPrint | Print · A4 invoice and transport document | invoice, shipment, customer, firm, gate token | prints; shares PDF on WhatsApp | desk / accounts (assumed) | yes · full |
+
+**Billed**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| nw-9 WebDBilled | Billed · sale invoices, invoice pane | invoice, sale order, customer (score, broker), design, colour | starts return; opens dossier; re-prints | manager / accounts (assumed) | yes · manager roles |
+| nw-10 WebDShipments | Billed · shipments history, transport doc pane | shipment, customer (consignee), transporter, broker, parcel, invoice, gate token | re-prints transport doc; shares | manager / accounts (assumed) | no |
+
+**Out of stock**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| nw-11 WebDOOS | Out of stock · counts, cards, who-is-waiting pane | design, colour, sale order shortage, customer, job card, karigar, restock suggestion | promises a date; calls; opens Production | dispatch / production manager (assumed) | no |
+
+**Warehouse stock**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| nw-12 WebDStockFG | Stock · finished goods, SKU pane | SKU (design + colour), stock (FG free / reserved / coming), production order | reserves stock for a customer (implied) | manager (assumed) | yes · list price in SKU pane (implied) |
+| nw-13 WebDStockMat | Stock · material, supplier pane | material, stock (material), supplier, PO, last GRN | raises PO | warehouse executive / manager (assumed) | yes · GRN rate per m in pane (implied) |
+| nw-14 WebDStockWIP | Stock · WIP, karigar pane | design, colour, job card, karigar, stock (WIP) | opens job card | production roles (assumed) | yes · karigar pane (material at cost, rate, due) |
+| nw-15 WebDFGInward | Stock · FG inward, gate token pane | job card, karigar, design, colour, gate token, production order, stock (FG) | verifies finished goods into stock; opens lifecycle | warehouse / dispatch (assumed) | no |
+
+**Sale return**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| nw-16 WebDRet1 | Return · 1 customer at the counter | customer, parcel count, gate token (guard), invoice, sale order | saves draft; picks bills | dispatch manager (desk) | no |
+| nw-17 WebDRet2 | Return · 2 pieces, desk scanner | SKU serial, design, colour, invoice, credit note (building) | scans pieces; edits qty; chooses note split | dispatch manager (desk) | yes · desk (rates at order price) |
+| nw-18 WebDRet3 | Return · 3 preview, blockers, notes pane | return lines, invoice, credit note, shipment (blocker), approval | raises credit notes; saves draft; marks shipment delivered | dispatch manager (desk) | yes · desk (totals) |
+| nw-19 WebDRet4 | Return · 4 credit notes raised, recent notes | credit note, invoice, parcel, approval state (accounts) | prints; shares on WhatsApp; next return | desk / accounts (assumed) | yes · desk |
+
+**Ready & Pending (on the approved bar)**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| nw-20 WebDReady3 | Ready · in-stock filter on, pane = all pending as a journey | customer, sale order (journey state), design, colour, stock (FG) | PACK; filters | dispatch manager (assumed) | yes · pane bill column, manager roles |
+| nw-21 WebDReadySel | Ready · order picked, pane = that order, All pending goes back | customer, sale order, design, colour, stock (FG) | PACK; picks order | dispatch manager (assumed) | no · order pane without money |
+| nw-22 WebDPendingGrid | Pending · four situations, grid, order pane | customer, sale order (situation), design, colour, approval state | none (read only) | manager | yes · manager (bill in order pane) |
+| nw-23 WebDPendingList | Pending · list view | customer, sale order, transporter, broker, journey | none (read only) | manager | yes · manager (bill column) |
+
+**Structured · Ready / Pending / Packing / Billed**
+
+| Frame | Caption (from the registration block) | Reads | Changes | Role shown | Money |
+|---|---|---|---|---|---|
+| nw-24 WebDsReady | Ready · node strip, ruled table, pending pane | customer, sale order, design, colour, stock (FG) | PACK; filters | dispatch manager (assumed) | no · "no rates here"; pane without money |
+| nw-25 WebDsPending | Pending · flat tabs, three-level table, order pane | customer, sale order, design, colour, stock (FG) | none (read only) | manager | yes · manager roles (rate, amount in pane) |
+| nw-26 WebDsPacking | Packing · terminal, boxes, live invoice | customer, sale order, parcel, SKU serial, design, colour, invoice (live) | scans; adds box; selects for shipment; closes shipment | manager (desk) | yes · live invoice pane, manager |
+| nw-27 WebDsBilled | Billed · invoices table, invoice pane | invoice, customer, sale order, shipment, firm (GST) | exports; opens invoice | manager / accounts (assumed) | yes · manager roles (totals, GST) |
 
 ## CRM
 
@@ -285,3 +629,17 @@ Tables pending; being derived from the component bodies and added in the next pu
 | **Settings** | | | | | |
 | nw-14 WebStSettingsModels | Settings · models, providers pane | Model per template with runs; providers with key state; usage counts | Picks models; tests a provider key | Admin (plan) | No; cost note is admin-only |
 | nw-15 WebStSettingsDefaults | Settings · defaults, what Stitch sends | Sales-data defaults and fields, generation defaults, memory retention, sharing (WhatsApp number, roles); preview of sent context | Toggles defaults; forget everything | Admin / sub-admin (plan) | No; "sold ₹ · money roles" toggle only |
+
+## Where the drawings show money the plans say they should not
+
+Found while reading the component bodies against the plans (13/10/26). These are observations for the money rule's
+owner, not defects to fix here: either the plan's "no money" column or the drawing is wrong, and the owner decides.
+
+- Dispatch phone, return step 2 (`dispatch` `n-22`): the scan toast reads "from SI-2271 at ₹4,995" although the lines on that screen carry no money.
+- Dispatch web Ready (`nw-1`): the board shows no money but the docked pending pane defaults to showing it; the approved-bar Ready with an order picked (`nw-21`) does not, while the Pending grid and list (`nw-22`, `nw-23`) do.
+- Dispatch web Stock panes (`nw-12`, `nw-13`, `nw-14`): the SKU pane shows the list price, the material pane the GRN rate per metre, the WIP pane the karigar's material at cost and due; the plan lists all three as money-free screens.
+- Production web shows locked "money roles" figures on more screens than the plan's money column says, because the mounted panes carry them: PO pane on the calendar and list (`nw-3`, `nw-4`), material pane rate average (`nw-9`), cut-order rate per metre (`nw-11`), dyer due on dye receive (`nw-14`), job rate and due on the lifecycle and receive panes (`nw-23`, `nw-27`, `nw-28`), target price and cost so far on every Samples screen (`nw-36`…`nw-41`), the new karigar rate card (`nw-46`), karigar analytics "material at cost" (`nw-47`).
+- Production floor phones carry no money anywhere except the three manager screens (`n-41`, `n-42`, `n-44`); several floor sheets say "rates on the desk" in words.
+- CRM: Follow-ups is money-free on both devices except the History tab on the web (`nw-9`), whose pane is the full customer pane with FY billing and credit line. The Share terminal on the web (`nw-10` and its states) shows FY billing and credit line through the same pane, so it is the sale manager's view; the executive's no-money variant is not drawn.
+- CRM phone headers all carry the role label "Sales", including the Payments screens the plan assigns to accounts.
+- Studio: the only ₹ on any frame is the target price on the web Save as sample sheet (`nw-8`); usage cost "admin only" appears as a note with no figure.
