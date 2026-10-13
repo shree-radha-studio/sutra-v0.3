@@ -181,3 +181,12 @@ the screen it came from so the BRD can absorb it later. Newest at the bottom.
   GR ratio limit, credit line, score floor) are the firm's to set; not decided here.
 - This overturns the lead's provisional answer to decision 7b (charts behind a tab): the charts stay on the first
   screen. Decision 7 on the deck is otherwise unchanged.
+
+### 13 Oct 2026, 15:35 · phone header rails (owner, on the deck)
+
+- The owner is worried about the horizontal rails in the phone header on every module: the lists bar and the
+  sub-menu scroller run past the screen, so three to five items show and the user has to scroll or tap a chevron
+  every time to see the whole menu. "This creates confusion rather than accessibility." Asked for a flow that
+  avoids it. Proposed as decision 54 on the deck: on the phone nothing in the header scrolls sideways except the
+  user's own applied filter chips; a menu is either fully visible (four items or fewer) or one tap away as a
+  full-width sheet listing every item with its count. Compare frames drawn in Catalogue · sell flow.

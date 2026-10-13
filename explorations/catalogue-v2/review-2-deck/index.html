@@ -184,7 +184,7 @@ dialog.lb .cap{color:#FAF7F2;font-size:13px;text-align:center;padding:10px 6px 0
     <div><div class="v num">4</div><div class="l">steps of the sell flow had no screen at all</div></div>
     <div><div class="v num">40 %+</div><div class="l">of the phone screen is chrome with a cart open</div></div>
     <div><div class="v num">2</div><div class="l">design languages on the board today</div></div>
-    <div><div class="v num">38</div><div class="l">decisions waiting on you, below (14 on the template and the sell flow, 24 from the module reviews)</div></div>
+    <div><div class="v num">39</div><div class="l">decisions waiting on you, below (14 on the template and the sell flow, 24 from the module reviews, one from your 15:35 note)</div></div>
   </div>
 
   <div class="body">
@@ -512,6 +512,7 @@ dialog.lb .cap{color:#FAF7F2;font-size:13px;text-align:center;padding:10px 6px 0
             </table>
           </div>
           <p class="muted" style="font-size:13px;margin-top:10px">Find them on the board by caption: every compare pair's caption ends "provisional, pending decision n". Ids are positional and shift as frames are added, so the captions are the stable handle.</p>
+          <p class="muted" style="font-size:13px;margin-top:10px"><b>Overturned by you at 15:30:</b> 7b. The approvals card shows the customer's analytics and the flags on the first screen, the order one tap away; flags are threshold rules on a fixed tile template, highlighted on the tile, never prose. The Home session is redrawing the card to that rule. <b>Added at 15:35:</b> decision 54, the phone header's hidden menus.</p>
         </div>
 
         <div class="grid3" style="margin-top:16px">
@@ -625,6 +626,8 @@ const DECISIONS = [
     opts:['Floor entries only','Every sheet on the phone'], rec:0 },
   { n:53, id:'d53', title:'Production · Delay reason', q:'Capture one reason chip when a tranche is received late, so the Karigars analytics donut is real; or drop the donut.',
     opts:['Capture one reason chip','Drop the donut'], rec:0 },
+  { n:54, id:'d54', title:'Phone header · no hidden menus', q:'Your concern of 15:35: the sideways rails in the phone header (the lists bar on the grid, the sub-menu scroller on other modules) run past the screen, so three to five items show and the rest need a scroll or a tap every time. Proposed rule: on the phone nothing in the header scrolls sideways except the user’s own applied filter chips; a menu is either fully visible (four items or fewer) or one tap away as a full-width sheet that lists every item with its count. On the grid the lists bar becomes one chip (“Lehenga · 15 designs ▾”) at the start of the chip row; on every module the page head carries the sub-menu name with a chevron that opens the sheet. Compare frames are being drawn in Catalogue · sell flow › Calmer header.',
+    opts:['Rule as proposed: visible or one tap to a full sheet','Keep the rails, add a labelled “All lists” button','Other (note)'], rec:0 },
 ];
 const state = {};   // id -> {choice, parts, note}
 let db = null, user = null, saveTimer = {}, writable = true;
