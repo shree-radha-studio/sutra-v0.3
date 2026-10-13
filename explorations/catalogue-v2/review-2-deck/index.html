@@ -184,7 +184,7 @@ dialog.lb .cap{color:#FAF7F2;font-size:13px;text-align:center;padding:10px 6px 0
     <div><div class="v num">4</div><div class="l">steps of the sell flow had no screen at all</div></div>
     <div><div class="v num">40 %+</div><div class="l">of the phone screen is chrome with a cart open</div></div>
     <div><div class="v num">2</div><div class="l">design languages on the board today</div></div>
-    <div><div class="v num">14</div><div class="l">decisions waiting on you, below</div></div>
+    <div><div class="v num">38</div><div class="l">decisions waiting on you, below (14 on the template and the sell flow, 24 from the module reviews)</div></div>
   </div>
 
   <div class="body">
@@ -196,6 +196,7 @@ dialog.lb .cap{color:#FAF7F2;font-size:13px;text-align:center;padding:10px 6px 0
       <li><a href="#priorities"><span class="n">5</span>Priorities</a></li>
       <li><a href="#decisions"><span class="n">6</span>Your decisions</a></li>
       <li><a href="#next"><span class="n">7</span>What happens next</a></li>
+      <li><a href="#round2"><span class="n">8</span>Round 2 · 15:00</a></li>
     </ol></nav>
 
     <main>
@@ -458,7 +459,7 @@ dialog.lb .cap{color:#FAF7F2;font-size:13px;text-align:center;padding:10px 6px 0
       <!-- 6 · decisions -->
       <section id="decisions">
         <div class="sec-head"><span class="n">6</span><h2>Your decisions</h2></div>
-        <p class="lede">Answer one by one; each answer starts a session. Pick an option, add a note if the answer is "yes, but". The recommended option is marked.</p>
+        <p class="lede">Answer one by one; each answer starts a session. Pick an option, add a note if the answer is "yes, but". The recommended option is marked. At 15:00 the lead answered 1 to 14 provisionally (section 8) so the team could draw compare pairs; your answer here overturns the lead's. Decisions 15 to 53 come from the CRM, Studio and Production reviews of the same afternoon.</p>
         <div class="dprog"><span id="dcount">0 of 14 answered</span><div class="bar"><i id="dbar"></i></div><span id="dsave" class="faint"></span></div>
         <div id="dnotice" class="notice" hidden>Answers are saved in this browser only on this device. Sign in as the owner to have them reach the session.</div>
         <div id="decisions-list"></div>
@@ -480,6 +481,62 @@ dialog.lb .cap{color:#FAF7F2;font-size:13px;text-align:center;padding:10px 6px 0
           </table>
         </div>
         <p class="muted" style="font-size:13.5px;margin-top:14px;max-width:72ch">Sign-off follows the board's own rule: finals appended, draft registrations removed, nothing reordered. The branch, the plan file and the draft PR carry the record.</p>
+      </section>
+
+      <!-- 8 · round 2 -->
+      <section id="round2">
+        <div class="sec-head"><span class="n">8</span><h2>Round 2 · 13 Oct, 15:00 · the team's second pass</h2></div>
+        <p class="lede">Orchestration moved to a new lead session at 14:52. Your words that afternoon set the rules: everything on the board is a draft, treat it so and give final recommendations; no sweep across screens before the core screens are final; the rectangular, ruled boxes are liked, the structured drafts feel crowded. So every decision below was answered provisionally by the lead, and each answer was drawn as one compare pair beside the current frames, captioned "provisional, pending decision n". Nothing entered finals.jsx or final.jsx. Your answers in section 6 overturn any of these.</p>
+
+        <div class="card" style="margin-top:22px">
+          <h3>The lead's provisional answers to 1 to 14</h3>
+          <div class="tbl" style="margin-top:12px;background:transparent;border:0">
+            <table>
+              <thead><tr><th style="width:40px">#</th><th>Answer</th><th>Drawn as</th></tr></thead>
+              <tbody>
+                <tr><td class="num">1</td><td>Three header rows everywhere, two inside the catalogue grid</td><td>The three "Calmer grid header" frames; the shared header untouched</td></tr>
+                <tr><td class="num">2</td><td>Island per role</td><td>Grid with the sale executive's island (Home · Catalogue · CRM · More, the orb)</td></tr>
+                <tr><td class="num">3</td><td>Six header buttons; Production regrouped; search never below 180 px</td><td>One Production frame with the six groups, Orders open, search at 196</td></tr>
+                <tr><td class="num">4</td><td>More than four fields takes the main area</td><td>New PO first; New material moves to the Hub</td></tr>
+                <tr><td class="num">5</td><td>One language, two densities; Desk means ruled and boxed with more air (44 px rows, six columns, two control rows, no third pane)</td><td>Sale orders cards and table, Desk density, more air; Dispatch Ready in the same density</td></tr>
+                <tr><td class="num">6</td><td>Approvals in one place</td><td>Sale order opened in the queue: state, "See in Approvals", Edit and Delete; no Approve on the page</td></tr>
+                <tr><td class="num">7</td><td>Keep Hold · charts behind a Graphs tab on the phone (the one place the lead diverged from the deck's recommendation, for your crowding steer) · admin only clears an over-the-line flag</td><td>Approvals card and the flagged variant</td></tr>
+                <tr><td class="num">8</td><td>Name, phone, city only</td><td>New customer sheet, three fields, the rest "later in the Hub"</td></tr>
+                <tr><td class="num">9</td><td>Submit sheet as drawn; nothing blocks; editable and deletable in the queue</td><td>Unchanged</td></tr>
+                <tr><td class="num">10</td><td>The Hub creates the product master, Production links</td><td>Hub new product with "Save and set recipe" and "Save and add photos"</td></tr>
+                <tr><td class="num">11</td><td>Upload centre slots as drawn</td><td>Unchanged</td></tr>
+                <tr><td class="num">12</td><td>Dry run first; admin-only commit</td><td>Unchanged</td></tr>
+                <tr><td class="num">13</td><td>Supplier invoice number and date first; accounts card folded</td><td>Purchase inward, folded</td></tr>
+                <tr><td class="num">14</td><td>Tranches collapsed to "default 30 / 30 / 40", open on tap</td><td>New production order, one tranche opened</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="muted" style="font-size:13px;margin-top:10px">Find them on the board by caption: every compare pair's caption ends "provisional, pending decision n". Ids are positional and shift as frames are added, so the captions are the stable handle.</p>
+        </div>
+
+        <div class="grid3" style="margin-top:16px">
+          <div class="card alt">
+            <h3>CRM review · decisions 15 to 22</h3>
+            <p class="muted" style="font-size:13.5px;margin-top:8px">The shape holds and every BRD line has a frame. Crowded: five header rows on the phone, four control rows on three web screens against a budget of two. Not picture-first on the phone. Duplicates to fold: board vs Today, map vs Bills vs Customers, pane vs composer. Missing: the sale executive's no-₹ variants, a dictated note after a call, the WhatsApp channel call. One exemplar drawn: the Follow-ups opening screen.</p>
+            <p style="margin-top:10px;font-size:13px"><a href="https://github.com/shree-radha-studio/sutra-v0.3/blob/claude/kind-goldberg-txzrb5/explorations/catalogue-v2/plans/review-2-crm.md">plans/review-2-crm.md</a></p>
+          </div>
+          <div class="card alt">
+            <h3>Studio review · decisions 30 to 36</h3>
+            <p class="muted" style="font-size:13.5px;margin-top:8px">The BRD is covered and nothing invented beyond it bar three small things. The terminal is the best screen and the one that breaks the language (deep space, three-colour thread, glows): name it the exception or retreat. Controls win the terminal; the header overflows at seven buttons. One exemplar drawn: the terminal in Sutra's own language, so decision 30 is a picture.</p>
+            <p style="margin-top:10px;font-size:13px"><a href="https://github.com/shree-radha-studio/sutra-v0.3/blob/claude/kind-goldberg-txzrb5/explorations/catalogue-v2/plans/review-2-studio.md">plans/review-2-studio.md</a></p>
+          </div>
+          <div class="card alt">
+            <h3>Production review · decisions 45 to 53</h3>
+            <p class="muted" style="font-size:13.5px;margin-top:8px">Complete against the BRD; the lifecycle terminal and the floor phone are the best desk-and-floor pair on the board. Over-drawn: 93 screens where about 60 carry the product; nine frames to retire. Crowding sits in the toolbars and the Overview, not the pages. Colour is spent on status. One exemplar drawn: the Overview with five tiles and one Suggestions list.</p>
+            <p style="margin-top:10px;font-size:13px"><a href="https://github.com/shree-radha-studio/sutra-v0.3/blob/claude/kind-goldberg-txzrb5/explorations/catalogue-v2/plans/review-2-production.md">plans/review-2-production.md</a></p>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:16px">
+          <h3>For Shrey, the architect</h3>
+          <p class="muted" style="font-size:13.5px;margin-top:8px;max-width:72ch">A pack built from the drawings, not a technical design: the screen flows with every frame id, a flow map with thumbnails that deep-link into the board, what each screen reads and does, the role and money matrix, and the open questions that gate architecture. Hand him the board link, the front-end pack and this folder.</p>
+          <p style="margin-top:10px;font-size:13px"><a href="https://github.com/shree-radha-studio/sutra-v0.3/tree/claude/kind-goldberg-txzrb5/design/architect-pack">design/architect-pack/</a> · start with README.md, then flows.html, then open-questions.md</p>
+        </div>
       </section>
     </main>
   </div>
@@ -520,6 +577,54 @@ const DECISIONS = [
     opts:['Yes, fold and reorder','Keep every field open'], rec:0, see:['img/production-nw-6.jpg'] },
   { id:'d14', title:'New production order tranches', q:'Tranches collapsed to “default 30 / 30 / 40” per process, opened on tap; the reason chips move under the head.',
     opts:['Collapse, open on tap','Keep the editor open'], rec:0, see:['img/production-nw-22.jpg'] },
+  { n:15, id:'d15', title:'CRM · Follow-ups opening screen', q:'Phone opens on the Today tab (every action across lists, oldest first) with the Journey board one tab away; web opens on the board. Or both open on the board, as drawn.',
+    opts:['Today on the phone, board on web','Board on both'], rec:0 },
+  { n:16, id:'d16', title:'CRM · Payments tabs', q:'Journey map and Broker / agency only, with a group-by chip (stage · customer) on the map; the Bills and Customers tabs leave. Or keep the four tabs.',
+    opts:['Two tabs and group-by','Keep four tabs'], rec:0 },
+  { n:17, id:'d17', title:'CRM · Heat and score colour', q:'Hot / Warm / Cold as a word in an outlined tag and the score ring in ink, colour only when a score is failing. Or the three-hue dots and rings as drawn.',
+    opts:['Words and ink; colour for danger and warn only','Three-hue dots and rings as drawn'], rec:0 },
+  { n:18, id:'d18', title:'CRM · Journeys on the phone', q:'Read-only map only; step settings, new journey, test run, add step and publish leave the phone. Or keep every web state on the phone.',
+    opts:['Read-only on the phone','Every web state on the phone'], rec:0 },
+  { n:19, id:'d19', title:'CRM · The sale executive’s view', q:'Draw the no-₹ variants beside the manager’s: the executive sees catalogue prices and the packet value, never FY billing, credit line, open book or bill amounts. Or one drawing with the note "₹ for manager roles".',
+    opts:['Draw them','One drawing with a note'], rec:0 },
+  { n:20, id:'d20', title:'CRM · RED', q:'A stage and list inside Payments owned by the admin, with Escalate raising the Home › Approvals card. Or RED itself as an approval item on Home.',
+    opts:['Stage in Payments; Escalate is the approval','RED as an approval item on Home'], rec:0 },
+  { n:21, id:'d21', title:'CRM · Dossier on the phone', q:'Info · Packets · Orders only on the phone; Invoices & payments, Shipments, Returns & credit notes and Growth are web only. Or all seven tabs on the phone.',
+    opts:['Three on the phone','All seven on the phone'], rec:0 },
+  { n:22, id:'d22', title:'CRM · WhatsApp channel', q:'The WhatsApp Business API (automated journey steps, approved templates, delivery and read ticks; template approval and a per-message cost) or the phone’s own WhatsApp through the share sheet (no automation, no ticks). Recommended: the API for the Payments journey and the packet’s delivery state; until it is live, the phone’s WhatsApp and a "handed to WhatsApp" state.',
+    opts:['API, phone WhatsApp until it is live','Phone WhatsApp only','API from day one'], rec:0 },
+  { n:30, id:'d30', title:'Studio · The Stitch window', q:'The terminal is drawn on deep-space black with a pink-blue-orange thread and glows. Keep it everywhere Stitch appears; or keep the dark stage and chat inside the terminal only as Studio’s one named exception (thread as a 2 px mark, glows only while Stitch draws, nothing of it elsewhere); or retreat to sand and espresso. Compare the drawn terminal with the exemplar in the house language.',
+    opts:['Dark inside the terminal only, as the named exception','Keep as drawn everywhere','Sand and espresso like every other screen'], rec:0 },
+  { n:31, id:'d31', title:'Studio · The header', q:'Seven sub-menu buttons collapse the search on every frame; decision 3 caps the row at six.',
+    opts:['Memory ▾ holds Memory and Settings','Photoshoots and Upload centre move to a Pictures module','Keep seven, accept the collapsed search'], rec:0 },
+  { n:32, id:'d32', title:'Studio · The phone’s scope', q:'Everything as drawn, all thirteen phone frames final; or the phone as the review companion in v1 (chat with canvas cards, the full canvas, swipe approval, History, Moodboard, Save as sample); or review and approve only, no chat.',
+    opts:['Review companion in v1','Everything as drawn','Review and approve only'], rec:0 },
+  { n:33, id:'d33', title:'Studio · Picture or controls in the terminal', q:'Three panes always open, the picture 520 px of 1280. Or the chat column collapses to its spine when a set lands, the right pane opens only on a pick, the tuner slides over the pane. Or the chat becomes a bottom bar under the stage.',
+    opts:['Chat to spine, pane on pick, tuner over the pane','As drawn','Chat as a bottom bar'], rec:0 },
+  { n:34, id:'d34', title:'Studio · Names', q:'The BRD companion calls a session a "track"; the drawings call the category the track and the session a thread. Keep the drawn names and correct the BRD, or rename the drawings to the BRD. Every Studio caption changes with the answer.',
+    opts:['Track = category, thread = session; fix the BRD','Rename the drawings to the BRD'], rec:0 },
+  { n:35, id:'d35', title:'Studio · The designer’s island', q:'Decision 2 gives each role its modules; Studio sits under More on every phone frame today.',
+    opts:['Design chair gets Home · Studio · Catalogue · More','Studio stays under More for everyone'], rec:0 },
+  { n:36, id:'d36', title:'Studio · Save as sample and the number', q:'Create sample mints S-0413 at once and the thread’s Archive is the only shelf, as drawn; or a "Stitch drafts" shelf before Samples, which adds a sub-menu and a state to every row.',
+    opts:['S-number at once, Archive is the shelf','A Stitch drafts shelf'], rec:0 },
+  { n:45, id:'d45', title:'Production · Orders default view on web', q:'List (the manager’s book with the lifecycle pane), cards one click away; or cards first as drawn.',
+    opts:['List first','Cards first'], rec:0 },
+  { n:46, id:'d46', title:'Production · Job card views', q:'Three (Cards · Table · Calendar), Swimlanes and Gantt under Later; or four with the Gantt for drag-to-reschedule; or all five as the 8 Sep brief asked.',
+    opts:['Three','Four, with the Gantt','All five'], rec:0 },
+  { n:47, id:'d47', title:'Production · Job cards on the phone', q:'List, filter sheet and the opened card only; retire phone swimlanes, timeline and calendar. Or keep them.',
+    opts:['List, filter, opened card only','Keep them'], rec:0 },
+  { n:48, id:'d48', title:'Production · Scan a job', q:'Scan is a way in: the camera lands on the job page and the separate scan page retires. Or keep a separate scan page.',
+    opts:['Scan lands on the job page','Keep a separate scan page'], rec:0 },
+  { n:49, id:'d49', title:'Production · Overview', q:'Five tiles and one ruled Suggestions list with a reason column; or seven tiles and four strips as drawn. An exemplar of the five-tile Overview is on the board.',
+    opts:['Five tiles and one Suggestions list','Seven tiles and four strips'], rec:0 },
+  { n:50, id:'d50', title:'Production · Costing', q:'A ruled table (photo beside the number, cost, margin, price, flag word) with the breakdown pane; default margins in a Settings sheet. Or cards as drawn with margins on the toolbar.',
+    opts:['Ruled table with the breakdown pane','Cards as drawn'], rec:0 },
+  { n:51, id:'d51', title:'Production · Karigar app scope', q:'Record pieces, my jobs, hand-over to another karigar, verified state; nothing else and no ₹. Or record pieces only. Or no karigar app in phase 1.',
+    opts:['Pieces, my jobs, hand-over, verified; no ₹','Record pieces only','No karigar app in phase 1'], rec:0 },
+  { n:52, id:'d52', title:'Production · What the phone creates', q:'Floor entries only (issue, receive, finished-goods receive, dye receive, sample move, inward capture); new karigar, new cut order, bulk issue and sample → product are desk only. Or keep every sheet on the phone.',
+    opts:['Floor entries only','Every sheet on the phone'], rec:0 },
+  { n:53, id:'d53', title:'Production · Delay reason', q:'Capture one reason chip when a tranche is received late, so the Karigars analytics donut is real; or drop the donut.',
+    opts:['Capture one reason chip','Drop the donut'], rec:0 },
 ];
 const state = {};   // id -> {choice, parts, note}
 let db = null, user = null, saveTimer = {}, writable = true;
@@ -536,7 +641,7 @@ function render(){
     const s = state[d.id] || {};
     const el = document.createElement('article'); el.className = 'dec' + (answered(d) ? ' answered' : ''); el.id = d.id;
     const groups = d.parts ? d.parts : [{k:null, l:null, opts:d.opts, rec:d.rec}];
-    let html = '<div class="id num">' + (i+1) + '</div><div><h3>' + d.title + '</h3><p class="q">' + d.q + '</p>';
+    let html = '<div class="id num">' + (d.n || (i+1)) + '</div><div><h3>' + d.title + '</h3><p class="q">' + d.q + '</p>';
     groups.forEach(g => {
       html += '<div class="part">' + (g.l ? '<div class="pl">' + g.l + '</div>' : '') + '<div class="opts" role="radiogroup">';
       g.opts.forEach((o, j) => {
