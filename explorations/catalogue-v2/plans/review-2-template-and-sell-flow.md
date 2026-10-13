@@ -116,7 +116,7 @@ structured drafts (n-24…n-31, nw-24…nw-28).
 | Upload a product | None. The salesperson view has a "Media" button (f-8 recipe & media, `final.jsx:261` "Media centre · Upload"); Process setting step 1 says "pick or add a product master" (nw-15); the Hub, where masters are created (M:5, M:119), has no screen. | **Gap, P0.** Drawn: Hub › New product (web form, phone sheet), Upload centre (per-colour checklist of F:66–71, the no-photo queue of M:296), xlsx Import (M:103–106). |
 | Create a customer | A "New customer" button on Carts (f-12, w-7) with no sheet behind it. B:82: required fields are name, contact, city only. | **Gap, P0.** Drawn: New cart sheet (recent customers · new customer · sale book) and New customer sheet (three required fields, the rest folded). |
 | Open a cart, pick, cart card | f-1, f-12, f-13, w-1, w-7. Single tap activates, double tap opens (DU:138). | Keep. The best part of the product. |
-| Submit for approval | A button (f-12, f-13, w-7). No summary, no due days (F:12: default 20, adjustable at noting), no priority (B:90: 1–5, default 3), no credit-line check (F:17: block and escalate to admin in red). | **Gap, P0.** Drawn: Submit sheet (pcs · ₹ · due days · priority · credit bar · note), the over-the-line state in words with "Send to admin", and the sent state with the SO number. |
+| Submit for approval | A button (f-12, f-13, w-7). No summary, no due days (F:12: default 20, adjustable at noting), no priority (B:90: 1–5, default 3), no note. F:17 asks for a red block over the credit line; the owner overruled it on 13 Oct: submission is never blocked (the people submitting are blue-collar), a submitted order can be edited or deleted by its salesperson while it sits in the queue, and every reason not to approve is a flag on the approver's side. | **Gap, P0.** Drawn: Submit sheet (pcs · ₹ · due days · priority · note, nothing that blocks), the sent state with the SO number, the order in the queue with Edit and Delete, the editing state, the delete confirm in words. |
 | Approval | None. F:46–56 lists the card's facts; the owner's Miro reference adds order lines with qty steppers, the note, order history with order / invoice / return links, and the two time-series graphs. The SO page's "Approve" (f-18, w-10) is a shortcut without the facts. | **Gap, P0.** Drawn: Home › Approvals queue, the sale-order card (standing tiles, credit bar, appetite, lines with steppers and stock, note, history, two charts, Reject · Hold · Approve, "for inspection → owner"), the over-the-line variant, the sale-return card. Rule: approval happens in one place; the SO page shows the state and links there. Decision 6. |
 | Ready, packing | Dispatch structured drafts n-27, nw-24 (Ready), n-28/29, nw-25 (Pending), n-30/31, nw-28 (Packing). | Keep the structured set as the Desk density of one language (§1.6). Finish Billed · Out of stock · Stock · Return in the same set; retire the 8 Sep band (R1 clean-up 7). |
 | Sale order history | Sale orders tabs Raised · Approved · Dispatched · Cancelled · Returns (f-15, w-8). | Keep. R1 decision 4 (cards only on the phone) still open. |
@@ -141,7 +141,7 @@ What the Miro frame shows and where it lands on the draft (Home › Approvals ·
 | Orders vs payments graph; broker's billing vs payments | F:55–56 | Two `LineG` charts, accent vs ok |
 | Reject · Approve | F:12 | Reject · Hold · Approve; "Mark for inspection → owner" (F:46 escalation) |
 | Payment overdue for the account | F:53 | Overdue tile in danger tone |
-| Credit line | F:17 | Credit bar: open · this order · free; over-the-line variant blocks with words and sends to admin |
+| Credit line | F:17, owner 13 Oct | Credit bar as a fact, and an "over the credit line" flag in the queue and on the card; never a block at submission. Flagged orders sort first; the card opens with a "Look twice" strip of the flags in words |
 
 Not in the reference, added from the BRD: current order amount and pcs (F:51–52), overdue (F:53), the credit line (F:17),
 the escalation (F:46). Not in either, assumed: a Hold action (the BRD has approve and reject only); the drafter's
@@ -195,7 +195,7 @@ eye finds the action); money omitted server-side for roles without the right (M:
 
 **P0 · sell the flow (this sprint).** Without these the demo has holes.
 1. Home › Approvals: queue, sale-order card, over-the-line variant, sale-return card. *Drawn.*
-2. Catalogue: new cart, new customer, submit with the credit check, sent state. *Drawn.*
+2. Catalogue: new cart, new customer, submit, sent state, the order in the queue with Edit and Delete. *Drawn.*
 3. Hub: new product master, upload centre with the per-colour checklist and the no-photo queue, xlsx import. *Drawn.*
 4. Home landing per role (what the fresher sees first). *Drawn (sale executive).*
 5. The phone header: three rows everywhere, two inside the catalogue grid. *Drawn for compare.*
@@ -234,10 +234,11 @@ Answer by number. Each one changes what the next session draws or retires. The b
 6. **Approvals in one place.** Every approval is a card on Home › Approvals with the BRD's facts; the sale order page shows
    the state and a link, its own Approve button goes?
 7. **The approval card itself.** Keep Hold as a third action? Keep the two charts on the phone card (long scroll) or move them
-   behind a "Graphs" tab? Who may approve an over-the-line order: admin only (F:17) or sub-admin too (F:29)?
+   behind a "Graphs" tab? Who may clear an "over the credit line" flag in the queue: admin only (F:17) or sub-admin too (F:29)?
 8. **New customer from the cart.** Name, phone, city only (B:82); broker, agency, GST and credit days later in the Hub?
-9. **Submit.** Due days as chips 10 · 20 · 30 · custom (default 20, F:12) and priority 1–5 (default 3, B:90) on the submit
-   sheet; the note for approval here too?
+9. **Submit.** Due days as chips 10 · 20 · 30 · custom (default 20, F:12), priority 1–5 (default 3, B:90) and the note for
+   approval on the submit sheet; no credit check and nothing that blocks (owner, 13 Oct); Edit and Delete on the order while it
+   is in the queue?
 10. **Product master.** Created in the Hub (M:5), with "Save and set recipe" opening Production › Process setting pre-filled,
     and "Save and add photos" opening the Upload centre; price TBD until costing (F:103)? Or created inside Process setting
     step 1 as the Production team does today?
@@ -275,4 +276,4 @@ Sign-off follows `references/board.md`: finals appended, drafts registration rem
 Appended to `design/during-ui-business-requirements.md` under 13 Oct: the user profile; the two densities; the header
 budgets (three rows phone, six buttons web, two control rows); the forms rule (typed numbers are the form; more than four
 fields takes the main area); Hold as an approval action and the escalation path; new customer's three required fields;
-submit sheet contents; the upload-centre slot list and the no-photo queue; import admin-only commit.
+submit sheet contents and the no-block rule; the upload-centre slot list and the no-photo queue; import admin-only commit.

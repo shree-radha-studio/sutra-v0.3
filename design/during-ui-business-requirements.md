@@ -162,3 +162,9 @@ the screen it came from so the BRD can absorb it later. Newest at the bottom.
   (model shoot) · side profiles × 4 · AI shoot · real-world shoot · video (F:66–71); the primary image is settable (F:21);
   the "designs with no photo yet" count opens a capture queue on the phone (M:296).
 - xlsx import: dry run first, commit as a second act by admin only (M:106); eight masters, products & SKUs first.
+- Owner, 13 Oct (overrules F:17's "blocked and escalated to admin with a red blocker theme" at submission): a sale order is
+  never blocked at submission, because the people submitting are blue-collar salespeople. A submitted order can be edited or
+  deleted by its salesperson while it is in the approval queue. Every reason not to approve (over the credit line, overdue
+  bills, high return ratio, new customer, edited after submit) is a flag on the approver's side, in words, and flagged orders
+  sort first in the queue. Who clears an over-the-line flag (admin only, or sub-admin too) is open. From the submit sheet and
+  the approvals card.
