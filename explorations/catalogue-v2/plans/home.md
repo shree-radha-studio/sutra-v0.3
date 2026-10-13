@@ -99,7 +99,7 @@ Format: purpose · who · web right pane · phone sheets · money rule. Frame id
 
 ## Open questions
 
-1. Who approves an order raised by the approver himself? The board's logged-in user is RM (Rohan Mehta) and SO-3455 is
+1. Who approves an order raised by the approver himself? The board's logged-in user is RM (Rohan Mehta) and SO-3456 is
    raised by Rohan Mehta.
 2. Does "Hold" keep the order in the queue (flagged "On hold") or move it to a Held list? The BRD only says an order
    stands "Holded" past its due days until the customer approves again (F:12 area).
@@ -146,3 +146,19 @@ Format: purpose · who · web right pane · phone sheets · money rule. Frame id
 
 New module file. Nothing in `design/`, `finals.jsx` or other modules was touched. Verified with
 `board-check.sh home` (22 frames, console clean) and `contact-sheet.sh --s 0.9 home`.
+
+## Round 2 (13 Oct, review-2 first job)
+
+- One story end to end: the card and the queue's first row are now **SO-3456 · Ramleela Fashion · In-cabin · raised by
+  Rohan Mehta · 13/10/26 · 10 pcs · 4 designs · ₹47,950**, the order the sell flow submitted. Lines: 2798 Sky × 2,
+  Purple × 1 at ₹4,995; 6002 Lilac × 1 at ₹4,995; 3661 Peach × 2 at ₹5,995; 1457 Firozi × 3, Bottle × 1 at ₹3,995;
+  note "2018 ke red ka stock check karna hai". Within the line (n-3, nw-2): open ₹64,000. Over the line (n-4, n-5, nw-3):
+  line ₹1,20,000, open ₹82,000, this order ₹47,950, over by ₹9,950. "Edited after submit" reads "qty of 2798 Sky 4 → 2".
+  The queue's second row (SO-3451) now says over by ₹14,200 so two rows do not share one figure.
+- Web nw-2 / nw-3: the Look twice band moved into the card column, above the card head, card width. The queue keeps
+  its own flag chips.
+- Appetite bar (web pane, phone card): High ink, Mid ink2, Low line2, with the legend. No blue.
+- Kept: Hold, admin and sub-admin variants, "Mark for inspection → owner". Dark twins checked at --w 2700.
+- Frames: n-3, n-4, n-5 (phone); nw-2, nw-3 (web). Console clean.
+- Assumed: order date 13/10/26 (the sell flow's), stock figures for 1457 (9 Firozi, 6 Bottle) invented; 3661 Peach keeps
+  0 in stock so the "8 of 10 in stock" pill stays.
