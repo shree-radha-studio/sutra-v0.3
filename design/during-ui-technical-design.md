@@ -113,3 +113,18 @@ Full hand-off is in `design-system/guidelines/chips-filters-sorts.md` section 5.
   a running order's inputs; the recipe frozen on an order must allow an input swap without changing the recipe version.
 - Sample reading metrics per day (views, cart adds, waitlist orders) for 15 days after deployment; the suggestion
   needs a growth threshold constant.
+
+## 13 Oct 2026 · Review 2 (plans/review-2-template-and-sell-flow.md)
+
+- The web shell is one component (`WebShell3`); Production, Studio and CRM shells wrap it. Only the 8 Sep Dispatch band
+  (`DShell`) re-implements chrome and is slated for retirement. A density prop (cabin / desk) on the content primitives, not on
+  the shell, is the cheapest way to carry the two-density rule into code.
+- Credit-line check at submit needs the customer's open book and credit line server-side at cart time (F:17), returned with the
+  cart totals, so the sheet can show open · this order · free before the salesperson taps Send.
+- The approvals card reads: customer standing (payment score, customer score, GR ratio, FY billing, overdue, open bills),
+  appetite split, credit line, order lines with stock per colour, the last three orders with document links, two 12-month
+  series (customer orders vs payments, agency orders vs payments). One payload per approval kind (F:46), resolved server-side
+  for the approver's role.
+- Upload centre needs per-colour slot state (primary, side 1–4, AI shoot, real shoot, video) on the SKU, a primary flag that
+  the catalogue reads, and a queue query "designs with no photo yet" ordered by demand score.
+- Import: a dry-run endpoint returning per-row, per-field errors before a separate commit (M:106).

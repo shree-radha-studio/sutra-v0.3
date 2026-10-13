@@ -137,3 +137,28 @@ the screen it came from so the BRD can absorb it later. Newest at the bottom.
   BRD F:85.
 - Cart chip: a single tap activates the cart (catalogue picks go into it); a double tap opens the cart card.
 - Analytics under Sale orders: sale managers and above only; hidden for sale executives.
+
+## 13 Oct 2026 · Review 2: the template, the sell flow, the entry forms (plans/review-2-template-and-sell-flow.md)
+
+- Users (owner): about twenty thousand salaried Indian employees over time; accountants with two or three years and fresh
+  data-analytics engineers from tier-2 and tier-3 colleges, plus the 30 % semi-skilled from 6 Oct. The first two groups know
+  Tally, Busy and Excel: ruled tables, Enter to the next field, numbers first. The owner's read of the board: the flow is right
+  but "a bit crowded".
+- Proposed, pending the owner: one design language with two densities on the same tokens and chrome, Cabin (picture-led,
+  rounded) and Desk (ruled rows, counts in the display face); the structured Dispatch look is the Desk density, not a second
+  language. Status is a word in an outlined tag; colour only for danger and warn.
+- Proposed budgets: phone header three rows (two inside the catalogue grid); web header at most six sub-menu buttons and a
+  search field never below 180 px; two control rows between the header and the first content row.
+- Proposed form rule: the typed numbers are the form, everything else pre-filled, picked or scanned; a form with more than
+  four fields takes the main area and the right pane helps (supplier snapshot, stock, checklist).
+- Approvals happen in one place, Home › Approvals, with the facts of F:46–56 on the card; the sale order page shows the
+  state and links there. Hold is drawn as a third action beside Reject and Approve (not in the BRD). An order over the credit
+  line (F:17) is blocked at submit in words and goes to admin, not to accounts.
+- New customer from a cart needs name, phone and city only (B:82); broker, agency, GST and credit days can follow in the Hub.
+- The submit sheet carries pcs, ₹, due days (chips 10 · 20 · 30 · custom, default 20 per F:12), priority 1–5 (default 3 per
+  B:90), the credit bar and the note for approval.
+- Product masters are created in the Hub (M:5) with "Save and set recipe" (opens Process setting pre-filled) and "Save and
+  add photos" (opens the Upload centre); price shows TBD until costing (F:103). Upload-centre slots per colour: primary
+  (model shoot) · side profiles × 4 · AI shoot · real-world shoot · video (F:66–71); the primary image is settable (F:21);
+  the "designs with no photo yet" count opens a capture queue on the phone (M:296).
+- xlsx import: dry run first, commit as a second act by admin only (M:106); eight masters, products & SKUs first.
