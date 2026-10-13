@@ -328,6 +328,45 @@ const CsRoleIsland = ({ T, role = 'Sale executive', active = 'Catalogue', voice 
 </div>;
 /* P11 · island for a sale executive on the catalogue grid (two-row header, decision 1): Home · Catalogue · CRM · More, bigger targets, no Dispatch or Production */
 const ScreenCsRoleIsland = ({ T }) => <CsGrid2Frame T={T} dock={<><T.CartStrip cart="A" /><CsRoleIsland T={T} /></>} />;
+/* ── Decision 54 (provisional): nothing in the phone header scrolls sideways except the user's own filter chips. A menu is fully visible
+   (four items or fewer) or one tap away as a full-width sheet listing every item with its count. ── */
+const CS_LIST_COUNTS = { 'All': 126, 'Samples': 9, 'Materials': 14, 'Lehenga': 15, 'Saree': 31, 'Delhi picks': 12, 'Wedding ’26': 8 };
+/* one chip row: the current list as a chip with a chevron and its count, then the applied filter chips with × (they may scroll; they are the user's own) */
+const CsListChipRow = ({ T, list = 'Lehenga' }) => <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 12px 0' }}>
+  <span className="press" style={{ flex: 'none', display: 'inline-flex', alignItems: 'center', gap: 6, height: 36, padding: '0 10px 0 14px', borderRadius: 999, background: T.ink, color: T.bg, fontFamily: T.fontUI, fontSize: 13.5, fontWeight: 600, whiteSpace: 'nowrap' }}>{list}<span style={{ fontWeight: 400, opacity: .75 }}>· {CS_LIST_COUNTS[list]} designs</span><Ic name="chevron-down" size={15} sw={2} /></span>
+  <div style={{ flex: 1, minWidth: 0, overflow: 'hidden', WebkitMaskImage: 'linear-gradient(90deg, #000 calc(100% - 28px), transparent)', maskImage: 'linear-gradient(90deg, #000 calc(100% - 28px), transparent)' }}><div style={{ display: 'flex', alignItems: 'center', gap: 6, width: 'max-content' }}>{CS_QUICK.map(c => <T.Chip key={c} outline x>{c}</T.Chip>)}</div></div>
+</div>;
+const CsListGrid = ({ T, dock }) => frameF(T, <>
+  <CsHeader T={T}><CsListChipRow T={T} /></CsHeader>
+  <CsGridCards T={T} />
+</>, dock || <T.Dock active="Catalogue" cart="A" />);
+const ScreenCsListChip = ({ T }) => <CsListGrid T={T} />;
+/* a full-width 52 px row: name, count, a tick on the current one */
+const CsSheetRow = ({ T, label, count, on, custom, first }) => <div className="press" style={{ display: 'flex', alignItems: 'center', gap: 10, height: 52, boxSizing: 'border-box', padding: '0 4px', borderTop: first ? 0 : `1px solid ${T.line}` }}>
+  <span style={{ flex: 1, minWidth: 0, fontFamily: T.fontDisplay, fontSize: 19, fontWeight: on ? 600 : 500, fontStyle: custom ? 'italic' : 'normal', color: custom ? T.custom : T.ink, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{label}</span>
+  <span style={{ fontFamily: T.fontUI, fontSize: 13, color: T.ink3, fontVariantNumeric: 'tabular-nums' }}>{count}</span>
+  <span style={{ width: 24, height: 24, borderRadius: 12, background: on ? T.ink : 'transparent', color: T.bg, display: 'grid', placeItems: 'center', flex: 'none' }}>{on && <Ic name="check" size={14} sw={2.4} />}</span>
+</div>;
+function ScreenCsListSheet({ T }) {
+  const plain = LISTS.filter(([, k]) => k !== 'custom'), saved = LISTS.filter(([, k]) => k === 'custom');
+  return <div style={{ position: 'relative', height: '100%' }}><CsListGrid T={T} dock={<span />} />{scrimF(T)}
+    <Sheet T={T} h={650} title="Lists" foot={<T.Btn kind="secondary" icon="plus" style={{ width: '100%', height: 48 }}>New list</T.Btn>}>
+      {plain.map(([l], i) => <CsSheetRow key={l} T={T} label={l} count={CS_LIST_COUNTS[l]} on={l === 'Lehenga'} first={!i} />)}
+      <div style={{ fontFamily: T.fontUI, fontSize: 12, fontWeight: 600, color: T.ink2, margin: '14px 4px 2px' }}>Saved</div>
+      {saved.map(([l]) => <CsSheetRow key={l} T={T} label={l} count={CS_LIST_COUNTS[l]} custom />)}
+    </Sheet></div>;
+}
+/* the same pattern for a module's sub-menu: the page head is the dropper, the sheet lists every sub-menu with its count */
+function ScreenCsSubSheet({ T }) {
+  const list = [csOrder(), ...ORDERS_F.filter(x => x.status === 'Raised')];
+  return <div style={{ position: 'relative', height: '100%' }}>{frameF(T, <>
+    <div style={{ display: 'flex', alignItems: 'center', padding: '0 12px', height: 44, gap: 6 }}><Hit T={T} icon="chevron-left" size={40} /><span className="press" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: T.fontDisplay, fontSize: 22, fontWeight: 500, color: T.ink }}>Catalogue · Sale orders<Ic name="chevron-down" size={18} color={T.ink2} /></span></div>
+    <div style={{ padding: '12px 14px 120px', display: 'flex', flexDirection: 'column', gap: 10 }}>{list.map((x, i) => <CsSOCard key={x.no} T={T} x={x} first={i === 0} />)}</div>
+  </>, <T.Island active="Catalogue" />)}{scrimF(T)}
+    <Sheet T={T} h={330} title="Catalogue">
+      {[['Catalogue', 15], ['Carts', 3], ['Sale orders', 4]].map(([l, n], i) => <CsSheetRow key={l} T={T} label={l} count={n} on={l === 'Sale orders'} first={!i} />)}
+    </Sheet></div>;
+}
 const ScreenCsGrid2 = ({ T }) => <CsGrid2Frame T={T} />;
 const ScreenCsGrid2Swiped = ({ T }) => <CsGrid2Frame T={T} away />;
 
@@ -393,9 +432,9 @@ function WebCsEditing({ T }) {
     phone: [['Cart · submit for approval sheet', ScreenCsSubmit], ['Cart · sent for approval', ScreenCsSubmitted], ['Sale orders · my order in the queue, edit or delete', ScreenCsInQueue], ['Sale orders · editing SO-3456 as cart A', ScreenCsEditing], ['Sale orders · delete, in words', ScreenCsDeleteConfirm], ['Sale orders · opened, in the queue: state and the link to Approvals (compare final f-18)', ScreenCsOrderState], ['Sale orders · opened, in the queue · manager (flags, link to Approvals)', ScreenCsOrderStateMgr], ['Sale executive · queue list, RAISED and IN QUEUE, no flags', ScreenCsQueueList]],
     web: [['Cart · submit for approval in the pane', WebCsSubmit], ['Sale orders · my order in the queue, Edit and Delete in the pane', WebCsInQueue], ['Sale orders · editing SO-3456 as cart A', WebCsEditing], ['Sale orders · delete, in words', WebCsDelete], ['Sale orders · opened, in the queue: state and the link to Approvals (compare final f-18 twin)', WebCsOrderState], ['Sale orders · opened, in the queue · manager (flags, link to Approvals)', WebCsOrderStateMgr]] },
   { name: 'Calmer grid header', flow: 'three rows → two rows → two rows after the first swipe, compare with the final',
-    phone: [['Grid · three-row header (compare with final f-1)', ScreenCsGrid3], ['Grid · two-row header, lists scroll with the grid (compare with f-1)', ScreenCsGrid2], ['Grid · two-row header, after the first swipe', ScreenCsGrid2Swiped], ['Grid · island for a sale executive: Home · Catalogue · CRM · More (decision 2 exemplar)', ScreenCsRoleIsland]],
+    phone: [['Grid · three-row header (compare with final f-1)', ScreenCsGrid3], ['Grid · two-row header, lists scroll with the grid (compare with f-1)', ScreenCsGrid2], ['Grid · two-row header, after the first swipe', ScreenCsGrid2Swiped], ['Grid · island for a sale executive: Home · Catalogue · CRM · More (decision 2 exemplar)', ScreenCsRoleIsland], ['Grid · lists as one chip, no rail · provisional, pending decision 54', ScreenCsListChip], ['Grid · lists sheet · provisional, pending decision 54', ScreenCsListSheet], ['Sale orders · sub-menu sheet · provisional, pending decision 54', ScreenCsSubSheet]],
     web: [] },
 ] });
 
 Object.assign(window, { CS_RECENT, CS_NEW, CS_CUST, CS_NOTE, CS_TABS, CS_QUICK, CS_ROW_H, csTotals, csOrder, csLines, CsSearch, CsSeg, CsChoice, CsField, CsOptRow, CsCustRow, CsLabel, CsDesigns, CsCartChips, CsNewCartBody, CsStartBtn, CsNewCustBody, CsAddBtn, CsSubmitBody, CsSubmitFoot, CsInfoStrip, CsQueueStrip, CsQueueButtons, CsSentCard, CsMergedRow, CsFilterCount, CsHeader, CsCount, CsGridCards, CsGrid2Frame, CsOverCarts, CsWebCartsMain, CsPane, CsBack, CsWebShell,
-  ScreenCsNewCart, ScreenCsNewCustomer, ScreenCsSubmit, ScreenCsSubmitted, ScreenCsInQueue, ScreenCsEditing, ScreenCsDeleteConfirm, ScreenCsOrderState, ScreenCsOrderStateMgr, CsOrderStateScreen, ScreenCsQueueList, WebCsOrderState, WebCsOrderStateMgr, CsStateCard, CsFlags, CS_FLAGS, ScreenCsGrid3, ScreenCsGrid2, ScreenCsGrid2Swiped, ScreenCsRoleIsland, CsRoleIsland, CS_ROLE_NAV, WebCsNewCart, WebCsNewCustomer, WebCsSubmit, WebCsInQueue, WebCsDelete, WebCsEditing, CsQueuePill, CsSOCard });
+  ScreenCsNewCart, ScreenCsNewCustomer, ScreenCsSubmit, ScreenCsSubmitted, ScreenCsInQueue, ScreenCsEditing, ScreenCsDeleteConfirm, ScreenCsOrderState, ScreenCsOrderStateMgr, CsOrderStateScreen, ScreenCsQueueList, WebCsOrderState, WebCsOrderStateMgr, CsStateCard, CsFlags, CS_FLAGS, ScreenCsGrid3, ScreenCsGrid2, ScreenCsGrid2Swiped, ScreenCsRoleIsland, ScreenCsListChip, ScreenCsListSheet, ScreenCsSubSheet, CsListChipRow, CsSheetRow, CS_LIST_COUNTS, CsRoleIsland, CS_ROLE_NAV, WebCsNewCart, WebCsNewCustomer, WebCsSubmit, WebCsInQueue, WebCsDelete, WebCsEditing, CsQueuePill, CsSOCard });
