@@ -160,3 +160,25 @@ Fix with the next Dispatch pass (my files): phone header → shared header; web 
 5. **Dispatch pane 310**, per SCH §5.
 
 Board ids after the lead's merge (review branch): cards n-19 / nd-19, table nw-13 / nwd-13.
+
+---
+
+## 7. Exemplars drawn on the provisional answers (13 Oct, lead for the owner; all drafts, nothing in finals)
+
+Owner's scope rule: one exemplar pair per decision for compare, no sweep before the core screens are final.
+
+| Decision | File | Frames (ids on my branch with the file loaded; the review branch may shift them) | What it shows |
+|---|---|---|---|
+| D5 · Desk with air | `mod-catalogue-so-s.jsx` (revised) | n-19 / nw-15 on the review branch | Six columns on first view, 44 px rows, 24 gutters, 8 rows then a foot, two control rows, pane facts cut to three |
+| D3 · header of six | `mod-production-ds.jsx` | n-47 · nw-48 | Phone scroller of six groups; web header Purchase ▾ · Materials ▾ · Recipes · Orders ▾ · Samples · More ▾, Orders ▾ open with Job cards inside, search 196 |
+| D13 · inward | `mod-production-ds.jsx` | n-48 · nw-49 | Supplier invoice no and date first (box 1), received the only typed number, accounts folded to Freight · Discount · GST with More; phone has no money |
+| D14 · tranches | `mod-production-ds.jsx` | n-49 · nw-50 | Reason chips under the head, "30 / 30 / 40 · ends dd/mm" per process, Embroidery opened to three tranches; fields cut to four, the rest as meta |
+
+`mod-production-ds.jsx` needs one line in `modules.js`: production `files`, after `mod-production-web3.jsx` (the lead adds it).
+D4 (forms to the main area) has no separate exemplar: the inward and new-order frames are main-area forms with a helping
+pane; New PO, New material and New sample wait for the sweep.
+
+**Waits.** Dispatch phone onto the shared header and pane 310 (ruling 2, 5); the sale-executive Sale orders variant
+without flags (ruling 3); the Dispatch gaps of §4; the D4 moves of New PO, New material, New sample; folding §1 into the
+schema (the lead lands it). Content primaries in Desk frames are filled ink, so the active view tab stays the one maroon
+line; the owner may want the maroon on the form's submit instead.
