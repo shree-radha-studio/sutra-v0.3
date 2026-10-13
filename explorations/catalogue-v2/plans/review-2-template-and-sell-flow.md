@@ -230,7 +230,9 @@ Answer by number. Each one changes what the next session draws or retires. The b
    out of the pane; New material lives in the Hub with a quick door from the inward?
 5. **One language, two densities.** Cabin and Desk on the same tokens and chrome; the structured Dispatch look becomes the
    Desk density for Dispatch, Production tables, Pending books, Hub lists, Reports and the Approvals queue; status as outlined
-   words, colour for danger and warn only? (If no: pick one of the two looks for the whole product.)
+   words, colour for danger and warn only? (If no: pick one of the two looks for the whole product.) Compare: Sale orders in
+   the Desk density, catalogue page n-19 (cards) and nw-13 (table with the order pane), beside the finals f-15 and w-9;
+   the proposed schema §9 is `plans/desk-density.md` §1.
 6. **Approvals in one place.** Every approval is a card on Home › Approvals with the BRD's facts; the sale order page shows
    the state and a link, its own Approve button goes?
 7. **The approval card itself.** Keep Hold as a third action? Keep the two charts on the phone card (long scroll) or move them
@@ -255,6 +257,10 @@ Answer by number. Each one changes what the next session draws or retires. The b
 Each decision maps to one session that a lower-cost model can run from a brief; the briefs are queued as task cards after
 the owner answers, one per decision, so they start with one click. The judgment stays here: every session's screenshots
 come back to this review before anything is marked final.
+
+Sessions created 13 Oct, each on its own branch off the review branch: Hub masters (`…-hub`, Sonnet), Desk density
+(`…-desk`, Opus), Sell flow & phone shell (`…-sell`, Sonnet); Home & Approvals follows its draft. The lead merges their
+branches into the review branch after judging every screenshot.
 
 | Session | Needs | Does |
 |---|---|---|
