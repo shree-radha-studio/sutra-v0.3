@@ -163,7 +163,11 @@ Board ids after the lead's merge (review branch): cards n-19 / nd-19, table nw-1
 
 ---
 
-## 7. Exemplars drawn on the provisional answers (13 Oct, lead for the owner; all drafts, nothing in finals)
+## 7. Exemplars drawn on the provisional answers (13 Oct; all drafts, nothing in finals)
+
+Pictures for the owner to compare, not decisions applied: decisions 3, 4, 5, 13 and 14 are unanswered on the deck.
+Every caption ends "· provisional, pending decision n". The two Production screens are copies in my own file;
+`mod-production-web.jsx` is untouched.
 
 Owner's scope rule: one exemplar pair per decision for compare, no sweep before the core screens are final.
 

@@ -121,5 +121,5 @@ function WebSoSTable({ T }) {
 Object.assign(window, { SoSUp, SoSNumS, SoSTag, SoSIcon, SoSBtn, SoSThumb, SoSDesign, SOS_RAISED, SOS_TABS, SOS_LINES, SOS_COLS, SoSCard, ScreenSoSCards, SoSWebHead, SoSTable, SoSOrderPane, WebSoSTable });
 
 (window.NEW_DRAFT_MODULES = window.NEW_DRAFT_MODULES || []).push({ module: 'Catalogue · sale orders · structured', note: 'the Desk density for compare with f-15 / w-9: same chrome, ruled content, status as words (review 2 §1.6, 13 Oct)', subs: [
-  { name: 'Sale orders · Desk', flow: 'cards (phone) → table with the order pane (web)', phone: [['Sale orders · cards, Desk density (more air)', ScreenSoSCards]], web: [['Sale orders · table with the order pane, Desk density, more air · manager (flags)', WebSoSTable]] },
+  { name: 'Sale orders · Desk', flow: 'cards (phone) → table with the order pane (web)', phone: [['Sale orders · cards, Desk density (more air) · provisional, pending decision 5', ScreenSoSCards]], web: [['Sale orders · table with the order pane, Desk density, more air · manager (flags) · provisional, pending decision 5', WebSoSTable]] },
 ] });
