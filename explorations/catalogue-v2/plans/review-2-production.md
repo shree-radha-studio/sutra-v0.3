@@ -88,9 +88,9 @@ assign → issue → receive … → finished goods → Dispatch inward.
 | Toolbar: search · Urgency ▾ · Group ▾ · three chips · All filters · saved view | nw-30 | ★★★★ | Simplify | Overflows at 1280 (the saved-view chip clips). Group by and the saved view live in the drawer already; the row becomes search · Urgency ▾ · Ready to issue · Waiting on floor · Tranche due today · All filters ▾. |
 | All filters drawer with saved views, live count | nw-31, n-29 | ★★★★★ | Keep | The "lot of filtering and sorting views" of F:103 in one pane; the eight sorts of C:178 on the phone sheet. |
 | Swimlanes by journey state | nw-32, n-31 | ★★ | Later | Owner brief (8 Sep). Six columns of 140 px; the journey state is already the chip and the scope tab. On the phone two columns, 60 % empty. Decision 46, 47. |
-| Table (14 of 26 columns, pane collapsed) | nw-33 | ★★★★ | Simplify | The Tally user's view. Restyle to Desk (44 px rules, 11 px heads, status words); Export into the column menu. |
-| Gantt (today line, tranche marks, overdue tail) | nw-34, n-32 | ★★ | Later | Owner brief. Half the frame is empty bars; the calendar answers "when" with the pictures. Decision 46. |
-| Calendar of tranche and dye dates, day pane | nw-35, n-33 | ★★★ | Keep (web) / Cut (phone) | F:124's "calendar-project-management view", here for tranches and dye lots. On the phone the cells are blank; the Overview's Due today list does the job. |
+| Table (14 of 26 columns, pane collapsed) | nw-33 | ★★★★ | Simplify | The Tally user's view and already nearly Desk: 44 px rows, status as words, "to due −19" in danger. What remains is the 18 px card around it and the soft shadow; Export into the column menu. |
+| Gantt (today line, tranche marks, overdue tail, drag a bar end to move a tranche) | nw-34, n-32 | ★★★ | Later | Owner brief. Well drawn, and the only view where a tranche date moves by drag; but it repeats the calendar's "when" and the lifecycle's "how far". Keep it only if the owner wants drag-to-reschedule in phase 1. Decision 46. |
+| Calendar of tranche and dye dates, day pane with "Remind the karigars" | nw-35, n-33 | ★★★★ | Keep (web) / Cut (phone) | F:124's "calendar-project-management view", here for tranches and dye lots; the day pane is the manager's morning. On the phone the cells are blank; the Overview's Due today list does the job. |
 | Phone list (one job per row, the same chip budget) | n-28 | ★★★★★ | Simplify | First photo at 310 px under five rows of chrome; fold the sort row into the sheet (D1 lands three rows). |
 | Phone job opened (verification card for karigar-recorded pieces, inputs, colour-wise, history, tray) | n-30 | ★★★★★ | Simplify | The floor's page. The glass tray covers the Colour-wise table; give the body a 110 px foot. The title clips ("Embroidery · PO-…"): job number first. |
 
@@ -136,7 +136,7 @@ Production shows stock inline (catalogue, readiness pane, inputs table, This-job
 
 | Feature | Frames | ★ | Call | Why |
 |---|---|---|---|---|
-| Catalogue grid (swatch, name, shade, stock, last inward, Low / Out) sorted newest inward | nw-9, n-7 | ★★★★★ | Keep | Owner brief; the material "photo" is a drawn swatch until photos exist (coverage Q6). Say so on the frame. |
+| Catalogue grid (swatch, name, shade, stock, last inward, Low / Out) sorted newest inward | nw-9, n-7 | ★★★★★ | Keep | Owner brief; the material "photo" is a drawn swatch until photos exist (coverage Q6) and the pane says so ("photo stand-ins · lot photos from inward land here"). |
 | Material pane: ledger, where-used, supplier, price (money roles) | nw-9, n-8 | ★★★★ | Keep | M:86. |
 | List view (the Desk table of the same) | nw-10 | ★★★★ | Keep | The pane form on it moves to the Hub (decision 4, decided). |
 | Dye ledger: open cut orders + cut-order pane · bulk balances + bulk issue · receive a lot | nw-11, nw-12, nw-14 | ★★★★ | Keep | Owner brief, X:Dye. "What it unblocks" on receive is the right link. |
@@ -169,7 +169,7 @@ not repeated per line.
 | Samples | n-34, n-35, n-36, n-37, n-39 | nw-36, nw-37, nw-39, nw-40, nw-41 | Tray foot on n-35; placeholder note on the reading threshold | n-40 (D52) |
 | Costing | n-41, n-42 | nw-42 | Cards → ruled table (D50); margins to a Settings sheet | — |
 | Karigars | n-43, n-44, n-45 | nw-43, nw-44, nw-45, nw-46, nw-47 | Score as a number; FAB "New karigar" off the phone; tray foot on n-44; nw-46 follows D4 | n-46 (D52) |
-| Materials | n-7, n-8, n-10, n-11 | nw-9, nw-10, nw-11, nw-12, nw-14 | Swatch stand-in note; chip row to four | nw-13; n-12, n-13 (D52) |
+| Materials | n-7, n-8, n-10, n-11 | nw-9, nw-10, nw-11, nw-12, nw-14 | Chip row to four (Low · Out · On order · Dye WIP; Used in active jobs and Group ▾ into Filters) | nw-13; n-12, n-13 (D52) |
 | Floor phone | n-1, n-28, n-30, n-22, n-23, n-24, n-20, n-10, n-26 | — | Tables to two columns; tray foot; one listening-state frame (gap 3) | — |
 
 Count after retiring: 46 → 37 phone, 47 → 42 web (nw-32, nw-34 kept on the board under Later).
@@ -223,8 +223,8 @@ Answer by number. Each one changes what gets drawn or retired. Recommended optio
 
 45. **Orders · default view on web.** ◆ List (nw-21, the manager's book, with the lifecycle pane), cards one click away · or cards
     first as drawn.
-46. **Job cards · how many views.** ◆ Three: Cards · Table · Calendar; Swimlanes and Gantt stay on the board under Later · or all
-    five as the 8 Sep brief asked.
+46. **Job cards · how many views.** ◆ Three: Cards · Table · Calendar; Swimlanes and Gantt stay on the board under Later · or four,
+    with the Gantt for drag-to-reschedule of tranche dates · or all five as the 8 Sep brief asked.
 47. **Job cards on the phone.** ◆ List, filter sheet and the opened card only; retire phone swimlanes, timeline and calendar (n-31,
     n-32, n-33) · or keep them.
 48. **Scan a job.** ◆ Scan is a way in: the camera lands on the job page (n-30); n-25 retires · or keep a separate scan page.
