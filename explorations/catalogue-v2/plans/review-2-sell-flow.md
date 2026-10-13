@@ -34,10 +34,23 @@ Submit for approval (summary → sent → in the queue → editing → delete, i
 13. nw-14 `WebCsDelete` · Sale orders · delete, in words: centred dialog (the dispatch web drafts' pattern) over nw-12, "Delete SO-3456?", Keep it · Delete.
 (nw-12, nw-13, nw-14 are in that order in the sub-menu; the grid frames below keep their numbers on phone.)
 
+Approvals in one place (decision 6; compare with final f-18 and its web twin)
+16. n-16 `ScreenCsOrderState` · Sale orders · opened, in the queue: state and the link to Approvals: head with IN QUEUE tag, state card ("Waiting for approval", "The sale manager sees it next · since 10:42", "You can edit or delete it until it is approved", a "See in Approvals" row), customer, lines; docked print, share, Delete · Edit order. No Approve, no Reject.
+17. n-17 `ScreenCsQueueList` · Sale executive · queue list, RAISED and IN QUEUE, no flags: the final's Sale orders list with my queued order first. Flags are the approver's, so none show here.
+18. nw-15 `WebCsOrderState` · the web counterpart: the Sale orders list (same no-flag cards, so it also serves as the web queue list) with the order pane carrying the state card, the order and Edit · Delete.
+`CsStateCard` takes `viewer='manager'` to add the approver's flags (HmFlags from the Home draft) in words and drop the Edit text; not drawn as a frame yet.
+16b. n-17 `ScreenCsOrderStateMgr` · Sale orders · opened, in the queue · manager (flags, link to Approvals): same page, "Look twice" flags in words (overdue, GR ratio, edited after submit; copied from Home's wording as `CsFlags`), the link to Approvals, only print and share docked. nw-16 `WebCsOrderStateMgr` is its web twin. The executive's n-16 / nw-15 sit right before them.
+
+## Final frame id map (catalogue page; `nd-`/`nwd-` are the dark twins)
+Phone: n-9 new cart · n-10 new customer · n-11 submit · n-12 sent · n-13 in the queue (edit or delete) · n-14 editing · n-15 delete, in words · n-16 state + link to Approvals (executive) · n-17 same, manager (flags) · n-18 executive queue list, no flags · n-19 grid three rows · n-20 grid two rows · n-21 grid two rows after the swipe · n-22 island for a sale executive.
+Web: nw-9 new cart · nw-10 new customer · nw-11 submit · nw-12 in the queue · nw-13 editing · nw-14 delete dialog · nw-15 state + link (executive) · nw-16 same, manager (flags).
+(Numbers 17 and 18 in the list above are older; this map is current. The grid compare frames are n-19 to n-21, so "n-16 / n-17 / n-18" in older notes means n-19 / n-20 / n-21.)
+
 Calmer grid header (phone only, compare with final f-1)
 12. n-16 `ScreenCsGrid3` · three rows: top bar, search island, one row (lists, hairline, quick chips); count as a Meta line in the body. About 10 px more grid than f-1.
 13. n-17 `ScreenCsGrid2` · two rows at rest: identity and search only; the lists-and-chips row is the first row of the grid body and the grid starts right under it (level with n-16).
 14. n-18 `ScreenCsGrid2Swiped` · two rows after the first swipe: the row has scrolled away with the grid, so the grid starts about 55 px higher than f-1.
+15. n-19 `ScreenCsRoleIsland` · Grid · island for a sale executive (decision 2 exemplar): the two-row header of n-17 with `CsRoleIsland` (Home · Catalogue · CRM · More, then the voice orb); a packer's would be Home · Dispatch · More (`CS_ROLE_NAV`). T.Island in final.jsx is untouched.
 All three grid frames carry a count bubble ("4", ink on bg, like the cart count) on the filters button of the search island.
 
 ## Components reused unchanged
@@ -68,8 +81,7 @@ final's chips plus a pressed "+", a sent state and an editing state), `CsNewCart
 - **Recent customers**: three of the five, last order dates from the board's orders; customers who already have an open cart
   (Ramleela Fashion, RL Fashion, Nalli) are left out. Search finds the rest. The first row is drawn picked (ink outline and a
   check, not maroon) so "Start cart D" has something to start.
-- **New customer**: "Optional" shows Broker · Agency and GST number; credit days (30 default) and transport sit behind "More".
-  Phone is the contact (BRD: "contact").
+- **New customer**: three fields only (name, phone, city); broker, GST, credit days and transport are added later in the Hub. Phone is the contact (BRD: "contact").
 - **Voice button** on the customer search and on the approval note (the 30 % semi-skilled users need voice, review 1 answer 2).
 - **Sale book** stays In-cabin · WhatsApp (BRD "two books") and is chosen when the cart is started, as in the final's cart card.
 - **Carts screen entry points**: the final's "New customer" chip on the phone Carts screen and the "+" chip both open the new
@@ -85,6 +97,9 @@ final's chips plus a pressed "+", a sent state and an editing state), `CsNewCart
 - IN QUEUE tag no longer gold: `CsQueuePill` has StatusPill's shape with an accent dot and ink2 text; the queue strip's clock is ink2 too. Note: final.jsx's `StatusPill` draws RAISED in `T.warn` (gold) itself, so "the finals' RAISED tone" is gold; I followed the stated intent (no gold, accent dot). On nw-12 the other cards still show the final's gold RAISED/APPROVED tags until the density decision restyles them.
 - `CsSOCard` copies SOCard's markup (mod-appshell.jsx, not mine) only to carry the queue pill.
 - Filter count bubble stays "4"; grid frames untouched. Dark twins checked at --w 2700; console clean.
+
+## Provisional answers (lead, for the owner, 13 Oct; owner may overturn on the deck; nothing goes into final.jsx this hour)
+1 Phone header: three rows everywhere, two inside the catalogue grid (n-16, n-17 and n-18 stay as the exemplars). 2 Island per role: yes (n-19). 8 New customer: name, phone, city only; the rest later in the Hub (applied: n-10 and nw-10 now show the three fields and a line saying the rest is added later in the Hub; the optional group is gone). 9 Submit sheet: as drawn (n-11, nw-11).
 
 ## Trade-offs for the owner
 - n-16 saves only about 10 px (the Meta line takes back most of the chips row). n-17 at rest is level with n-16; n-18 saves
