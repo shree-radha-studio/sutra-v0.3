@@ -272,14 +272,22 @@ function ScreenCsGrid3({ T }) {
 }
 /* P9 · two-row header at rest: identity and search only; the lists-and-chips row is the first row of the grid body.
    P10 · after the first swipe: the row has scrolled away with the grid, so the grid starts about 55 px higher than f-1. */
-const CsGrid2Frame = ({ T, away }) => frameF(T, <>
+const CsGrid2Frame = ({ T, away, dock }) => frameF(T, <>
   <CsHeader T={T} />
   <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
     <div style={{ marginTop: away ? -CS_ROW_H : 0 }}><CsMergedRow T={T} side /></div>
     <CsCount T={T} />
     <CsGridCards T={T} />
   </div>
-</>, <T.Dock active="Catalogue" cart="A" />);
+</>, dock || <T.Dock active="Catalogue" cart="A" />);
+/* Island per role (decision 2): T.Island's markup with the role's own tabs. Exemplar only; T.Island in final.jsx is untouched. */
+const CS_ROLE_NAV = { 'Sale executive': [['house', 'Home'], ['layout-grid', 'Catalogue'], ['users', 'CRM'], ['grip', 'More']], 'Packer': [['house', 'Home'], ['package', 'Dispatch'], ['grip', 'More']] };
+const CsRoleIsland = ({ T, role = 'Sale executive', active = 'Catalogue', voice }) => <div style={{ position: 'absolute', left: 14, right: 14, bottom: 22, height: 66, borderRadius: 33, display: 'flex', alignItems: 'center', padding: '0 8px 0 2px', ...glass(T) }}>
+  {CS_ROLE_NAV[role].map(([i, l]) => { const on = l === active; return <span key={l} className="press" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 3, flex: 1, height: 52, borderRadius: T.rCtl, background: on ? T.accentSoft : 'transparent', color: on ? T.accent : T.ink2 }}><Ic name={i} size={20} sw={on ? 1.9 : 1.6} /><span style={{ fontFamily: T.fontUI, fontSize: 10, fontWeight: on ? 600 : 400 }}>{l}</span></span>; })}
+  <span className="press" style={{ width: 48, height: 52, display: 'grid', placeItems: 'center', flex: 'none' }}><Orb T={T} on={voice} size={34} /></span>
+</div>;
+/* P11 · island for a sale executive on the catalogue grid (two-row header, decision 1): Home · Catalogue · CRM · More, bigger targets, no Dispatch or Production */
+const ScreenCsRoleIsland = ({ T }) => <CsGrid2Frame T={T} dock={<><T.CartStrip cart="A" /><CsRoleIsland T={T} /></>} />;
 const ScreenCsGrid2 = ({ T }) => <CsGrid2Frame T={T} />;
 const ScreenCsGrid2Swiped = ({ T }) => <CsGrid2Frame T={T} away />;
 
@@ -343,9 +351,9 @@ function WebCsEditing({ T }) {
     phone: [['Cart · submit for approval sheet', ScreenCsSubmit], ['Cart · sent for approval', ScreenCsSubmitted], ['Sale orders · my order in the queue, edit or delete', ScreenCsInQueue], ['Sale orders · editing SO-3456 as cart A', ScreenCsEditing], ['Sale orders · delete, in words', ScreenCsDeleteConfirm]],
     web: [['Cart · submit for approval in the pane', WebCsSubmit], ['Sale orders · my order in the queue, Edit and Delete in the pane', WebCsInQueue], ['Sale orders · editing SO-3456 as cart A', WebCsEditing], ['Sale orders · delete, in words', WebCsDelete]] },
   { name: 'Calmer grid header', flow: 'three rows → two rows → two rows after the first swipe, compare with the final',
-    phone: [['Grid · three-row header (compare with final f-1)', ScreenCsGrid3], ['Grid · two-row header, lists scroll with the grid (compare with f-1)', ScreenCsGrid2], ['Grid · two-row header, after the first swipe', ScreenCsGrid2Swiped]],
+    phone: [['Grid · three-row header (compare with final f-1)', ScreenCsGrid3], ['Grid · two-row header, lists scroll with the grid (compare with f-1)', ScreenCsGrid2], ['Grid · two-row header, after the first swipe', ScreenCsGrid2Swiped], ['Grid · island for a sale executive: Home · Catalogue · CRM · More (decision 2 exemplar)', ScreenCsRoleIsland]],
     web: [] },
 ] });
 
 Object.assign(window, { CS_RECENT, CS_NEW, CS_CUST, CS_NOTE, CS_TABS, CS_QUICK, CS_ROW_H, csTotals, csOrder, csLines, CsSearch, CsSeg, CsChoice, CsField, CsOptRow, CsCustRow, CsLabel, CsDesigns, CsCartChips, CsNewCartBody, CsStartBtn, CsNewCustBody, CsAddBtn, CsSubmitBody, CsSubmitFoot, CsInfoStrip, CsQueueStrip, CsQueueButtons, CsSentCard, CsMergedRow, CsFilterCount, CsHeader, CsCount, CsGridCards, CsGrid2Frame, CsOverCarts, CsWebCartsMain, CsPane, CsBack, CsWebShell,
-  ScreenCsNewCart, ScreenCsNewCustomer, ScreenCsSubmit, ScreenCsSubmitted, ScreenCsInQueue, ScreenCsEditing, ScreenCsDeleteConfirm, ScreenCsGrid3, ScreenCsGrid2, ScreenCsGrid2Swiped, WebCsNewCart, WebCsNewCustomer, WebCsSubmit, WebCsInQueue, WebCsDelete, WebCsEditing, CsQueuePill, CsSOCard });
+  ScreenCsNewCart, ScreenCsNewCustomer, ScreenCsSubmit, ScreenCsSubmitted, ScreenCsInQueue, ScreenCsEditing, ScreenCsDeleteConfirm, ScreenCsGrid3, ScreenCsGrid2, ScreenCsGrid2Swiped, ScreenCsRoleIsland, CsRoleIsland, CS_ROLE_NAV, WebCsNewCart, WebCsNewCustomer, WebCsSubmit, WebCsInQueue, WebCsDelete, WebCsEditing, CsQueuePill, CsSOCard });

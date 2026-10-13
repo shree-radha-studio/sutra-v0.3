@@ -38,6 +38,7 @@ Calmer grid header (phone only, compare with final f-1)
 12. n-16 `ScreenCsGrid3` · three rows: top bar, search island, one row (lists, hairline, quick chips); count as a Meta line in the body. About 10 px more grid than f-1.
 13. n-17 `ScreenCsGrid2` · two rows at rest: identity and search only; the lists-and-chips row is the first row of the grid body and the grid starts right under it (level with n-16).
 14. n-18 `ScreenCsGrid2Swiped` · two rows after the first swipe: the row has scrolled away with the grid, so the grid starts about 55 px higher than f-1.
+15. n-19 `ScreenCsRoleIsland` · Grid · island for a sale executive (decision 2 exemplar): the two-row header of n-17 with `CsRoleIsland` (Home · Catalogue · CRM · More, then the voice orb); a packer's would be Home · Dispatch · More (`CS_ROLE_NAV`). T.Island in final.jsx is untouched.
 All three grid frames carry a count bubble ("4", ink on bg, like the cart count) on the filters button of the search island.
 
 ## Components reused unchanged
@@ -85,6 +86,9 @@ final's chips plus a pressed "+", a sent state and an editing state), `CsNewCart
 - IN QUEUE tag no longer gold: `CsQueuePill` has StatusPill's shape with an accent dot and ink2 text; the queue strip's clock is ink2 too. Note: final.jsx's `StatusPill` draws RAISED in `T.warn` (gold) itself, so "the finals' RAISED tone" is gold; I followed the stated intent (no gold, accent dot). On nw-12 the other cards still show the final's gold RAISED/APPROVED tags until the density decision restyles them.
 - `CsSOCard` copies SOCard's markup (mod-appshell.jsx, not mine) only to carry the queue pill.
 - Filter count bubble stays "4"; grid frames untouched. Dark twins checked at --w 2700; console clean.
+
+## Provisional answers (lead, for the owner, 13 Oct; owner may overturn on the deck; nothing goes into final.jsx this hour)
+1 Phone header: three rows everywhere, two inside the catalogue grid (n-16, n-17 and n-18 stay as the exemplars). 2 Island per role: yes (n-19). 8 New customer: name, phone, city only; the rest later in the Hub (n-10 and nw-10 already draw the rest as optional, behind "can wait"; trim to the three fields if the owner confirms). 9 Submit sheet: as drawn (n-11, nw-11).
 
 ## Trade-offs for the owner
 - n-16 saves only about 10 px (the Meta line takes back most of the chips row). n-17 at rest is level with n-16; n-18 saves
