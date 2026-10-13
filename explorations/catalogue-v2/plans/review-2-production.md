@@ -269,3 +269,18 @@ density for the lists), decisions 13 and 14 (inward card, tranches collapsed).
 - **Costing.** Unit cost = Σ(average × average purchase rate) + Σ job rates; complete when the final process has a rate; price =
   cost ÷ (1 − margin), margin per category, admin-set; TBD in the catalogue until approved by PM or admin.
 - **Gate tokens.** One per issue and receive, printed on the sticker; manual by the guard for unlinked inwards (F:57).
+
+---
+
+## 7 · Exemplar drawn (13 Oct, after the lead accepted the review)
+
+One compare pair for decision 49, in `mod-production-r2.jsx` (registered as Production › "review 2"; the lead adds the file to
+`modules.js` at merge). Compare it against nw-1 / n-1. Captions end "provisional, pending decision 49"; nothing else changes.
+
+| Frame | What it shows |
+|---|---|
+| nw-48 / nwd-48 | Overview · Desk density: five counts in one ruled strip (display 28 over 11 px labels, Delayed in danger), Arriving this week as a ruled table with an "unblocks" word per lot, one Suggestions list (photo beside the number, kind as a word, why, the number that decides, an outlined action) with its toolbar inside the box head, the dues pane as a ruled table with the one maroon button. One control row in the content; no colour but danger and warn. |
+| n-47 / nd-47 | Overview · floor phone, no money: the shared header and island; five counts in one strip; Scan a job (maroon) · Receive · Issue at 48 px; Due today, Arriving this week and Suggestions as ruled 56 / 48 px rows with the photo beside every number. First picture at 390 px. |
+
+Verified: `board-check.sh production` mounts 190 frames, console clean; `contact-sheet.sh production "review 2"` at
+`.board-check/sheet-production-review-2.png`; singles at `.board-check/production-{n-47,nd-47,nw-48,nwd-48}.png`.
