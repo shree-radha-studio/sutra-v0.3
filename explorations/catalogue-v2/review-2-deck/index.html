@@ -1,0 +1,634 @@
+<title>Sutra Review 2</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a reading column (max 1180) with a sticky contents rail on wide screens; images sit in ruled "shot" frames; decisions are cards that save. Tokens are Sutra's own (design/SUTRA-DESIGN-SCHEMA.md). */
+:root{
+  --bg:#F4EFE8; --bg2:#ECE6DE; --surface:#FCFAF6; --surface2:#F6F2EC;
+  --line:rgba(36,23,18,.08); --line2:rgba(36,23,18,.16);
+  --ink:#241712; --ink2:#65524A; --ink3:#9C8B80;
+  --accent:#561C24; --accent-soft:rgba(86,28,36,.09); --accent-line:rgba(86,28,36,.28); --on-accent:#FDFBF7;
+  --ok:#3F7D5A; --warn:#B8862B; --danger:#B23A3A; --gold:#C0953F;
+  --shadow:0 10px 30px -18px rgba(36,23,18,.35);
+  --display:"Cormorant Garamond",Georgia,"Times New Roman",serif;
+  --ui:"Jost","Segoe UI",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#140F0C; --bg2:#1C1512; --surface:#221A16; --surface2:#2C221D;
+  --line:rgba(250,247,242,.08); --line2:rgba(250,247,242,.16);
+  --ink:#FAF7F2; --ink2:#C8BDB3; --ink3:#8A7D74;
+  --accent:#B24A5A; --accent-soft:rgba(178,74,90,.18); --accent-line:rgba(178,74,90,.45); --on-accent:#FAF7F2;
+  --ok:#6FB58C; --warn:#D8B15A; --danger:#E48383; --shadow:none; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#140F0C; --bg2:#1C1512; --surface:#221A16; --surface2:#2C221D;
+  --line:rgba(250,247,242,.08); --line2:rgba(250,247,242,.16);
+  --ink:#FAF7F2; --ink2:#C8BDB3; --ink3:#8A7D74;
+  --accent:#B24A5A; --accent-soft:rgba(178,74,90,.18); --accent-line:rgba(178,74,90,.45); --on-accent:#FAF7F2;
+  --ok:#6FB58C; --warn:#D8B15A; --danger:#E48383; --shadow:none; color-scheme:dark }
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--ui);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:0 80px}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-line)}
+a:hover{border-bottom-color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+h1,h2,h3{font-family:var(--display);font-weight:600;letter-spacing:-.01em;text-wrap:balance;margin:0}
+h1{font-size:clamp(34px,5vw,52px);line-height:1.02}
+h2{font-size:30px;line-height:1.1}
+h3{font-size:22px;line-height:1.15}
+p{margin:0}
+.eyebrow{font-family:var(--ui);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);font-weight:500}
+.mono{font-family:var(--mono);font-size:.92em}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--ink2)}
+.faint{color:var(--ink3)}
+.lede{font-size:17px;line-height:1.55;max-width:68ch;color:var(--ink2)}
+.prose{max-width:68ch}
+.prose p + p{margin-top:10px}
+ul.clean{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+ul.clean li{padding-left:18px;position:relative}
+ul.clean li::before{content:"";position:absolute;left:0;top:.62em;width:8px;height:1px;background:var(--accent)}
+b{font-weight:600}
+
+/* masthead */
+.mast{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;padding-block:36px 26px;border-bottom:1px solid var(--line)}
+.mast .brand{display:inline-flex;align-items:center;gap:10px;padding:6px 12px 6px 8px;border-radius:10px;background:var(--accent-soft);border:1px solid var(--accent-line);margin-bottom:18px}
+.mast .brand .mark{font-family:var(--display);font-size:20px;color:var(--gold);font-weight:600;line-height:1}
+.mast .brand .sep{width:1px;height:14px;background:var(--accent-line)}
+.mast .brand .firm{font-size:11.5px;color:var(--ink2);letter-spacing:.04em}
+.mast .date{font-size:12.5px;color:var(--ink3);text-align:right}
+.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:26px}
+.facts div{background:var(--surface);padding:16px 18px}
+.facts .v{font-family:var(--display);font-size:34px;font-weight:600;line-height:1;color:var(--ink)}
+.facts .l{font-size:12px;color:var(--ink2);margin-top:6px}
+
+/* body grid with the contents rail */
+.body{display:grid;grid-template-columns:200px 1fr;gap:44px;margin-top:30px}
+nav.toc{position:sticky;top:env(safe-area-inset-top,0px);align-self:start;padding-top:12px}
+nav.toc ol{list-style:none;padding:0;margin:0;display:grid;gap:2px}
+nav.toc a{display:block;padding:6px 10px;border:0;border-left:2px solid transparent;color:var(--ink2);font-size:13px;border-radius:0 8px 8px 0}
+nav.toc a:hover{background:var(--surface2);color:var(--ink)}
+nav.toc a.on{border-left-color:var(--accent);color:var(--ink);font-weight:500}
+nav.toc .n{font-family:var(--mono);font-size:11px;color:var(--ink3);margin-right:8px}
+main{min-width:0}
+section{padding-block:44px 8px;scroll-margin-top:12px}
+section + section{border-top:1px solid var(--line)}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:14px}
+.sec-head .n{font-family:var(--mono);font-size:12px;color:var(--ink3)}
+
+/* cards and shots */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px 20px;box-shadow:var(--shadow)}
+.card.alt{background:var(--surface2);box-shadow:none}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.shot{display:grid;gap:8px;min-width:0}
+.shot figure{margin:0;border:1px solid var(--line2);border-radius:12px;overflow:hidden;background:var(--bg2);position:relative;cursor:zoom-in}
+.shot figure img{display:block;width:100%;height:auto;max-width:100%}
+.shot figure.phone{max-width:300px;margin-inline:auto;width:100%}
+.shot figcaption{font-size:12.5px;color:var(--ink2);line-height:1.35;padding:0 2px}
+.shot figcaption b{color:var(--ink)}
+.shot .tag{display:inline-block;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border:1px solid var(--line2);border-radius:3px;color:var(--ink2);margin-right:6px;vertical-align:1px}
+.shot .tag.now{border-color:var(--line2)}
+.shot .tag.new{border-color:var(--accent-line);color:var(--accent)}
+.pending{display:grid;place-items:center;aspect-ratio:4/5;color:var(--ink3);font-size:13px;text-align:center;padding:20px;border:1px dashed var(--line2);border-radius:12px;background:var(--surface2)}
+.pending.web{aspect-ratio:16/10}
+/* annotation brackets over a phone shot */
+.anno{position:absolute;left:0;right:0;pointer-events:none}
+.anno span{position:absolute;left:0;right:0;border-top:1px solid var(--accent);border-bottom:1px solid var(--accent);background:rgba(86,28,36,.10)}
+.anno span i{position:absolute;right:6px;top:2px;font-style:normal;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:var(--accent);padding:1px 6px;border-radius:3px}
+/* step rows */
+.step{display:grid;grid-template-columns:200px 1fr;gap:20px;padding:22px 0;border-top:1px solid var(--line)}
+.step:first-of-type{border-top:0}
+.step .k{display:grid;gap:6px;align-content:start}
+.step .k .t{font-family:var(--display);font-size:22px;font-weight:600;line-height:1.1}
+.step .k .verdict{display:inline-block;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:3px;border:1px solid var(--line2);color:var(--ink2);width:max-content}
+.step .k .verdict.gap{border-color:var(--danger);color:var(--danger)}
+.step .k .verdict.keep{border-color:var(--ok);color:var(--ok)}
+.step .k .verdict.fin{border-color:var(--accent-line);color:var(--accent)}
+.step .k .why{font-size:13px;color:var(--ink2)}
+.step .shots{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;min-width:0}
+/* tables */
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{text-align:left;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);font-weight:500;padding:8px 10px;border-bottom:1px solid var(--line2)}
+td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top}
+td.num,th.num{text-align:right}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.pill{display:inline-block;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:3px;border:1px solid var(--line2);color:var(--ink2);white-space:nowrap}
+.pill.p0{border-color:var(--accent);color:var(--accent)}
+.pill.done{border-color:var(--ok);color:var(--ok)}
+/* thesis */
+.thesis{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+.thesis .card h3{margin-bottom:8px}
+.thesis .who{display:grid;gap:10px;margin-top:14px}
+.thesis .who div{display:grid;grid-template-columns:150px 1fr;gap:12px;font-size:13.5px}
+.thesis .who div b{font-weight:500;color:var(--ink)}
+.rule{font-family:var(--display);font-size:26px;line-height:1.2;font-weight:500;font-style:italic;color:var(--ink);padding:18px 22px;border-left:2px solid var(--accent);background:var(--surface);border-radius:0 14px 14px 0;margin:18px 0}
+/* decisions */
+.dprog{display:flex;align-items:center;gap:14px;margin:4px 0 18px;font-size:13px;color:var(--ink2)}
+.dprog .bar{flex:1;height:4px;background:var(--line);border-radius:2px;overflow:hidden;max-width:360px}
+.dprog .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s ease-out}
+.dec{display:grid;grid-template-columns:52px 1fr;gap:16px;padding:20px;border:1px solid var(--line);border-radius:18px;background:var(--surface);margin-bottom:12px;box-shadow:var(--shadow)}
+.dec.answered{border-color:var(--accent-line)}
+.dec .id{font-family:var(--display);font-size:30px;font-weight:600;line-height:1;color:var(--ink3)}
+.dec.answered .id{color:var(--accent)}
+.dec h3{margin-bottom:4px}
+.dec .q{font-size:14px;color:var(--ink2);max-width:72ch}
+.dec .opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.dec .part{margin-top:12px}
+.dec .part .pl{font-size:12px;color:var(--ink3);margin-bottom:6px}
+.opt{appearance:none;border:1px solid var(--line2);background:transparent;color:var(--ink);font:inherit;font-size:13.5px;padding:8px 14px;border-radius:999px;cursor:pointer;line-height:1.2}
+.opt:hover{background:var(--surface2)}
+.opt.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.opt .rec{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-left:6px}
+.opt.on .rec{color:var(--gold)}
+.dec .foot{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:12px}
+.dec textarea{flex:1;min-width:220px;font:inherit;font-size:13.5px;padding:9px 12px;border:1px solid var(--line2);border-radius:12px;background:var(--surface2);color:var(--ink);resize:vertical;min-height:40px}
+.dec .see{font-size:12.5px;color:var(--accent);background:none;border:0;cursor:pointer;font-family:inherit;padding:0;border-bottom:1px solid var(--accent-line)}
+.dec .state{font-size:12px;color:var(--ink3);min-width:70px}
+.dec .state.ok{color:var(--ok)}
+.notice{font-size:13px;color:var(--ink2);padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface2);margin-bottom:14px}
+/* lightbox */
+dialog.lb{border:0;padding:0;background:transparent;max-width:min(96vw,1400px);width:auto}
+dialog.lb::backdrop{background:rgba(20,15,12,.82);backdrop-filter:blur(6px)}
+dialog.lb img{display:block;max-width:min(96vw,1400px);max-height:88vh;width:auto;height:auto;border-radius:12px;background:var(--bg2)}
+dialog.lb .cap{color:#FAF7F2;font-size:13px;text-align:center;padding:10px 6px 0}
+.sr{position:absolute;left:-9999px}
+@media (max-width:900px){
+  .body{grid-template-columns:1fr;gap:10px}
+  nav.toc{position:static;display:flex;overflow-x:auto;gap:4px;padding:8px 0;border-bottom:1px solid var(--line)}
+  nav.toc ol{display:flex;gap:4px}
+  nav.toc a{white-space:nowrap;border-left:0;border-bottom:2px solid transparent;border-radius:8px 8px 0 0}
+  nav.toc a.on{border-bottom-color:var(--accent)}
+  .facts{grid-template-columns:1fr 1fr}
+  .grid2,.grid3,.thesis{grid-template-columns:1fr}
+  .step{grid-template-columns:1fr;gap:12px}
+  .mast{grid-template-columns:1fr}
+  .mast .date{text-align:left}
+  .dec{grid-template-columns:1fr}
+  .dec .id{font-size:22px}
+}
+@media (prefers-reduced-motion:reduce){ *{transition:none!important} }
+</style>
+
+<div class="wrap">
+  <header class="mast">
+    <div>
+      <div class="brand"><span class="mark">सूत्र</span><span class="sep"></span><span class="firm">SHREE RADHA STUDIO · DESIGN BOARD</span></div>
+      <h1>Sutra Review 2</h1>
+      <p class="lede" style="margin-top:12px">The template every screen inherits, the sell flow walked as one path, and the Production entry forms, judged for the people who will sit in the chairs. The screen-by-screen reviews from 6 Oct stay as they are; this pass sits one level above them and draws the screens the flow was missing.</p>
+    </div>
+    <div class="date">13 Oct 2026<br>Fable judgment · Sonnet drafts<br><span class="mono">plans/review-2-template-and-sell-flow.md</span></div>
+  </header>
+
+  <div class="facts">
+    <div><div class="v num">4</div><div class="l">steps of the sell flow had no screen at all</div></div>
+    <div><div class="v num">40 %+</div><div class="l">of the phone screen is chrome with a cart open</div></div>
+    <div><div class="v num">2</div><div class="l">design languages on the board today</div></div>
+    <div><div class="v num">14</div><div class="l">decisions waiting on you, below</div></div>
+  </div>
+
+  <div class="body">
+    <nav class="toc" aria-label="Contents"><ol>
+      <li><a href="#thesis"><span class="n">1</span>What Sutra should look like</a></li>
+      <li><a href="#template"><span class="n">2</span>The template</a></li>
+      <li><a href="#flow"><span class="n">3</span>The sell flow</a></li>
+      <li><a href="#forms"><span class="n">4</span>Entry forms</a></li>
+      <li><a href="#priorities"><span class="n">5</span>Priorities</a></li>
+      <li><a href="#decisions"><span class="n">6</span>Your decisions</a></li>
+      <li><a href="#next"><span class="n">7</span>What happens next</a></li>
+    </ol></nav>
+
+    <main>
+      <!-- 1 · thesis -->
+      <section id="thesis">
+        <div class="sec-head"><span class="n">1</span><h2>What Sutra should look like</h2></div>
+        <div class="rule">A picture-first ledger.</div>
+        <div class="prose">
+          <p>The cabin side shows a design the way a buyer meets it: photo first, the number as the head, the price in the display face, one maroon line for the action. The desk side shows the business the way an accountant trusts it: ruled rows, counts in the display face, status as words, money only where the role allows. Same canvas, same ink, same type, same chrome. The split between them is density, not style.</p>
+          <p>The people you named decide the rest. Accountants with two or three years and fresh analysts from tier-2 and tier-3 colleges know Tally, Busy and Excel: they want tables, Enter to the next field, numbers first. The semi-skilled 30 % read pictures and talk. One product serves both when the chrome is the same and only the density changes.</p>
+        </div>
+        <div class="thesis">
+          <div class="card">
+            <h3>Cabin density</h3>
+            <p class="muted" style="font-size:13.5px">Catalogue, carts, product pages, CRM share, Studio, Home. Rounded cards, pill chips, glass islands, photos at 4:5. This is the final language on the board today.</p>
+            <div class="who">
+              <div><b>Salesperson</b><span>Grid, two rows of chrome, cart strip, island. New customer is three fields. Submit is one sheet.</span></div>
+              <div><b>Semi-skilled worker</b><span>Three island tabs, the orb, pictures to tap, never a table.</span></div>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Desk density</h3>
+            <p class="muted" style="font-size:13.5px">Dispatch, Production orders and job tables, pending books, Hub lists, Reports, the Approvals queue. Ruled 44 px rows, 4 px radii inside content, 28 px counts. This is the "structured" Dispatch look, kept as a density of the same language.</p>
+            <div class="who">
+              <div><b>Fresher at the desk</b><span>Home with four numbers and a "needs you" list. Every list a ruled table with search and one Filters sheet. The right pane shows what they are looking at, so they never leave the form.</span></div>
+              <div><b>Approver</b><span>One card per decision with every fact the BRD names, and the actions the BRD names.</span></div>
+            </div>
+          </div>
+        </div>
+        <p class="muted" style="font-size:13.5px;margin-top:16px;max-width:72ch">Three things to protect in both: the photo beside every design number (it is the identifier), one maroon line per screen (the eye finds the action), and money omitted on the server for roles without the right, so a screen never greys out a number.</p>
+        <div class="grid2" style="margin-top:18px">
+          <div class="shot"><figure class="phone" data-cap="Proposed: Home landing for a sale executive"><img src="img/p-hm-home.jpg" alt="Proposed Home landing on the phone for a sale executive" width="404" height="836" onerror="slotPending(this,'phone')"></figure><figcaption><span class="tag new">Proposed</span>What a sale executive sees first: today's numbers, what needs them, six links, notifications. No chart, no money.</figcaption></div>
+          <div class="shot"><figure data-cap="Proposed: Home landing on the web for a sale manager"><img src="img/p-hm-home-web.jpg" alt="Proposed Home landing on the web for a sale manager" width="1358" height="896" onerror="slotPending(this,'web')"></figure><figcaption><span class="tag new">Proposed</span>What a sale manager sees first on the web: the same shape with the money tile and the week's orders; notifications in the pane.</figcaption></div>
+        </div>
+      </section>
+
+      <!-- 2 · template -->
+      <section id="template">
+        <div class="sec-head"><span class="n">2</span><h2>The template: what every screen inherits</h2></div>
+        <p class="lede">The crowding you feel is not thirty screens; it is four things every screen copies. Fix them once and every module changes.</p>
+
+        <div class="grid2" style="margin-top:22px">
+          <div class="card">
+            <h3>2.1 Phone: four rows of chrome before the first picture</h3>
+            <p class="muted" style="font-size:13.5px;margin-top:8px">Top bar, search island, lists bar, chip row. The first photo starts about 225 px down an 844 px screen; with a cart active the strip and the island take another 140 px at the foot. Every module copies this header, so the feeling repeats everywhere.</p>
+            <ul class="clean" style="margin-top:12px;font-size:13.5px">
+              <li><b>Three rows:</b> the lists bar and the quick chips merge into one scrolling row. Nothing is lost; one row is.</li>
+              <li><b>Two rows inside the grid:</b> the lists row becomes the first row of the grid body and scrolls away with it.</li>
+              <li>Call: three rows on every module, two inside the catalogue grid. Decision 1.</li>
+            </ul>
+          </div>
+          <div class="shot">
+            <figure class="phone" data-cap="Catalogue grid today (final f-1): four rows of chrome, then the cart strip and the island">
+              <img src="img/catalogue-f-1.jpg" alt="Catalogue grid on the phone with the header rows marked" width="404" height="836">
+              <div class="anno" style="top:0;bottom:0">
+                <span style="top:9.5%;height:5.2%"><i>1 top bar</i></span>
+                <span style="top:15.2%;height:5.2%"><i>2 search</i></span>
+                <span style="top:20.6%;height:4.4%"><i>3 lists</i></span>
+                <span style="top:25.2%;height:4.6%"><i>4 chips</i></span>
+                <span style="top:87.3%;height:11.2%"><i>cart strip · island</i></span>
+              </div>
+            </figure>
+            <figcaption><span class="tag now">Today</span><b>Final f-1.</b> Rows 3 and 4 are both filters; the proposed header merges them, and inside the grid lets them scroll away.</figcaption>
+          </div>
+        </div>
+
+        <div class="grid2" style="margin-top:16px">
+          <div class="shot">
+            <figure data-cap="Production header today: eight sub-menu buttons squeeze the search field to “Se…”">
+              <img src="img/production-nw-22.jpg" alt="Production web header with eight sub-menu buttons and a truncated search field" width="1358" height="796">
+            </figure>
+            <figcaption><span class="tag now">Today</span><b>2.2 Web header overflow.</b> Eight sub-menu buttons on Production squeeze the search field to "Se…" on every Production frame. Cap at six; group the rest (Purchase ▾ · Materials ▾ · Recipes · Orders ▾ · Samples · More ▾). Decision 3.</figcaption>
+          </div>
+          <div class="shot">
+            <figure data-cap="New material today: a twelve-field form inside the 340 px right pane">
+              <img src="img/production-nw-10.jpg" alt="Materials list with the new-material form inside the right pane" width="1358" height="796">
+            </figure>
+            <figcaption><span class="tag now">Today</span><b>2.3 Forms in the pane.</b> New PO, New material and New sample live in the 340 px pane: a scroll inside a scroll, 10.5 px labels. Rule: more than four fields takes the main area; the pane helps (supplier, stock, checklist). Purchase inward and New order already do this. Decision 4.</figcaption>
+          </div>
+        </div>
+
+        <div class="grid2" style="margin-top:16px">
+          <div class="shot">
+            <figure data-cap="Catalogue web final (w-1): the rounded, picture-led language">
+              <img src="img/catalogue-w-1.jpg" alt="Catalogue grid on the web with the cart pane, rounded language" width="1358" height="796">
+            </figure>
+            <figcaption><span class="tag now">Language A</span><b>The finals.</b> Sand, rounded cards, pill chips, glass, soft shadows.</figcaption>
+          </div>
+          <div class="shot">
+            <figure data-cap="Dispatch structured draft (nw-24): the ruled, two-colour language">
+              <img src="img/dispatch-nw-24.jpg" alt="Dispatch Ready board in the structured, ruled look" width="1358" height="796">
+            </figure>
+            <figcaption><span class="tag now">Language B</span><b>The structured Dispatch drafts.</b> 4 px radii, 1 px rules, 28 px counts, two colours. Good for a warehouse; a fork if it stays a second language. Call: one language, two densities (section 1). Decision 5.</figcaption>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:16px">
+          <h3>The same screen in both densities</h3>
+          <p class="muted" style="font-size:13.5px;margin-top:8px;max-width:72ch">Sale orders, drawn once in each density on the same chrome, so the choice in decision 5 is a picture and not a sentence. The Desk version is the manager's view: status is a word, and the approver's flags sit beside it in words; a sale executive would see neither flag.</p>
+          <div class="grid2" style="margin-top:14px">
+            <div class="shot"><figure class="phone" data-cap="Sale orders · cards, today (final f-15)"><img src="img/catalogue-f-15.jpg" alt="Sale orders cards on the phone, Cabin density" width="404" height="836"></figure><figcaption><span class="tag now">Cabin · today</span>Sale orders · cards (final f-15)</figcaption></div>
+            <div class="shot"><figure class="phone" data-cap="Sale orders · cards in the Desk density (draft)"><img src="img/p-desk-cards.jpg" alt="Sale orders cards on the phone, Desk density" width="404" height="836"></figure><figcaption><span class="tag new">Desk · proposed</span>Sale orders · cards, Desk density: ruled rows, status and flags as words</figcaption></div>
+          </div>
+          <div class="grid2" style="margin-top:14px">
+            <div class="shot"><figure data-cap="Sale orders · grouped table today (final w-9)"><img src="img/catalogue-w-9.jpg" alt="Sale orders grouped table on the web, Cabin density" width="1358" height="896"></figure><figcaption><span class="tag now">Cabin · today</span>Sale orders · grouped table, column filter (final w-9)</figcaption></div>
+            <div class="shot"><figure data-cap="Sale orders · table with the order pane in the Desk density (draft)"><img src="img/p-desk-table.jpg" alt="Sale orders table on the web, Desk density, with the order pane" width="1358" height="896"></figure><figcaption><span class="tag new">Desk · proposed</span>Sale orders · table with the order pane, Desk density, manager view</figcaption></div>
+          </div>
+        </div>
+
+        <div class="card alt" style="margin-top:16px">
+          <h3>Smaller inheritances, no decision needed</h3>
+          <ul class="clean" style="margin-top:10px;font-size:13.5px">
+            <li><b>One web shell after all.</b> Production, Studio and CRM wrap the same shell as the finals; only the 8 Sep Dispatch band has its own, and it is already slated for retirement. Clean-up, not a decision.</li>
+            <li><b>Island per role.</b> Seven targets at the foot for every role today. A packer needs Home · Dispatch · More; a sale executive Home · Catalogue · CRM · More. Decision 2.</li>
+            <li><b>Two control rows under the header.</b> Many web screens stack three (view tabs, toolbar, chips). Budget two; the rest goes in the Filters sheet. A rule for drafters, applied as modules are revisited.</li>
+            <li><b>Status as words.</b> Three hues on the sale-order cards today (raised, approved, dispatched). Outlined tags everywhere; colour only for danger and warn. Folds into decision 5.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 3 · the sell flow -->
+      <section id="flow">
+        <div class="sec-head"><span class="n">3</span><h2>The sell flow, walked as one path</h2></div>
+        <p class="lede">Upload a product, create a customer, open a cart, pick, submit, approve, pack, read the history. Everything on this path holds except four steps that exist only as a button. Those four are drawn now; the first pictures are below as they land on the board.</p>
+
+        <div class="step">
+          <div class="k"><div class="t">Upload a product</div><span class="verdict gap">Gap · P0</span><p class="why">The salesperson view has a "Media" button and Process setting says "pick or add a product master", but the Hub, where masters are created, has no screen. Drawn: Hub › New product, the Upload centre with the per-colour checklist and the no-photo queue, xlsx import with a dry run.</p></div>
+          <div class="shots">
+            <div class="shot"><figure class="phone" data-cap="Salesperson view today (f-7): a Media button, nothing behind it"><img src="img/catalogue-f-7.jpg" alt="Salesperson view with the Media button" width="404" height="836"></figure><figcaption><span class="tag now">Today</span>Salesperson view · stock &amp; production</figcaption></div>
+            <div class="shot" data-slot="hub-newproduct"><figure data-cap="Proposed: Hub › New product master"><img src="img/p-hub-newproduct.jpg" alt="Proposed new product master form" width="1358" height="796" onerror="slotPending(this,'web')"></figure><figcaption><span class="tag new">Proposed</span>Hub · new product master, checklist pane</figcaption></div>
+            <div class="shot" data-slot="hub-upload"><figure class="phone" data-cap="Proposed: Upload centre, capture per colour on the phone"><img src="img/p-hub-upload-phone.jpg" alt="Proposed phone capture per colour" width="404" height="836" onerror="slotPending(this,'phone')"></figure><figcaption><span class="tag new">Proposed</span>Upload centre · capture per colour</figcaption></div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="k"><div class="t">Create a customer</div><span class="verdict gap">Gap · P0</span><p class="why">A "New customer" button on Carts with no sheet behind it. The BRD asks for name, contact and city only. Drawn: new cart sheet (recent customers, new customer, sale book) and the three-field customer sheet with the rest folded.</p></div>
+          <div class="shots">
+            <div class="shot"><figure data-cap="Carts today (w-7): the New customer button, nothing behind it"><img src="img/catalogue-w-7.jpg" alt="Carts on the web with the New customer button" width="1358" height="796"></figure><figcaption><span class="tag now">Today</span>Carts · web final w-7</figcaption></div>
+            <div class="shot" data-slot="cs-newcart"><figure class="phone" data-cap="Proposed: new cart sheet"><img src="img/p-cs-newcart.jpg" alt="Proposed new cart sheet" width="404" height="836" onerror="slotPending(this,'phone')"></figure><figcaption><span class="tag new">Proposed</span>Carts · new cart: recent, new customer, sale book</figcaption></div>
+            <div class="shot" data-slot="cs-newcustomer"><figure class="phone" data-cap="Proposed: new customer, three required fields"><img src="img/p-cs-newcustomer.jpg" alt="Proposed new customer sheet" width="404" height="836" onerror="slotPending(this,'phone')"></figure><figcaption><span class="tag new">Proposed</span>Carts · new customer: name, phone, city</figcaption></div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="k"><div class="t">Open a cart, pick, cart card</div><span class="verdict keep">Keep</span><p class="why">Single tap activates a cart, double tap opens its card. The best part of the product; untouched.</p></div>
+          <div class="shots">
+            <div class="shot"><figure class="phone" data-cap="Cart card over the grid (f-13)"><img src="img/catalogue-f-13.jpg" alt="Cart card over the catalogue grid" width="404" height="836"></figure><figcaption><span class="tag now">Today</span>Cart card · double tap on a chip</figcaption></div>
+            <div class="shot"><figure class="phone" data-cap="Carts grouped by design (f-12)"><img src="img/catalogue-f-12.jpg" alt="Carts screen grouped by design" width="404" height="836"></figure><figcaption><span class="tag now">Today</span>Carts · grouped by design, totals</figcaption></div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="k"><div class="t">Submit for approval</div><span class="verdict gap">Gap · P0</span><p class="why">A button today. No due days (default 20), no priority (1 to 5, default 3), no note. Your rule of 13 Oct replaces the BRD's red block: submission is never blocked, the salesperson can edit or delete the order while it waits in the queue, and every reason not to approve shows as a flag on the approver's side. Drawn: the submit sheet, the sent state with the SO number, and the order in the queue with Edit and Delete.</p></div>
+          <div class="shots">
+            <div class="shot" data-slot="cs-submit"><figure class="phone" data-cap="Proposed: submit sheet with the credit bar"><img src="img/p-cs-submit.jpg" alt="Proposed submit for approval sheet" width="404" height="836" onerror="slotPending(this,'phone')"></figure><figcaption><span class="tag new">Proposed</span>Cart · submit: pcs, ₹, due days, priority, credit bar, note</figcaption></div>
+            <div class="shot" data-slot="cs-queue"><figure class="phone" data-cap="Proposed: the submitted order in the queue, Edit and Delete"><img src="img/p-cs-queue.jpg" alt="Proposed submitted order in the approval queue with Edit and Delete" width="404" height="836" onerror="slotPending(this,'phone')"></figure><figcaption><span class="tag new">Proposed</span>Sale orders · in the queue: edit or delete until approved</figcaption></div>
+            <div class="shot" data-slot="cs-sent"><figure class="phone" data-cap="Proposed: sent for approval"><img src="img/p-cs-sent.jpg" alt="Proposed sent-for-approval state" width="404" height="836" onerror="slotPending(this,'phone')"></figure><figcaption><span class="tag new">Proposed</span>Cart · sent: SO number, who sees it next</figcaption></div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="k"><div class="t">Approval</div><span class="verdict gap">Gap · P0</span><p class="why">The screen you sent the reference for does not exist yet; the sale-order page has an Approve button without the facts. Drawn: Home › Approvals with the queue (flagged orders first, the reasons in words), the sale-order card (flags, standing, credit line, appetite, lines with stock, note, history, both charts), the flagged over-the-line variant and the sale-return card. Rule: approval happens in one place; the SO page shows the state and links there.</p></div>
+          <div class="shots">
+            <div class="shot"><figure class="phone" data-cap="Sale order opened today (f-18): Approve without the facts"><img src="img/catalogue-f-18.jpg" alt="Sale order page with an Approve button" width="404" height="836"></figure><figcaption><span class="tag now">Today</span>Sale order · opened, Approve at the foot</figcaption></div>
+            <div class="shot" data-slot="hm-queue"><figure class="phone" data-cap="Proposed: the approvals queue, flagged orders first, reasons in words"><img src="img/p-hm-queue.jpg" alt="Proposed approvals queue on the phone with flag chips" width="404" height="836" onerror="slotPending(this,'phone')"></figure><figcaption><span class="tag new">Proposed</span>Approvals · queue: flagged first, the reasons in words</figcaption></div>
+            <div class="shot" data-slot="hm-approve"><figure class="phone" data-cap="Proposed: Home › Approvals, the sale-order card (the lower half scrolls: lines, note, history, charts)"><img src="img/p-hm-approve.jpg" alt="Proposed approvals card on the phone" width="404" height="836" onerror="slotPending(this,'phone')"></figure><figcaption><span class="tag new">Proposed</span>Approvals · sale order card (phone): look twice, their record, credit line; lines, note, history and charts scroll below</figcaption></div>
+            <div class="shot" data-slot="hm-approve-web"><figure data-cap="Proposed: Approvals on the web, queue, card, facts pane"><img src="img/p-hm-approve-web.jpg" alt="Proposed approvals screen on the web" width="1358" height="796" onerror="slotPending(this,'web')"></figure><figcaption><span class="tag new">Proposed</span>Approvals · queue, card, facts pane (web)</figcaption></div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="k"><div class="t">Ready, packing</div><span class="verdict keep">Keep · finish</span><p class="why">The structured Dispatch drafts are right for a desk and a packer. Keep them as the Desk density of one language, finish Billed, Out of stock, Stock and Return in the same set, retire the 8 Sep band.</p></div>
+          <div class="shots">
+            <div class="shot"><figure data-cap="Packing terminal, structured draft (nw-26)"><img src="img/dispatch-nw-26.jpg" alt="Packing terminal with boxes and the live invoice" width="1358" height="796"></figure><figcaption><span class="tag now">Today</span>Packing · terminal, boxes, live invoice</figcaption></div>
+            <div class="shot"><figure class="phone" data-cap="Packer phone, scan and tally (n-30)"><img src="img/dispatch-n-30.jpg" alt="Packer phone with the scan tally" width="404" height="836"></figure><figcaption><span class="tag now">Today</span>Packing · scan, tally (packer phone)</figcaption></div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="k"><div class="t">History and analytics</div><span class="verdict keep">Keep</span><p class="why">Raised · Approved · Dispatched · Cancelled · Returns on the sale orders page is the history. Analytics stays for sale managers and above (your 6 Oct answer). Both get the Desk restyle once decision 5 lands.</p></div>
+          <div class="shots">
+            <div class="shot"><figure data-cap="Sale order opened on the web (w-10), customer pane"><img src="img/catalogue-w-10.jpg" alt="Sale order opened on the web with the customer pane" width="1358" height="796"></figure><figcaption><span class="tag now">Today</span>Sale order · opened, customer pane</figcaption></div>
+          </div>
+        </div>
+
+        <div class="card alt" style="margin-top:18px">
+          <h3>The approvals card, checked against your reference and the BRD</h3>
+          <div class="tbl" style="margin-top:12px;background:transparent;border:0">
+            <table>
+              <thead><tr><th>Your Miro frame shows</th><th>BRD</th><th>On the draft</th></tr></thead>
+              <tbody>
+                <tr><td>Customer, city, agency, agent, since</td><td class="mono">F:46</td><td>Customer block in the head</td></tr>
+                <tr><td>Payment score · GR ratio · FY billing · total pcs</td><td class="mono">F:47 F:49 F:50</td><td>Standing tiles; pcs moves to the order footer</td></tr>
+                <tr><td>Customer score · high / mid / low appetite</td><td class="mono">F:48 F:54</td><td>Standing tile; one stacked appetite bar</td></tr>
+                <tr><td>Order lines: photo, colours with + / − qty, rate</td><td class="mono">F:51 F:52</td><td>Lines with photo, stepper, "n in stock" per colour</td></tr>
+                <tr><td>Order history with order · invoice · return links</td><td class="faint">reference only</td><td>Last three orders, three outline chips</td></tr>
+                <tr><td>Note with this order (Hinglish)</td><td class="mono">SCH §7</td><td>Verbatim, in a soft box</td></tr>
+                <tr><td>Orders vs payments; broker billing vs payments</td><td class="mono">F:55 F:56</td><td>Two line charts, accent against ok</td></tr>
+                <tr><td>Reject · Approve</td><td class="mono">F:12 F:46</td><td>Reject · Hold · Approve, "mark for inspection → owner"</td></tr>
+                <tr><td class="faint">not shown</td><td class="mono">F:53 F:17</td><td>Overdue tile in danger; credit bar and an "over the line" flag on the queue and the card, never a block at submission (your rule, 13 Oct)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4 · forms -->
+      <section id="forms">
+        <div class="sec-head"><span class="n">4</span><h2>Entry forms, passed for entry speed</h2></div>
+        <p class="lede">The coverage review proved every field exists. This asks how fast an accountant fills the form. One rule came out of it: the typed numbers are the form; everything else is pre-filled, picked or scanned.</p>
+        <div class="grid2" style="margin-top:22px">
+          <div class="shot">
+            <figure data-cap="Purchase inward today (nw-6): the right shape, the accounts card too open"><img src="img/production-nw-6.jpg" alt="Purchase inward form with the accounts card and supplier pane" width="1358" height="796"></figure>
+            <figcaption><span class="tag now">Today</span><b>Purchase inward.</b> Right shape: find a PO, lines pre-filled, received qty the only typed number, variance in words, supplier snapshot in the pane. Slower: the accounts card opens seven fields at once; the supplier invoice number and date sit after the lines, and that is what the accountant copies from the paper. Decision 13.</figcaption>
+          </div>
+          <div class="shot">
+            <figure data-cap="New production order today (nw-22): two steps, readiness pane"><img src="img/production-nw-22.jpg" alt="New production order with process assignment and the material readiness pane" width="1358" height="796"></figure>
+            <figcaption><span class="tag now">Today</span><b>New production order.</b> Qty per colour is the only typed number; the readiness pane says what is short. Slower: five reason chips compete with step 1; the tranche editor per process is heavy for a draft. Collapse to "default 30 / 30 / 40", open on tap. Decision 14.</figcaption>
+          </div>
+        </div>
+        <div class="grid2" style="margin-top:16px">
+          <div class="shot">
+            <figure class="phone" data-cap="Inward capture on the phone (n-5): photo, two numbers, done"><img src="img/production-n-5.jpg" alt="Phone inward capture with the lot photo" width="404" height="836"></figure>
+            <figcaption><span class="tag now">Today</span><b>Inward on the phone.</b> Already right: the lot photo and two received quantities. Keep.</figcaption>
+          </div>
+          <div class="card">
+            <h3>The other three forms</h3>
+            <ul class="clean" style="margin-top:10px;font-size:13.5px">
+              <li><b>New material</b> is twelve fields in the pane. Belongs in the Hub as a main-area form; Production keeps "+ New material · from the lot" on the inward as the quick door. Decisions 4 and 10.</li>
+              <li><b>New sample</b> is a pane form too. Move it to the main area; the pane shows the moodboard or the last three samples of the category.</li>
+              <li><b>Process setting</b> step 1 carries nine chips and two buttons on one row. Keep the number, colours and status chips; "Copy recipe from" and "Recipe option" move into the pane's Search tab.</li>
+              <li><b>Issue</b> on the phone already does it right: pieces to issue for, the lines computed.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5 · priorities -->
+      <section id="priorities">
+        <div class="sec-head"><span class="n">5</span><h2>Priorities, set the way a PM would</h2></div>
+        <div class="tbl" style="margin-top:14px">
+          <table>
+            <thead><tr><th style="width:90px">Priority</th><th>Item</th><th style="width:150px">State</th></tr></thead>
+            <tbody>
+              <tr><td><span class="pill p0">P0 · sell the flow</span></td><td>Home › Approvals: queue, sale-order card, over-the-line variant, sale-return card</td><td><span class="pill done">Drawn</span></td></tr>
+              <tr><td><span class="pill p0">P0</span></td>Catalogue: new cart, new customer, submit, sent state, the order in the queue with Edit and Delete</td><td><span class="pill done">Drawn</span></td></tr>
+              <tr><td><span class="pill p0">P0</span></td><td>Hub: new product master, upload centre with the checklist and the no-photo queue, xlsx import</td><td><span class="pill done">Drawn</span></td></tr>
+              <tr><td><span class="pill p0">P0</span></td><td>Home landing per role, starting with the sale executive</td><td><span class="pill done">Drawn</span></td></tr>
+              <tr><td><span class="pill p0">P0</span></td><td>Phone header: three rows everywhere, two inside the grid</td><td><span class="pill done">Drawn for compare</span></td></tr>
+              <tr><td><span class="pill">P1 · one product</span></td><td>Density rule written into the schema; Sale orders and Analytics restyled; Dispatch structured set finished; the 8 Sep band retired</td><td><span class="pill">After decision 5</span></td></tr>
+              <tr><td><span class="pill">P1</span></td><td>Web header capped at six buttons; Production regrouped; search never below 180 px</td><td><span class="pill">After decision 3</span></td></tr>
+              <tr><td><span class="pill">P1</span></td><td>Forms with more than four fields take the main area: New PO, New material, New sample; inward's accounts card folded; tranches collapsed</td><td><span class="pill">After 4, 13, 14</span></td></tr>
+              <tr><td><span class="pill">P1</span></td><td>Island per role</td><td><span class="pill">After decision 2</span></td></tr>
+              <tr><td><span class="pill">P2 · later</span></td><td>Two-control-row budget on every web screen; sale orders cards-only on the phone; gate pass, notifications, user menu, login; report builder and master views beyond the shell</td><td><span class="pill">Queued</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 6 · decisions -->
+      <section id="decisions">
+        <div class="sec-head"><span class="n">6</span><h2>Your decisions</h2></div>
+        <p class="lede">Answer one by one; each answer starts a session. Pick an option, add a note if the answer is "yes, but". The recommended option is marked.</p>
+        <div class="dprog"><span id="dcount">0 of 14 answered</span><div class="bar"><i id="dbar"></i></div><span id="dsave" class="faint"></span></div>
+        <div id="dnotice" class="notice" hidden>Answers are saved in this browser only on this device. Sign in as the owner to have them reach the session.</div>
+        <div id="decisions-list"></div>
+      </section>
+
+      <!-- 7 · next -->
+      <section id="next">
+        <div class="sec-head"><span class="n">7</span><h2>What happens next</h2></div>
+        <p class="lede">Four persistent sessions make up the team, one per workstream, each on its own branch off the review branch. You and the review session can both talk to them. Judgment stays with the review: every screenshot comes back here before anything is marked final.</p>
+        <div class="tbl" style="margin-top:16px">
+          <table>
+            <thead><tr><th style="width:210px">Session</th><th>Owns</th><th>Starts on</th></tr></thead>
+            <tbody>
+              <tr><td><b>Home &amp; Approvals</b></td><td>Home landing per role, the approvals queue and cards, gate pass, notifications</td><td>Decisions 2, 6, 7</td></tr>
+              <tr><td><b>Sell flow &amp; phone shell</b></td><td>New cart, new customer, submit, sent; the phone header rows; the island per role; the catalogue finals' pane states</td><td>Decisions 1, 2, 8, 9</td></tr>
+              <tr><td><b>Hub masters</b></td><td>New product, upload centre, import, new material; the Masters shell; the link from Process setting step 1</td><td>Decisions 4, 10, 11, 12</td></tr>
+              <tr><td><b>Desk density</b></td><td>The density rule in the schema; Sale orders and Analytics restyle; Dispatch structured set to completion; Production header regroup and form moves; retiring the 8 Sep band</td><td>Decisions 3, 4, 5, 13, 14</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="muted" style="font-size:13.5px;margin-top:14px;max-width:72ch">Sign-off follows the board's own rule: finals appended, draft registrations removed, nothing reordered. The branch, the plan file and the draft PR carry the record.</p>
+      </section>
+    </main>
+  </div>
+</div>
+
+<dialog class="lb" id="lb"><img id="lbimg" alt=""><div class="cap" id="lbcap"></div></dialog>
+
+<script>
+/* ---------- decisions ---------- */
+const DECISIONS = [
+  { id:'d1', title:'Phone header', q:'Three rows on every module and two inside the catalogue grid is the proposal. Compare the two drafts against the final f-1 on the board (Catalogue · sell flow › Calmer grid header).',
+    opts:['Three rows everywhere, two inside the grid','Three rows everywhere','Keep four rows'], rec:0, see:['img/catalogue-f-1.jpg','img/p-cs-grid3.jpg','img/p-cs-grid2.jpg'] },
+  { id:'d2', title:'Island per role', q:'Show only the role’s modules at the foot of the phone: at most four tabs plus More and the orb. A packer sees Home · Dispatch · More.',
+    opts:['Yes, per role','No, every module for everyone'], rec:0 },
+  { id:'d3', title:'Web header cap', q:'At most six sub-menu buttons in the header, and the search field never below 180 px. Production regrouped as Purchase ▾ · Materials ▾ · Recipes · Orders ▾ (with Job cards) · Samples · More ▾ (Costing, Karigars).',
+    opts:['Cap at six, regroup Production','Keep eight, shrink the search','Other (note)'], rec:0, see:['img/production-nw-22.jpg'] },
+  { id:'d4', title:'Where a form lives', q:'A form with more than four fields takes the main area; the right pane helps (supplier snapshot, stock, checklist). New PO, New material and New sample move out of the pane.',
+    opts:['Yes, main area for long forms','Keep the pane forms'], rec:0, see:['img/production-nw-10.jpg','img/production-nw-6.jpg'] },
+  { id:'d5', title:'One language, two densities', q:'Cabin and Desk on the same tokens and chrome. The structured Dispatch look becomes the Desk density for Dispatch, Production tables, pending books, Hub lists, Reports and the Approvals queue. Status as outlined words; colour only for danger and warn.',
+    opts:['Yes, two densities of one language','Rounded look for the whole product','Structured look for the whole product'], rec:0, see:['img/catalogue-f-15.jpg','img/p-desk-cards.jpg','img/catalogue-w-9.jpg','img/p-desk-table.jpg','img/catalogue-w-1.jpg','img/dispatch-nw-24.jpg'] },
+  { id:'d6', title:'Approvals in one place', q:'Every approval is a card on Home › Approvals with the BRD’s facts. The sale order page shows the state and a link; its own Approve button goes.',
+    opts:['Yes, one place','Keep Approve on the sale order page too'], rec:0, see:['img/catalogue-f-18.jpg','img/p-hm-queue.jpg','img/p-hm-approve.jpg','img/p-hm-approve-web.jpg'] },
+  { id:'d7', title:'The approval card itself', q:'Three small calls on the card you sent the reference for.',
+    parts:[ {k:'hold', l:'Hold as a third action beside Reject and Approve', opts:['Keep Hold','Reject and Approve only'], rec:0},
+            {k:'charts', l:'The two charts on the phone card', opts:['Inline, long scroll','Behind a Graphs tab'], rec:0},
+            {k:'over', l:'Who may clear an “over the credit line” flag in the queue', opts:['Admin only','Sub-admin too'], rec:0} ], see:['img/p-hm-approve.jpg','img/p-hm-flagged.jpg','img/p-hm-approve-web.jpg'] },
+  { id:'d8', title:'New customer from the cart', q:'Name, phone and city only, as the BRD says; broker, agency, GST and credit days can follow in the Hub.',
+    opts:['Three fields now, the rest later','Broker and GST at creation too'], rec:0, see:['img/p-cs-newcustomer.jpg'] },
+  { id:'d9', title:'The submit sheet', q:'Pcs, ₹, due days as chips 10 · 20 · 30 · custom (default 20), priority 1 to 5 (default 3) and the note for approval on one sheet. No credit check and nothing that blocks, per your rule of 13 Oct; the credit facts move to the approver’s card, and the order stays editable and deletable in the queue.',
+    opts:['As drawn','Simpler: no priority on the sheet','Other (note)'], rec:0, see:['img/p-cs-submit.jpg','img/p-cs-queue.jpg'] },
+  { id:'d10', title:'Where a product master is created', q:'In the Hub, with “Save and set recipe” opening Process setting pre-filled and “Save and add photos” opening the Upload centre; price shows TBD until costing.',
+    opts:['Hub creates, Production links','Inside Process setting step 1','Both doors, same form'], rec:0, see:['img/p-hub-newproduct.jpg'] },
+  { id:'d11', title:'Upload centre slots', q:'Per colour: primary (model shoot) · side profiles × 4 · AI shoot · real-world shoot · video, with the primary image settable, and phone capture per colour.',
+    opts:['As drawn','Fewer slots (note which)','Other (note)'], rec:0, see:['img/p-hub-upload.jpg','img/p-hub-upload-phone.jpg'] },
+  { id:'d12', title:'xlsx import', q:'Dry run first; commit as a second act by admin only; eight masters, products and SKUs first.',
+    opts:['Admin-only commit','Any manager may commit'], rec:0, see:['img/p-hub-import.jpg'] },
+  { id:'d13', title:'Purchase inward form', q:'Supplier invoice number and date first, above the lines; the accounts card folded to Freight · Discount · GST with More.',
+    opts:['Yes, fold and reorder','Keep every field open'], rec:0, see:['img/production-nw-6.jpg'] },
+  { id:'d14', title:'New production order tranches', q:'Tranches collapsed to “default 30 / 30 / 40” per process, opened on tap; the reason chips move under the head.',
+    opts:['Collapse, open on tap','Keep the editor open'], rec:0, see:['img/production-nw-22.jpg'] },
+];
+const state = {};   // id -> {choice, parts, note}
+let db = null, user = null, saveTimer = {}, writable = true;
+
+function lsGet(){ try{ return JSON.parse(localStorage.getItem('sutra-r2-decisions')||'{}') }catch(e){ return {} } }
+function lsSet(){ try{ localStorage.setItem('sutra-r2-decisions', JSON.stringify(state)) }catch(e){} }
+
+function answered(d){ const s = state[d.id]; if(!s) return false; if(d.parts) return d.parts.every(p => s.parts && s.parts[p.k] != null); return s.choice != null }
+function progress(){ const n = DECISIONS.filter(answered).length; document.getElementById('dcount').textContent = n + ' of ' + DECISIONS.length + ' answered'; document.getElementById('dbar').style.width = (100*n/DECISIONS.length) + '%'; }
+
+function render(){
+  const root = document.getElementById('decisions-list'); root.innerHTML = '';
+  DECISIONS.forEach((d, i) => {
+    const s = state[d.id] || {};
+    const el = document.createElement('article'); el.className = 'dec' + (answered(d) ? ' answered' : ''); el.id = d.id;
+    const groups = d.parts ? d.parts : [{k:null, l:null, opts:d.opts, rec:d.rec}];
+    let html = '<div class="id num">' + (i+1) + '</div><div><h3>' + d.title + '</h3><p class="q">' + d.q + '</p>';
+    groups.forEach(g => {
+      html += '<div class="part">' + (g.l ? '<div class="pl">' + g.l + '</div>' : '') + '<div class="opts" role="radiogroup">';
+      g.opts.forEach((o, j) => {
+        const on = g.k ? (s.parts && s.parts[g.k] === j) : (s.choice === j);
+        html += '<button type="button" class="opt' + (on ? ' on' : '') + '" role="radio" aria-checked="' + on + '" data-id="' + d.id + '" data-part="' + (g.k||'') + '" data-j="' + j + '">' + o + (j === g.rec ? '<span class="rec">recommended</span>' : '') + '</button>';
+      });
+      html += '</div></div>';
+    });
+    html += '<div class="foot"><textarea id="note-' + d.id + '" placeholder="Note, if the answer is yes, but…">' + (s.note ? s.note.replace(/</g,'&lt;') : '') + '</textarea>';
+    if (d.see) html += '<button type="button" class="see" data-see="' + d.id + '">See it</button>';
+    html += '<span class="state" id="st-' + d.id + '">' + (answered(d) ? 'Answered' : '') + '</span></div></div>';
+    el.innerHTML = html; root.appendChild(el);
+  });
+  progress();
+}
+
+async function persist(id){
+  const s = state[id]; lsSet();
+  const st = document.getElementById('st-' + id);
+  if (!db || !writable) { st.textContent = 'Saved here'; st.className = 'state'; return; }
+  st.textContent = 'Saving…'; st.className = 'state';
+  try {
+    await db.doc('decisions/' + id).set({ ...s, at: new Date().toISOString() });
+    st.textContent = 'Saved'; st.className = 'state ok';
+  } catch (e) {
+    if (e && e.code === 'invalid_argument') { writable = false; document.getElementById('dnotice').hidden = false; }
+    st.textContent = 'Saved here'; st.className = 'state';
+  }
+}
+
+document.getElementById('decisions-list').addEventListener('click', ev => {
+  const b = ev.target.closest('button.opt'); const see = ev.target.closest('button.see');
+  if (see) { const d = DECISIONS.find(x => x.id === see.dataset.see); openSee(d); return; }
+  if (!b) return;
+  const id = b.dataset.id, part = b.dataset.part, j = +b.dataset.j;
+  state[id] = state[id] || {};
+  if (part) { state[id].parts = state[id].parts || {}; state[id].parts[part] = j; } else { state[id].choice = j; }
+  const note = document.getElementById('note-' + id); if (note) state[id].note = note.value;
+  render(); persist(id);
+  const el = document.getElementById(id); if (el) el.scrollIntoView({ block: 'nearest' });
+});
+document.getElementById('decisions-list').addEventListener('input', ev => {
+  const t = ev.target; if (!(t instanceof HTMLTextAreaElement)) return;
+  const id = t.id.replace('note-', ''); state[id] = state[id] || {}; state[id].note = t.value;
+  clearTimeout(saveTimer[id]); saveTimer[id] = setTimeout(() => persist(id), 700);
+});
+
+/* "See it": cycle the decision's pictures in the lightbox */
+let seeList = [], seeIdx = 0;
+function openSee(d){ seeList = (d.see || []).slice(); seeIdx = 0; if (!seeList.length) return; showSee(); }
+function showSee(){ const src = seeList[seeIdx]; const cap = (seeIdx+1) + ' of ' + seeList.length + ' · tap the picture for the next one'; openLb(src, cap, true); }
+
+/* ---------- lightbox ---------- */
+const lb = document.getElementById('lb'), lbimg = document.getElementById('lbimg'), lbcap = document.getElementById('lbcap');
+function openLb(src, cap, cycling){
+  lbimg.src = src; lbimg.alt = cap; lbcap.textContent = cap; lb.dataset.cycling = cycling ? '1' : '';
+  if (!lb.open) lb.showModal();
+}
+lbimg.onerror = () => { lbcap.textContent = 'This picture is still being drawn on the board.'; };
+document.querySelectorAll('.shot figure').forEach(f => { f.addEventListener('click', () => { const img = f.querySelector('img'); if (img && !img.hidden) openLb(img.currentSrc || img.src, f.dataset.cap || img.alt, false); }); });
+lb.addEventListener('click', ev => {
+  if (ev.target === lbimg && lb.dataset.cycling === '1' && seeList.length > 1) { seeIdx = (seeIdx + 1) % seeList.length; showSee(); return; }
+  lb.close();
+});
+
+/* a proposed picture that is not on the board yet shows a quiet placeholder */
+function slotPending(img, kind){
+  const fig = img.closest('figure'); if (!fig) return;
+  img.hidden = true; fig.style.cursor = 'default';
+  const d = document.createElement('div'); d.className = 'pending' + (kind === 'web' ? ' web' : ''); d.textContent = 'Being drawn on the board now. It appears here on the next publish.';
+  fig.appendChild(d);
+}
+
+/* ---------- contents rail highlight ---------- */
+const links = [...document.querySelectorAll('nav.toc a')];
+const secs = links.map(a => document.querySelector(a.getAttribute('href')));
+const io = new IntersectionObserver(es => { es.forEach(e => { if (e.isIntersecting) { links.forEach(l => l.classList.toggle('on', l.getAttribute('href') === '#' + e.target.id)); } }); }, { rootMargin: '-20% 0px -70% 0px' });
+secs.forEach(s => s && io.observe(s));
+
+/* ---------- boot: local first, then the shared store ---------- */
+Object.assign(state, lsGet()); render();
+(async () => {
+  if (!window.claude || !window.claude.use) return;
+  try {
+    [db, user] = await Promise.all([claude.use('db'), claude.use('user')]);
+  } catch (e) { db = null; }
+  if (!db) { document.getElementById('dnotice').hidden = false; return; }
+  try { const w = user && await user.can('data.write'); if (w === false) { writable = false; document.getElementById('dnotice').hidden = false; } } catch (e) {}
+  db.collection('decisions').onSnapshot(snap => {
+    snap.docs.forEach(doc => { if (doc.exists) { const d = doc.data(); state[doc.id] = { choice: d.choice ?? null, parts: d.parts || undefined, note: d.note || '' }; } });
+    lsSet(); render();
+    document.getElementById('dsave').textContent = snap.empty ? '' : 'Shared answers loaded';
+  }, err => { document.getElementById('dsave').textContent = ''; });
+})();
+</script>
