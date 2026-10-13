@@ -34,6 +34,13 @@ Submit for approval (summary → sent → in the queue → editing → delete, i
 13. nw-14 `WebCsDelete` · Sale orders · delete, in words: centred dialog (the dispatch web drafts' pattern) over nw-12, "Delete SO-3456?", Keep it · Delete.
 (nw-12, nw-13, nw-14 are in that order in the sub-menu; the grid frames below keep their numbers on phone.)
 
+Approvals in one place (decision 6; compare with final f-18 and its web twin)
+16. n-16 `ScreenCsOrderState` · Sale orders · opened, in the queue: state and the link to Approvals: head with IN QUEUE tag, state card ("Waiting for approval", "The sale manager sees it next · since 10:42", "You can edit or delete it until it is approved", a "See in Approvals" row), customer, lines; docked print, share, Delete · Edit order. No Approve, no Reject.
+17. n-17 `ScreenCsQueueList` · Sale executive · queue list, RAISED and IN QUEUE, no flags: the final's Sale orders list with my queued order first. Flags are the approver's, so none show here.
+18. nw-15 `WebCsOrderState` · the web counterpart: the Sale orders list (same no-flag cards, so it also serves as the web queue list) with the order pane carrying the state card, the order and Edit · Delete.
+`CsStateCard` takes `viewer='manager'` to add the approver's flags (HmFlags from the Home draft) in words and drop the Edit text; not drawn as a frame yet.
+(Ids shift by the frames added above them: the grid frames are now n-18 to n-20 on phone, the island exemplar n-21.)
+
 Calmer grid header (phone only, compare with final f-1)
 12. n-16 `ScreenCsGrid3` · three rows: top bar, search island, one row (lists, hairline, quick chips); count as a Meta line in the body. About 10 px more grid than f-1.
 13. n-17 `ScreenCsGrid2` · two rows at rest: identity and search only; the lists-and-chips row is the first row of the grid body and the grid starts right under it (level with n-16).

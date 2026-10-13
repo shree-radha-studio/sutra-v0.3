@@ -139,6 +139,21 @@ const CsSOCard = ({ T, x, first }) => <div style={{ padding: '12px 14px', border
   <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 10 }}><T.Chip icon="user" style={{ height: 26, fontSize: 11 }}>{x.c.broker}</T.Chip><span style={{ flex: 1 }} /><Hit T={T} icon="printer" size={30} iconSize={14} style={{ background: T.chipBg }} /><Hit T={T} icon="share-2" size={30} iconSize={14} style={{ background: T.chipBg }} /></div>
 </div>;
 const CsQueueStrip = ({ T }) => <CsInfoStrip T={T} icon="clock" meta="You can edit or delete it until it is approved."><div style={{ fontWeight: 600 }}>In the approval queue</div><div style={{ color: T.ink2, fontSize: 12.5, marginTop: 1 }}>Nalini (accounts) · since 10:42</div></CsInfoStrip>;
+/* Decision 6, approvals in one place: the sale-order page only shows the state and links to Home › Approvals. No Approve, no Reject.
+   viewer 'sales' (the salesperson who raised it): who sees it next, Edit and Delete while it waits. viewer 'manager': the same state plus the
+   approver's flags in words (HmFlags from the Home draft); the manager acts in Approvals, so no buttons here. */
+const CS_FLAGS = () => hmFlags(0, 0);
+function CsStateCard({ T, viewer = 'sales' }) {
+  return <div style={{ padding: '12px 14px', borderRadius: 16, background: T.surface2, border: `1px solid ${T.line2}` }}>
+    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+      <Ic name="clock" size={17} color={T.ink2} style={{ marginTop: 1 }} />
+      <span style={{ flex: 1, minWidth: 0 }}><div style={{ fontFamily: T.fontUI, fontSize: 14, fontWeight: 600, color: T.ink }}>Waiting for approval</div><div style={{ fontFamily: T.fontUI, fontSize: 12.5, color: T.ink2, marginTop: 1 }}>The sale manager sees it next · since 10:42</div></span>
+    </div>
+    {viewer === 'manager' && <div style={{ marginTop: 10 }}><HmFlags T={T} flags={CS_FLAGS()} /></div>}
+    {viewer === 'sales' && <div style={{ fontFamily: T.fontUI, fontSize: 12.5, color: T.ink3, marginTop: 8, lineHeight: 1.4 }}>You can edit or delete it until it is approved.</div>}
+    <div className="press" style={{ display: 'flex', alignItems: 'center', gap: 8, height: 44, marginTop: 10, padding: '0 12px', borderRadius: 12, background: T.surface, border: `1px solid ${T.line2}`, fontFamily: T.fontUI, fontSize: 14, fontWeight: 500, color: T.ink }}><Ic name="clipboard-check" size={17} color={T.ink2} />See in Approvals<span style={{ flex: 1 }} /><Ic name="chevron-right" size={17} color={T.ink3} /></div>
+  </div>;
+}
 const csLines = () => groupsOf().map(g => ({ d: g.d, cols: g.cols }));
 const CsQueueButtons = ({ T }) => <div style={{ display: 'flex', gap: 8 }}><T.Btn kind="secondary" icon="trash-2" style={{ height: 48 }}>Delete</T.Btn><T.Btn icon="pencil" style={{ flex: 1, height: 48 }}>Edit order</T.Btn></div>;
 
@@ -232,6 +247,26 @@ function ScreenCsInQueue({ T }) {
     <T.Btn kind="secondary" icon="trash-2" small style={{ height: 44 }}>Delete</T.Btn><T.Btn icon="pencil" small style={{ height: 44, padding: '0 16px', fontSize: 13.5 }}>Edit order</T.Btn>
   </div>);
 }
+/* P5b · decision 6, compare with final f-18: the opened order shows the state and the link to Approvals; its own Approve is gone */
+function ScreenCsOrderState({ T }) {
+  const o = csOrder();
+  return frameF(T, <>
+    <div style={{ display: 'flex', alignItems: 'center', padding: '0 12px', height: 44, gap: 6 }}><Hit T={T} icon="chevron-left" size={40} /><span style={{ fontFamily: T.fontMono, fontSize: 15, fontWeight: 600, color: T.ink }}>{o.no}</span><CsQueuePill T={T} /><span style={{ flex: 1 }} /><span style={{ fontSize: 12, color: T.ink3 }}>{o.date}</span></div>
+    <div style={{ margin: '4px 14px 0' }}><CsStateCard T={T} /></div>
+    <div style={{ margin: '10px 14px 0' }}><CustomerBar T={T} c={o.c} compact /></div>
+    <div style={{ margin: '10px 14px 0' }}><OrderLines T={T} o={o} lines={csLines()} /></div>
+  </>, <div style={{ position: 'absolute', left: 14, right: 14, bottom: 22, display: 'flex', alignItems: 'center', gap: 8, padding: 8, borderRadius: T.rDock, ...glass(T) }}>
+    <Hit T={T} icon="printer" size={40} iconSize={18} style={{ background: T.chipBg }} /><Hit T={T} icon="share-2" size={40} iconSize={18} style={{ background: T.chipBg }} /><span style={{ flex: 1 }} /><T.Btn kind="secondary" icon="trash-2" small style={{ height: 44 }}>Delete</T.Btn><T.Btn icon="pencil" small style={{ height: 44, padding: '0 16px', fontSize: 13.5 }}>Edit order</T.Btn>
+  </div>);
+}
+/* P5c · the sale executive's queue list: RAISED and IN QUEUE only, no flags (flags are the approver's) */
+function ScreenCsQueueList({ T }) {
+  const list = [csOrder(), ...ORDERS_F.filter(x => x.status === 'Raised')];
+  return frameF(T, <>
+    <SOHeader T={T} tab="Raised" view="cards" />
+    <div style={{ padding: '12px 14px 120px', display: 'flex', flexDirection: 'column', gap: 10 }}>{list.map((x, i) => <CsSOCard key={x.no} T={T} x={x} first={i === 0} />)}</div>
+  </>, <T.Island active="Catalogue" />);
+}
 /* P6 · editing SO-3456 as cart A: the Carts screen, steppers live, the order goes back to the queue on send */
 function ScreenCsEditing({ T }) {
   const { g, pcs, total } = csTotals();
@@ -308,10 +343,10 @@ const WebCsNewCart = ({ T }) => <CsWebShell T={T} plusOn title="New cart" pane={
 const WebCsNewCustomer = ({ T }) => <CsWebShell T={T} plusOn title="New customer" pane={<CsPane T={T} foot={<CsAddBtn T={T} />}><CsBack T={T}>Customers</CsBack><CsNewCustBody T={T} /></CsPane>} />;
 const WebCsSubmit = ({ T }) => <CsWebShell T={T} title="Submit cart A" pane={<CsPane T={T} foot={<CsSubmitFoot T={T} />}><CsSubmitBody T={T} /></CsPane>} />;
 /* the Sale orders web screen (WebSO3's anatomy) with my queued order picked; the pane holds the strip, the order and Delete · Edit order */
-function WebCsInQueue({ T, dialog }) {
+function WebCsInQueue({ T, dialog, state }) {
   const o = csOrder(); const list = [o, ...ORDERS_F.filter(x => x.status !== 'Cancelled')]; const sum = list.reduce((a, x) => a + x.bill, 0);
   const tabs = [{ icon: 'layout-grid', label: 'Catalogue' }, { icon: 'receipt-text', label: 'Sale orders · Raised', on: true }];
-  const pane = <CsPane T={T} fade foot={<CsQueueButtons T={T} />}><CsQueueStrip T={T} /><div style={{ margin: '12px 2px 10px' }}><div style={{ fontFamily: T.fontDisplay, fontSize: 21, fontWeight: 500, color: T.ink, lineHeight: 1.1 }}>{o.c.name}</div><Meta T={T} style={{ display: 'block', marginTop: 3 }}>{o.c.city} · {o.c.tier} · {o.pcs} pcs · {o.designs} designs</Meta></div><OrderLines T={T} o={o} lines={csLines()} /></CsPane>;
+  const pane = <CsPane T={T} fade foot={<CsQueueButtons T={T} />}>{state ? <CsStateCard T={T} /> : <CsQueueStrip T={T} />}<div style={{ margin: '12px 2px 10px' }}><div style={{ fontFamily: T.fontDisplay, fontSize: 21, fontWeight: 500, color: T.ink, lineHeight: 1.1 }}>{o.c.name}</div><Meta T={T} style={{ display: 'block', marginTop: 3 }}>{o.c.city} · {o.c.tier} · {o.pcs} pcs · {o.designs} designs</Meta></div><OrderLines T={T} o={o} lines={csLines()} /></CsPane>;
   return <WebShell3 T={T} module="Catalogue" crumb={['Catalogue', 'Sale orders', 'Raised']} section="Sale orders" seg={CAT_SEG} active="Sale orders" mode="Customer mode" tabs={tabs} paneTitle={o.no} pane={pane}>
     <ViewTabs T={T} tabs={SO_TABS2.map(([t, n]) => t === 'Raised' ? [t, n + 1] : [t, n])} active="Raised" extra={[['Analytics', null, 'bar-chart-3']]} right={<span style={{ display: 'inline-flex', padding: 3, borderRadius: 999, background: T.bg2 }}>{[['layout-list', 'cards'], ['table-2', 'table']].map(([ic, v]) => <span key={v} className="press" style={{ width: 34, height: 26, borderRadius: 999, display: 'grid', placeItems: 'center', background: v === 'cards' ? T.surface : 'transparent', color: v === 'cards' ? T.ink : T.ink3 }}><Ic name={ic} size={15} /></span>)}</span>} />
     <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '12px 24px 0' }}><T.Chip icon="search" outline>Order, customer, agent</T.Chip><T.Chip icon="calendar" x outline>This month</T.Chip><T.Chip icon="arrow-down-up" outline>Newest</T.Chip><span style={{ flex: 1 }} /><span style={{ fontSize: 12, color: T.ink3 }}>{list.length} orders · {money(sum)}</span><Hit T={T} icon="printer" size={34} iconSize={16} style={{ background: T.chipBg }} /><Hit T={T} icon="download" size={34} iconSize={16} style={{ background: T.chipBg }} /></div>
@@ -319,6 +354,7 @@ function WebCsInQueue({ T, dialog }) {
     {dialog && <><div style={{ position: 'absolute', inset: 0, background: T.dark ? 'rgba(0,0,0,.5)' : 'rgba(36,23,18,.30)', backdropFilter: 'blur(3px)', zIndex: 5 }} />{dialog}</>}
   </WebShell3>;
 }
+const WebCsOrderState = ({ T }) => <WebCsInQueue T={T} state />;
 /* delete, in words: a centred dialog over nw-12 (the Dialog pattern of the dispatch web drafts) */
 const WebCsDelete = ({ T }) => <WebCsInQueue T={T} dialog={<div style={{ position: 'absolute', left: '50%', top: '42%', transform: 'translate(-50%,-50%)', width: 380, padding: 18, borderRadius: 18, background: T.surface, border: `1px solid ${T.line2}`, boxShadow: '0 30px 60px -20px rgba(0,0,0,.5)', zIndex: 6 }}>
   <div style={{ fontFamily: T.fontDisplay, fontSize: 22, fontWeight: 500, color: T.ink }}>Delete SO-3456?</div>
@@ -342,12 +378,12 @@ function WebCsEditing({ T }) {
     phone: [['Carts · new cart sheet', ScreenCsNewCart], ['Carts · new customer sheet', ScreenCsNewCustomer]],
     web: [['Carts · new cart, customer picker in the pane', WebCsNewCart], ['Carts · new customer in the pane', WebCsNewCustomer]] },
   { name: 'Submit for approval', flow: 'summary → sent → in the queue → editing → delete, in words',
-    phone: [['Cart · submit for approval sheet', ScreenCsSubmit], ['Cart · sent for approval', ScreenCsSubmitted], ['Sale orders · my order in the queue, edit or delete', ScreenCsInQueue], ['Sale orders · editing SO-3456 as cart A', ScreenCsEditing], ['Sale orders · delete, in words', ScreenCsDeleteConfirm]],
-    web: [['Cart · submit for approval in the pane', WebCsSubmit], ['Sale orders · my order in the queue, Edit and Delete in the pane', WebCsInQueue], ['Sale orders · editing SO-3456 as cart A', WebCsEditing], ['Sale orders · delete, in words', WebCsDelete]] },
+    phone: [['Cart · submit for approval sheet', ScreenCsSubmit], ['Cart · sent for approval', ScreenCsSubmitted], ['Sale orders · my order in the queue, edit or delete', ScreenCsInQueue], ['Sale orders · editing SO-3456 as cart A', ScreenCsEditing], ['Sale orders · delete, in words', ScreenCsDeleteConfirm], ['Sale orders · opened, in the queue: state and the link to Approvals (compare final f-18)', ScreenCsOrderState], ['Sale executive · queue list, RAISED and IN QUEUE, no flags', ScreenCsQueueList]],
+    web: [['Cart · submit for approval in the pane', WebCsSubmit], ['Sale orders · my order in the queue, Edit and Delete in the pane', WebCsInQueue], ['Sale orders · editing SO-3456 as cart A', WebCsEditing], ['Sale orders · delete, in words', WebCsDelete], ['Sale orders · opened, in the queue: state and the link to Approvals (compare final f-18 twin)', WebCsOrderState]] },
   { name: 'Calmer grid header', flow: 'three rows → two rows → two rows after the first swipe, compare with the final',
     phone: [['Grid · three-row header (compare with final f-1)', ScreenCsGrid3], ['Grid · two-row header, lists scroll with the grid (compare with f-1)', ScreenCsGrid2], ['Grid · two-row header, after the first swipe', ScreenCsGrid2Swiped], ['Grid · island for a sale executive: Home · Catalogue · CRM · More (decision 2 exemplar)', ScreenCsRoleIsland]],
     web: [] },
 ] });
 
 Object.assign(window, { CS_RECENT, CS_NEW, CS_CUST, CS_NOTE, CS_TABS, CS_QUICK, CS_ROW_H, csTotals, csOrder, csLines, CsSearch, CsSeg, CsChoice, CsField, CsOptRow, CsCustRow, CsLabel, CsDesigns, CsCartChips, CsNewCartBody, CsStartBtn, CsNewCustBody, CsAddBtn, CsSubmitBody, CsSubmitFoot, CsInfoStrip, CsQueueStrip, CsQueueButtons, CsSentCard, CsMergedRow, CsFilterCount, CsHeader, CsCount, CsGridCards, CsGrid2Frame, CsOverCarts, CsWebCartsMain, CsPane, CsBack, CsWebShell,
-  ScreenCsNewCart, ScreenCsNewCustomer, ScreenCsSubmit, ScreenCsSubmitted, ScreenCsInQueue, ScreenCsEditing, ScreenCsDeleteConfirm, ScreenCsGrid3, ScreenCsGrid2, ScreenCsGrid2Swiped, ScreenCsRoleIsland, CsRoleIsland, CS_ROLE_NAV, WebCsNewCart, WebCsNewCustomer, WebCsSubmit, WebCsInQueue, WebCsDelete, WebCsEditing, CsQueuePill, CsSOCard });
+  ScreenCsNewCart, ScreenCsNewCustomer, ScreenCsSubmit, ScreenCsSubmitted, ScreenCsInQueue, ScreenCsEditing, ScreenCsDeleteConfirm, ScreenCsOrderState, ScreenCsQueueList, WebCsOrderState, CsStateCard, CS_FLAGS, ScreenCsGrid3, ScreenCsGrid2, ScreenCsGrid2Swiped, ScreenCsRoleIsland, CsRoleIsland, CS_ROLE_NAV, WebCsNewCart, WebCsNewCustomer, WebCsSubmit, WebCsInQueue, WebCsDelete, WebCsEditing, CsQueuePill, CsSOCard });
