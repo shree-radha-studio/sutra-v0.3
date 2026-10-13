@@ -139,6 +139,8 @@ Per sub-menu, the frames that become the final (light and dark, same numbers wit
 
 Across the module: the phone top bar follows the final's (lockup · role · cart · menu); CRM's drops the cart, and a salesperson in Share may want the cart within reach. Status stays a word in an outlined tag (R2 §1.8); the stage pills already do this.
 
+Seen in the pictures, to fix on the way to final: the Payments (n-25…36) and Journeys (n-48…54) phone headers show the Follow-ups list row (Today's to-do · Refill due · What worked …) instead of their own lists (`CrLists` falls back to `CRM_LISTS`); the Share phone's grid tabs clip "Catalogue 612" at the right edge (n-11…13); dark frames match light throughout, no clipped captions or empty panes otherwise.
+
 ---
 
 ## 4 · Gaps to draw
