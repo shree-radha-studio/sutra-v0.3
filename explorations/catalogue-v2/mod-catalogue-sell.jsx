@@ -1,6 +1,6 @@
 /* NEW DRAFTS · Catalogue · sell flow (13 Oct 2026, review 2). The screens the sell flow was missing: new cart with a
-   customer picker, new customer sheet, submit for approval with the credit-line check, and a calmer phone grid header
-   drawn as a draft beside the final for compare. Component names start with Cs. Plan: plans/review-2-sell-flow.md. */
+   customer picker, new customer sheet, submit for approval (never blocked), the order waiting in the approval queue (edit or
+   delete it), and a calmer phone grid header drawn as a draft beside the final for compare. Component names start with Cs. Plan: plans/review-2-sell-flow.md. */
 
 /* Reuses from base: frameF, scrimF, ScreenFCarts, CartGroups, groupsOf, PriceF, money, LISTS, QTY, CARTS, CartChips,
    Body-less sheets (Sheet), Meta, Mono, Pill, Thumb, Monogram, Toast, Hit, Ic, T.Btn, T.Chip, T.Island/T.Dock, T.TopBar,
@@ -9,10 +9,12 @@
 /* ── data (the board's own) ── */
 const CS_RECENT = [[XD.customers[0], '10/09/26'], [XD.customers[3], '09/09/26'], [XD.customers[1], '26/08/26']];   // Preeti · A V Creation · Rangoli
 const CS_NEW = { name: 'Shree Vastra Collection', phone: '98765 43210', city: 'Jaipur', broker: 'Harjeet Singh · Harjeet Agency' };
-const CS_CREDIT = { line: 120000, openFits: 52000, openOver: 82000 };                                                  // credit line, open bills (fits / over)
 const CS_NOTE = '2018 ke red ka stock check karna hai';
 const CS_TABS = [{ icon: 'layout-grid', label: 'Catalogue' }, { icon: 'shopping-basket', label: 'Carts · 3 active', on: true }];
+/* Cart A's customer and the order it became (SO-3456), for the queue screens */
+const CS_CUST = { id: 'ca', name: 'Ramleela Fashion', city: 'Surat', market: 'Ring Road', tier: 'Platinum', score: 90, phone: '98152 23366', transport: 'Patel Parcel Service', broker: 'Harjeet Singh' };
 const csTotals = () => { const g = groupsOf(); return { g, pcs: g.reduce((s, x) => s + x.pcs, 0), total: g.reduce((s, x) => s + x.pcs * (x.d.price || 0), 0) }; };
+const csOrder = () => { const { g, pcs, total } = csTotals(); return { no: 'SO-3456', c: CS_CUST, date: '13/10/26', pcs, designs: g.length, bill: total, status: 'In queue' }; };
 
 /* ── small pieces ── */
 /* plain text search field with a voice button (no scan: this one finds customers, not designs) */
@@ -43,16 +45,12 @@ const CsCustRow = ({ T, c, last, sel }) => <div className="press" style={{ displ
   {sel ? <span style={{ width: 24, height: 24, borderRadius: 12, background: T.ink, color: T.bg, display: 'grid', placeItems: 'center', flex: 'none' }}><Ic name="check" size={14} sw={2.4} /></span> : <Ic name="chevron-right" size={18} color={T.ink3} />}
 </div>;
 const CsLabel = ({ T, children, right, style }) => <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, margin: '0 2px 7px', ...style }}><span style={{ fontFamily: T.fontUI, fontSize: 12.5, fontWeight: 600, color: T.ink2 }}>{children}</span><span style={{ flex: 1 }} />{right}</div>;
-/* label (and a hint) on the left, the choice on the right: keeps the submit sheet short */
-const CsRow = ({ T, label, hint, children, lw = 88 }) => <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-  <span style={{ width: lw, flex: 'none' }}><div style={{ fontFamily: T.fontUI, fontSize: 12.5, fontWeight: 600, color: T.ink2, lineHeight: 1.2 }}>{label}</div><Meta T={T} style={{ display: 'block', marginTop: 1 }}>{hint}</Meta></span>
-  <div style={{ flex: 1, minWidth: 0 }}>{children}</div>
-</div>;
 /* design photos beside their numbers, for the summary and the sent card */
 const CsDesigns = ({ T, size = 1 }) => <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>{groupsOf().map(g => <span key={g.d.code} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Thumb T={T} d={g.d} w={Math.round(28 * size)} h={Math.round(35 * size)} r={7} /><span style={{ fontFamily: T.fontDisplay, fontSize: 16, fontWeight: 600, color: T.ink, fontVariantNumeric: 'tabular-nums' }}>{g.d.code}</span></span>)}</div>;
 
-/* Cart chips like the final's (tap activates), plus: "+" in its pressed state, and a sent cart greyed with a "sent" tag */
-function CsCartChips({ T, cart = 'A', sent, plusOn, style }) {
+/* Cart chips like the final's (tap activates), plus: "+" in its pressed state, a sent cart greyed with a "sent" tag, and the
+   active chip reading "SO-3456 · editing" while a queued order is being edited */
+function CsCartChips({ T, cart = 'A', sent, editing, plusOn, style }) {
   return <div style={{ display: 'flex', gap: 6, alignItems: 'center', overflow: 'hidden', ...style }}>
     {CARTS.map(c => {
       if (c.k === sent) return <span key={c.k} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, height: 34, padding: '0 10px 0 4px', borderRadius: 999, background: T.chipBg, color: T.ink3, fontFamily: T.fontUI, fontSize: 12, fontWeight: 500, flex: 'none', whiteSpace: 'nowrap' }}>
@@ -62,7 +60,7 @@ function CsCartChips({ T, cart = 'A', sent, plusOn, style }) {
       const on = c.k === cart;
       return <span key={c.k} className="press" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, height: 34, padding: on ? '0 12px 0 4px' : '0 10px 0 4px', borderRadius: 999, background: on ? T.accent : T.chipBg, color: on ? T.onAccent : T.ink, fontFamily: T.fontUI, fontSize: 12.5, fontWeight: 500, flex: 'none', whiteSpace: 'nowrap' }}>
         <span style={{ width: 26, height: 26, borderRadius: 13, background: on ? 'rgba(255,255,255,.2)' : T.bg2, display: 'grid', placeItems: 'center', fontFamily: T.fontDisplay, fontSize: 13, fontWeight: 600 }}>{c.k}</span>
-        {on ? c.name : c.name.split(' ')[0]}<b style={{ fontWeight: 500, opacity: .7 }}>{c.n}</b>
+        {on ? (editing || c.name) : c.name.split(' ')[0]}<b style={{ fontWeight: 500, opacity: .7 }}>{c.n}</b>
       </span>;
     })}
     <span className="press" style={{ width: 34, height: 34, borderRadius: 17, border: plusOn ? 0 : `1px dashed ${T.line2}`, background: plusOn ? T.ink : 'transparent', color: plusOn ? T.bg : T.ink2, display: 'grid', placeItems: 'center', flex: 'none', boxShadow: plusOn ? `0 0 0 3px ${T.chipBg}` : 'none' }}><Ic name="plus" size={15} sw={plusOn ? 2.2 : 1.6} /></span>
@@ -105,51 +103,41 @@ function CsNewCustBody({ T }) {
 }
 const CsAddBtn = ({ T }) => <T.Btn icon="user-plus" style={{ width: '100%', height: 48 }}>Add and start cart D</T.Btn>;
 
-/* ── Submit for approval: summary, due and priority, the credit-line check, a note ── */
-function CsCredit({ T, blocked }) {
-  const { line, openFits, openOver } = CS_CREDIT, { total: cart } = csTotals();
-  const used = blocked ? openOver : openFits, tot = used + cart, scale = Math.max(line, tot);
-  const segs = blocked ? [[used, T.ink2], [line - used, T.accent], [tot - line, T.danger]] : [[used, T.ink2], [cart, T.accent], [line - tot, T.line2]];
-  const keys = blocked ? [['Open bills', T.ink2, used], ['This cart', T.accent, cart], ['Over', T.danger, tot - line]] : [['Open bills', T.ink2, used], ['This cart', T.accent, cart], ['Free', T.line2, line - tot]];
-  const at = line / scale * 100;
-  return <div style={{ padding: '10px 14px 11px', borderRadius: 16, background: T.surface2, border: `1px solid ${blocked ? T.danger + '66' : T.line}` }}>
-    <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 8, height: 18, marginBottom: 8 }}><Ic name="banknote" size={15} color={T.ink2} /><span style={{ fontFamily: T.fontUI, fontSize: 12.5, fontWeight: 600, color: T.ink2 }}>Credit line</span>
-      {blocked && <span style={{ position: 'absolute', right: `calc(${100 - at}% + 5px)`, top: 2, fontFamily: T.fontUI, fontSize: 10.5, color: T.ink3, whiteSpace: 'nowrap' }}>line {money(line)}</span>}</div>
-    <div style={{ position: 'relative' }}>
-      <div style={{ display: 'flex', gap: 2, height: 12, borderRadius: 6, overflow: 'hidden', background: T.chipBg }}>{segs.map(([v, c], i) => <span key={i} style={{ flex: `${v} 0 0`, minWidth: 0, background: c }} />)}</div>
-      {blocked && <span style={{ position: 'absolute', left: `${at}%`, top: -4, width: 2, height: 20, marginLeft: -1, borderRadius: 1, background: T.ink }} />}
-    </div>
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px 9px', marginTop: 8, fontFamily: T.fontUI, fontSize: 11.5, color: T.ink3 }}>{keys.map(([l, c, v]) => <span key={l} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, whiteSpace: 'nowrap' }}><span style={{ width: 8, height: 8, borderRadius: 4, background: c, boxShadow: c === T.line2 ? 'inset 0 0 0 1px rgba(128,128,128,.4)' : 'none' }} />{l}<b style={{ color: T.ink, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{money(v)}</b></span>)}</div>
-    <div style={{ marginTop: 6, fontFamily: T.fontUI, fontSize: 11.5, color: T.ink3, fontVariantNumeric: 'tabular-nums' }}>{blocked ? <span style={{ color: T.danger, fontWeight: 600 }}>Over the line by {money(tot - line)} · admin must approve</span> : <>{money(line)} line · {money(used)} open · <span style={{ color: T.ok, fontWeight: 600 }}>fits</span></>}</div>
-  </div>;
-}
-function CsSubmitBody({ T, blocked, tight }) {
+/* ── Submit for approval: nothing on this sheet can block. Credit and overdue reasons are flags on the approver's side. ── */
+function CsSubmitBody({ T }) {
   const { pcs, g, total } = csTotals();
-  return <div style={{ display: 'grid', gap: tight ? 10 : 12 }}>
-    <div style={{ padding: tight ? '10px 12px' : '11px 14px', borderRadius: 18, background: T.surface, border: `1px solid ${T.line}` }}>
+  return <div style={{ display: 'grid', gap: 15 }}>
+    <div style={{ padding: '12px 14px', borderRadius: 18, background: T.surface, border: `1px solid ${T.line}` }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
         <span style={{ flex: 1, minWidth: 0 }}><div style={{ fontFamily: T.fontDisplay, fontSize: 21, fontWeight: 500, color: T.ink, lineHeight: 1.1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Ramleela Fashion</div><Meta T={T} style={{ display: 'block', marginTop: 3 }}>Surat · {pcs} pcs · {g.length} designs</Meta></span>
         <span style={{ textAlign: 'right' }}><PriceF v={total} size={26} font={T.fontSerif} color={T.ink} dim={T.ink3} /><div style={{ fontFamily: T.fontUI, fontSize: 10.5, color: T.ink3, marginTop: 3 }}>total · GST extra</div></span>
       </div>
-      <div style={{ marginTop: 9, paddingTop: 9, borderTop: `1px solid ${T.line}`, overflow: 'hidden' }}><CsDesigns T={T} /></div>
+      <div style={{ marginTop: 10, paddingTop: 10, borderTop: `1px solid ${T.line}`, overflow: 'hidden' }}><CsDesigns T={T} /></div>
     </div>
-    <CsRow T={T} label="Dispatch due" hint="default 20 d" lw={tight ? 80 : 88}><CsChoice T={T} items={['10 d', '20 d', '30 d', 'custom']} on="20 d" fs={tight ? 13 : 14} /></CsRow>
-    <CsRow T={T} label="Priority" hint="1 packs first" lw={tight ? 80 : 88}><CsChoice T={T} items={['1', '2', '3', '4', '5']} on="3" fs={tight ? 13 : 14} /></CsRow>
-    <CsCredit T={T} blocked={blocked} />
+    <div>
+      <CsLabel T={T} right={<Meta T={T}>default 20 d</Meta>}>Dispatch due</CsLabel>
+      <CsChoice T={T} items={['10 d', '20 d', '30 d', 'custom']} on="20 d" h={44} />
+    </div>
+    <div>
+      <CsLabel T={T} right={<Meta T={T}>1 packs first</Meta>}>Priority</CsLabel>
+      <CsChoice T={T} items={['1', '2', '3', '4', '5']} on="3" h={44} />
+    </div>
     <div>
       <CsLabel T={T}>Note for approval</CsLabel>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, minHeight: 44, boxSizing: 'border-box', padding: '0 6px 0 14px', borderRadius: T.rCtl, background: T.surface, border: `1px solid ${T.line2}` }}><span style={{ flex: 1, minWidth: 0, fontFamily: T.fontUI, fontSize: 14, color: T.ink, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{CS_NOTE}</span><Hit T={T} icon="mic" size={34} iconSize={18} style={{ color: T.ink2 }} /></div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, minHeight: 46, boxSizing: 'border-box', padding: '0 6px 0 14px', borderRadius: T.rCtl, background: T.surface, border: `1px solid ${T.line2}` }}><span style={{ flex: 1, minWidth: 0, fontFamily: T.fontUI, fontSize: 14, color: T.ink, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{CS_NOTE}</span><Hit T={T} icon="mic" size={34} iconSize={18} style={{ color: T.ink2 }} /></div>
     </div>
   </div>;
 }
-const CsStrip = ({ T }) => <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '10px 12px', borderRadius: 14, background: T.danger + '1F', border: `1px solid ${T.danger}66`, marginBottom: 10 }}>
-  <Ic name="octagon-alert" size={18} color={T.danger} style={{ marginTop: 1 }} />
-  <span style={{ fontFamily: T.fontUI, fontSize: 12.5, lineHeight: 1.4, color: T.ink }}>This cart crosses Ramleela Fashion’s credit line. It will go to admin, not to accounts.</span>
+const CsSubmitFoot = ({ T }) => <T.Btn icon="send" style={{ width: '100%', height: 48 }}>Send for approval</T.Btn>;
+
+/* ── In the approval queue: the order is still the salesperson's to edit or delete ── */
+const CsInfoStrip = ({ T, icon, tone, children, meta }) => <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '10px 12px', borderRadius: 14, background: T.surface2, border: `1px solid ${T.line2}` }}>
+  <Ic name={icon} size={17} color={tone || T.ink2} style={{ marginTop: 1 }} />
+  <span style={{ flex: 1, minWidth: 0 }}><div style={{ fontFamily: T.fontUI, fontSize: 13, lineHeight: 1.35, color: T.ink }}>{children}</div>{meta && <Meta T={T} style={{ display: 'block', whiteSpace: 'normal', marginTop: 3 }}>{meta}</Meta>}</span>
 </div>;
-function CsSubmitFoot({ T, blocked }) {
-  return blocked ? <><CsStrip T={T} /><div style={{ display: 'flex', gap: 8 }}><T.Btn kind="secondary" icon="list-minus" style={{ height: 48 }}>Trim cart</T.Btn><T.Btn icon="send" style={{ flex: 1, height: 48 }}>Send to admin</T.Btn></div></>
-    : <T.Btn icon="send" style={{ width: '100%', height: 48 }}>Send for approval</T.Btn>;
-}
+const CsQueueStrip = ({ T }) => <CsInfoStrip T={T} icon="clock" tone={T.warn} meta="You can edit or delete it until it is approved."><b style={{ fontWeight: 600 }}>In the approval queue</b> · Nalini (accounts) · since 10:42</CsInfoStrip>;
+const csLines = () => groupsOf().map(g => ({ d: g.d, cols: g.cols }));
+const CsQueueButtons = ({ T }) => <div style={{ display: 'flex', gap: 8 }}><T.Btn kind="secondary" icon="trash-2" style={{ height: 48 }}>Delete</T.Btn><T.Btn icon="pencil" style={{ flex: 1, height: 48 }}>Edit order</T.Btn></div>;
 
 /* ── Sent: the card that replaces cart A's card ── */
 function CsSentCard({ T, wide }) {
@@ -164,7 +152,7 @@ function CsSentCard({ T, wide }) {
       <PriceF v={total} size={22} font={T.fontSerif} color={T.ink} dim={T.ink3} />
     </div>
     <div style={{ marginTop: 12, paddingTop: 12, borderTop: `1px solid ${T.line}`, overflow: 'hidden' }}><CsDesigns T={T} /></div>
-    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 12, fontFamily: T.fontUI, fontSize: 12.5, color: T.ink2 }}><Ic name="clock" size={14} color={T.ink3} />Nalini (accounts) will see it now · usually within 2 h</div>
+    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8, marginTop: 12, fontFamily: T.fontUI, fontSize: 12.5, lineHeight: 1.4, color: T.ink2 }}><Ic name="clock" size={14} color={T.ink3} style={{ marginTop: 2 }} />In the queue. You can edit or delete it until it is approved.</div>
     <div style={{ display: 'flex', gap: 8, marginTop: 14 }}>
       <T.Btn kind="secondary" icon="share-2" small style={{ flex: 1, height: 44, fontSize: 13 }}>Share with customer</T.Btn>
       <T.Btn kind="secondary" icon="receipt-text" small style={{ flex: 1, height: 44, fontSize: 13 }}>Open order</T.Btn>
@@ -175,10 +163,10 @@ function CsSentCard({ T, wide }) {
 /* ── Calmer grid header: one scrolling row merges the lists and the quick chips ── */
 const CS_QUICK = ['Top 30', 'Delhi', 'Zari work', 'Wine'];
 /* One row: the current list stays pinned at the left (as QuickRow pins active chips), the other lists, a 1 px hairline
-   and the quick chips scroll beneath it. `swiped` = the row has been swiped sideways to the saved lists, so the hairline and the quick chips show. */
+   and the quick chips scroll beneath it. `side` = the row has been swiped sideways to the saved lists, so the hairline and the quick chips show. */
 const CS_ROW_H = 46;   // 8 margin + 30 row + 6 gap + 2 indicator
-function CsMergedRow({ T, swiped }) {
-  const snap = el => { const t = el && swiped && el.querySelector('[data-snap]'); if (t) el.scrollLeft = t.offsetLeft - 6; };
+function CsMergedRow({ T, side }) {
+  const snap = el => { const t = el && side && el.querySelector('[data-snap]'); if (t) el.scrollLeft = t.offsetLeft - 6; };
   const pill = (l, k, on, first) => <span key={l} data-snap={first ? '1' : undefined} className="press" style={{ flex: 'none', padding: on ? '3px 12px' : '3px 7px', borderRadius: 999, background: on ? T.ink : 'transparent', color: on ? T.bg : k === 'custom' ? T.custom : T.ink2, fontFamily: T.fontDisplay, fontSize: 17, fontWeight: 500, fontStyle: k === 'custom' ? 'italic' : 'normal', whiteSpace: 'nowrap', lineHeight: 1.25 }}>{l}</span>;
   return <div style={{ marginTop: 8 }}>
     <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 6, padding: '0 12px', height: 30 }}>
@@ -192,10 +180,12 @@ function CsMergedRow({ T, swiped }) {
       </div>
       <span className="press" style={{ position: 'absolute', right: 10, top: 3, width: 24, height: 24, borderRadius: 12, background: T.chipBg, color: T.ink2, display: 'grid', placeItems: 'center' }}><Ic name="chevron-right" size={13} sw={2.2} /></span>
     </div>
-    <div style={{ margin: '6px 12px 0', height: 2, borderRadius: 1, background: T.line }}><span style={{ display: 'block', width: '34%', height: 2, borderRadius: 1, background: T.accent, marginLeft: swiped ? '32%' : 0 }} /></div>
+    <div style={{ margin: '6px 12px 0', height: 2, borderRadius: 1, background: T.line }}><span style={{ display: 'block', width: '34%', height: 2, borderRadius: 1, background: T.accent, marginLeft: side ? '32%' : 0 }} /></div>
   </div>;
 }
-const CsHeader = ({ T, children }) => <div style={{ background: T.header, borderBottom: `1px solid ${T.line}`, boxShadow: T.headerShadow, paddingBottom: 6, marginTop: -54, paddingTop: 54, flex: 'none' }}><T.TopBar /><T.SearchBar view="grid" />{children}</div>;
+/* filters button count: the final's search island, with a small bubble (ink on bg, like the cart count) on its filters button */
+const CsFilterCount = ({ T, n = 4 }) => <span style={{ position: 'absolute', left: 82, top: -2, minWidth: 16, height: 16, padding: '0 4px', boxSizing: 'border-box', borderRadius: 8, background: T.ink, color: T.bg, fontFamily: T.fontUI, fontSize: 9.5, fontWeight: 600, display: 'grid', placeItems: 'center', pointerEvents: 'none' }}>{n}</span>;
+const CsHeader = ({ T, children }) => <div style={{ background: T.header, borderBottom: `1px solid ${T.line}`, boxShadow: T.headerShadow, paddingBottom: 6, marginTop: -54, paddingTop: 54, flex: 'none' }}><T.TopBar /><div style={{ position: 'relative' }}><T.SearchBar view="grid" /><CsFilterCount T={T} /></div>{children}</div>;
 const CsCount = ({ T }) => <div style={{ padding: '8px 16px 0' }}><Meta T={T}>15 designs · sorted by featured</Meta></div>;
 function CsGridCards({ T }) {
   const list = XD.designs.slice(0, 6);
@@ -213,15 +203,11 @@ function ScreenCsNewCart({ T }) {
 function ScreenCsNewCustomer({ T }) {
   return <CsOverCarts T={T} sheet={<Sheet T={T} h={580} title="New customer" foot={<CsAddBtn T={T} />}><CsNewCustBody T={T} /></Sheet>} />;
 }
-/* P3 · submit, it fits */
+/* P3 · submit: summary, due, priority, note. Nothing here can block. */
 function ScreenCsSubmit({ T }) {
-  return <CsOverCarts T={T} sheet={<Sheet T={T} h={590} title="Submit cart A" foot={<CsSubmitFoot T={T} />}><CsSubmitBody T={T} /></Sheet>} />;
+  return <CsOverCarts T={T} sheet={<Sheet T={T} h={540} title="Submit cart A" foot={<CsSubmitFoot T={T} />}><CsSubmitBody T={T} /></Sheet>} />;
 }
-/* P4 · submit, over the credit line */
-function ScreenCsSubmitBlocked({ T }) {
-  return <CsOverCarts T={T} sheet={<Sheet T={T} h={632} title="Submit cart A" foot={<CsSubmitFoot T={T} blocked />}><CsSubmitBody T={T} blocked /></Sheet>} />;
-}
-/* P5 · sent: A greyed with "sent", B active, confirmation card in A's place, toast */
+/* P4 · sent: A greyed with "sent", B active, confirmation card in A's place, toast */
 function ScreenCsSubmitted({ T }) {
   return frameF(T, <>
     <div style={{ display: 'flex', alignItems: 'center', padding: '0 20px', height: 44 }}><span style={{ fontFamily: T.fontDisplay, fontSize: 26, fontWeight: 500, color: T.ink }}>Carts</span><span style={{ flex: 1 }} /><T.Chip icon="user-plus">New customer</T.Chip></div>
@@ -230,26 +216,63 @@ function ScreenCsSubmitted({ T }) {
     <div style={{ padding: '12px 22px 0' }}><Meta T={T} style={{ display: 'block', whiteSpace: 'normal' }}>Cart B · RL Fashion is active now. Designs you pick in the catalogue go into it.</Meta></div>
   </>, <Toast T={T} title="Cart A became SO-3456" sub="Sent to accounts" style={{ position: 'absolute', left: 14, right: 14, bottom: 22 }} />);
 }
-/* P6 · three-row header: one scrolling row for lists and quick chips (swiped sideways so the chips show), count as a Meta line in the body */
+/* P5 · my order in the queue: the final's opened sale order, with the queue strip and Delete · Edit order, no Approve */
+function ScreenCsInQueue({ T }) {
+  const o = csOrder();
+  return frameF(T, <>
+    <div style={{ display: 'flex', alignItems: 'center', padding: '0 12px', height: 44, gap: 6 }}><Hit T={T} icon="chevron-left" size={40} /><span style={{ fontFamily: T.fontMono, fontSize: 15, fontWeight: 600, color: T.ink }}>{o.no}</span><StatusPill T={T} s={o.status} /><span style={{ flex: 1 }} /><span style={{ fontSize: 12, color: T.ink3 }}>{o.date}</span></div>
+    <div style={{ margin: '4px 14px 0' }}><CsQueueStrip T={T} /></div>
+    <div style={{ margin: '10px 14px 0' }}><CustomerBar T={T} c={o.c} compact /></div>
+    <div style={{ margin: '10px 14px 0' }}><OrderLines T={T} o={o} lines={csLines()} /></div>
+  </>, <div style={{ position: 'absolute', left: 14, right: 14, bottom: 22, display: 'flex', alignItems: 'center', gap: 10, padding: 10, borderRadius: T.rDock, ...glass(T) }}>
+    <span style={{ paddingLeft: 6 }}><div style={{ fontSize: 11, color: T.ink3, whiteSpace: 'nowrap' }}>{o.pcs} pcs · due 20 d</div><PriceF v={o.bill} size={21} font={T.fontSerif} color={T.ink} dim={T.ink3} style={{ marginTop: 2 }} /></span><span style={{ flex: 1 }} />
+    <T.Btn kind="secondary" icon="trash-2" small style={{ height: 44 }}>Delete</T.Btn><T.Btn icon="pencil" small style={{ height: 44, padding: '0 16px', fontSize: 13.5 }}>Edit order</T.Btn>
+  </div>);
+}
+/* P6 · editing SO-3456 as cart A: the Carts screen, steppers live, the order goes back to the queue on send */
+function ScreenCsEditing({ T }) {
+  const { g, pcs, total } = csTotals();
+  return frameF(T, <>
+    <div style={{ display: 'flex', alignItems: 'center', padding: '0 20px', height: 44 }}><span style={{ fontFamily: T.fontDisplay, fontSize: 26, fontWeight: 500, color: T.ink }}>Carts</span><span style={{ flex: 1 }} /><T.Chip icon="user-plus">New customer</T.Chip></div>
+    <div style={{ padding: '6px 16px 0' }}><CsCartChips T={T} cart="A" editing="SO-3456 · editing" /></div>
+    <div style={{ margin: '10px 14px 0' }}><CsInfoStrip T={T} icon="pencil">Editing SO-3456 · it goes back to the queue when you send</CsInfoStrip></div>
+    <div style={{ margin: '10px 14px 0', borderRadius: T.rCard, background: T.surface, border: `1px solid ${T.line}`, overflow: 'hidden', boxShadow: T.dark ? 'none' : '0 6px 18px -12px rgba(36,23,18,.25)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px 12px' }}><span style={{ minWidth: 0 }}><div style={{ fontFamily: T.fontDisplay, fontSize: 20, fontWeight: 500, color: T.ink, whiteSpace: 'nowrap' }}>Ramleela Fashion</div><div style={{ fontSize: 12, color: T.ink3, marginTop: 2 }}>Surat · 30 days credit · {g.length} designs · {pcs} pcs</div></span><span style={{ flex: 1 }} /><span style={{ display: 'inline-flex', padding: 3, borderRadius: 999, background: T.bg2, flex: 'none' }}>{['In-cabin', 'WhatsApp'].map((b, i) => <span key={b} className="press" style={{ height: 26, padding: '0 10px', borderRadius: 999, display: 'grid', placeItems: 'center', fontSize: 11.5, background: i === 0 ? T.surface : 'transparent', color: i === 0 ? T.ink : T.ink3 }}>{b}</span>)}</span></div>
+      <CartGroups T={T} groups={g} />
+    </div>
+  </>, <div style={{ position: 'absolute', left: 14, right: 14, bottom: 22, padding: 10, borderRadius: T.rDock, ...glass(T), display: 'flex', alignItems: 'center', gap: 8 }}>
+    <span style={{ paddingLeft: 6 }}><div style={{ fontSize: 11, color: T.ink3, whiteSpace: 'nowrap' }}>{pcs} pcs</div><PriceF v={total} size={21} font={T.fontSerif} color={T.ink} dim={T.ink3} style={{ marginTop: 2 }} /></span><span style={{ flex: 1 }} />
+    <T.Btn kind="secondary" small style={{ height: 44, padding: '0 13px', fontSize: 13 }}>Discard changes</T.Btn><T.Btn icon="send" small style={{ height: 44, padding: '0 14px', fontSize: 13 }}>Send changes</T.Btn>
+  </div>);
+}
+/* P7 · delete, in words: a short sheet over the queue screen */
+function ScreenCsDeleteConfirm({ T }) {
+  return <div style={{ position: 'relative', height: '100%' }}><ScreenCsInQueue T={T} />{scrimF(T)}
+    <Sheet T={T} h={300} title="Delete SO-3456?" foot={<div style={{ display: 'flex', gap: 8 }}><T.Btn kind="secondary" style={{ flex: 1, height: 48 }}>Keep it</T.Btn><T.Btn icon="trash-2" style={{ flex: 1, height: 48 }}>Delete</T.Btn></div>}>
+      <div style={{ fontFamily: T.fontUI, fontSize: 15, lineHeight: 1.5, color: T.ink, padding: '4px 2px 0' }}>It leaves the queue. The customer’s picks come back as cart A, so you can start again.</div>
+    </Sheet>
+  </div>;
+}
+/* P8 · three-row header: one scrolling row for lists and quick chips (swiped sideways so the chips show), count as a Meta line in the body */
 function ScreenCsGrid3({ T }) {
   return frameF(T, <>
-    <CsHeader T={T}><CsMergedRow T={T} swiped /></CsHeader>
+    <CsHeader T={T}><CsMergedRow T={T} side /></CsHeader>
     <CsCount T={T} />
     <CsGridCards T={T} />
   </>, <T.Dock active="Catalogue" cart="A" />);
 }
-/* P7 · two-row header: identity and search only; the lists-and-chips row is the first row of the grid body and has
-   scrolled away with the grid (at rest it sits right under the search island, level with P6) */
-function ScreenCsGrid2({ T }) {
-  return frameF(T, <>
-    <CsHeader T={T} />
-    <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
-      <div style={{ marginTop: -CS_ROW_H }}><CsMergedRow T={T} /></div>
-      <CsCount T={T} />
-      <CsGridCards T={T} />
-    </div>
-  </>, <T.Dock active="Catalogue" cart="A" />);
-}
+/* P9 · two-row header at rest: identity and search only; the lists-and-chips row is the first row of the grid body.
+   P10 · after the first swipe: the row has scrolled away with the grid, so the grid starts about 55 px higher than f-1. */
+const CsGrid2Frame = ({ T, away }) => frameF(T, <>
+  <CsHeader T={T} />
+  <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
+    <div style={{ marginTop: away ? -CS_ROW_H : 0 }}><CsMergedRow T={T} side /></div>
+    <CsCount T={T} />
+    <CsGridCards T={T} />
+  </div>
+</>, <T.Dock active="Catalogue" cart="A" />);
+const ScreenCsGrid2 = ({ T }) => <CsGrid2Frame T={T} />;
+const ScreenCsGrid2Swiped = ({ T }) => <CsGrid2Frame T={T} away />;
 
 /* ═══════════════ web screens ═══════════════ */
 /* the Carts main area exactly as WebCarts draws it, with the chips row taking the pressed "+" */
@@ -263,8 +286,8 @@ function CsWebCartsMain({ T, plusOn }) {
     </div>
   </>;
 }
-const CsPane = ({ T, children, foot }) => <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-  <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', padding: '14px 16px 0' }}>{children}</div>
+const CsPane = ({ T, children, foot, fade }) => <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+  <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', padding: '14px 16px 0', position: 'relative' }}>{children}{fade && <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 44, background: `linear-gradient(180deg, transparent, ${T.surface})`, pointerEvents: 'none' }} />}</div>
   {foot && <div style={{ padding: '12px 16px 16px', borderTop: `1px solid ${T.line}` }}>{foot}</div>}
 </div>;
 const CsBack = ({ T, children }) => <span className="press" style={{ display: 'inline-flex', alignItems: 'center', gap: 5, height: 28, padding: '0 10px 0 6px', borderRadius: 999, background: T.chipBg, fontFamily: T.fontUI, fontSize: 12, color: T.ink2, marginBottom: 12 }}><Ic name="arrow-left" size={13} />{children}</span>;
@@ -272,21 +295,31 @@ const CsWebShell = ({ T, plusOn, title, pane }) => <WebShell3 T={T} module="Cata
 
 const WebCsNewCart = ({ T }) => <CsWebShell T={T} plusOn title="New cart" pane={<CsPane T={T} foot={<CsStartBtn T={T} />}><CsNewCartBody T={T} /></CsPane>} />;
 const WebCsNewCustomer = ({ T }) => <CsWebShell T={T} plusOn title="New customer" pane={<CsPane T={T} foot={<CsAddBtn T={T} />}><CsBack T={T}>Customers</CsBack><CsNewCustBody T={T} /></CsPane>} />;
-const WebCsSubmit = ({ T }) => <CsWebShell T={T} title="Submit cart A" pane={<CsPane T={T} foot={<CsSubmitFoot T={T} />}><CsSubmitBody T={T} tight /></CsPane>} />;
-const WebCsSubmitBlocked = ({ T }) => <CsWebShell T={T} title="Submit cart A" pane={<CsPane T={T} foot={<CsSubmitFoot T={T} blocked />}><CsSubmitBody T={T} blocked tight /></CsPane>} />;
+const WebCsSubmit = ({ T }) => <CsWebShell T={T} title="Submit cart A" pane={<CsPane T={T} foot={<CsSubmitFoot T={T} />}><CsSubmitBody T={T} /></CsPane>} />;
+/* the Sale orders web screen (WebSO3's anatomy) with my queued order picked; the pane holds the strip, the order and Delete · Edit order */
+function WebCsInQueue({ T }) {
+  const o = csOrder(); const list = [o, ...ORDERS_F.filter(x => x.status !== 'Cancelled')]; const sum = list.reduce((a, x) => a + x.bill, 0);
+  const tabs = [{ icon: 'layout-grid', label: 'Catalogue' }, { icon: 'receipt-text', label: 'Sale orders · Raised', on: true }];
+  const pane = <CsPane T={T} fade foot={<CsQueueButtons T={T} />}><CsQueueStrip T={T} /><div style={{ marginTop: 10 }}><CustomerBar T={T} c={o.c} compact /></div><div style={{ marginTop: 10 }}><OrderLines T={T} o={o} lines={csLines()} /></div></CsPane>;
+  return <WebShell3 T={T} module="Catalogue" crumb={['Catalogue', 'Sale orders', 'Raised']} section="Sale orders" seg={CAT_SEG} active="Sale orders" mode="Customer mode" tabs={tabs} paneTitle={o.no} pane={pane}>
+    <ViewTabs T={T} tabs={SO_TABS2.map(([t, n]) => t === 'Raised' ? [t, n + 1] : [t, n])} active="Raised" extra={[['Analytics', null, 'bar-chart-3']]} right={<span style={{ display: 'inline-flex', padding: 3, borderRadius: 999, background: T.bg2 }}>{[['layout-list', 'cards'], ['table-2', 'table']].map(([ic, v]) => <span key={v} className="press" style={{ width: 34, height: 26, borderRadius: 999, display: 'grid', placeItems: 'center', background: v === 'cards' ? T.surface : 'transparent', color: v === 'cards' ? T.ink : T.ink3 }}><Ic name={ic} size={15} /></span>)}</span>} />
+    <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '12px 24px 0' }}><T.Chip icon="search" outline>Order, customer, agent</T.Chip><T.Chip icon="calendar" x outline>This month</T.Chip><T.Chip icon="arrow-down-up" outline>Newest</T.Chip><span style={{ flex: 1 }} /><span style={{ fontSize: 12, color: T.ink3 }}>{list.length} orders · {money(sum)}</span><Hit T={T} icon="printer" size={34} iconSize={16} style={{ background: T.chipBg }} /><Hit T={T} icon="download" size={34} iconSize={16} style={{ background: T.chipBg }} /></div>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0,1fr))', gap: 12, padding: '14px 24px' }}>{list.map((x, i) => <SOCard key={x.no} T={T} x={x} first={i === 0} />)}</div>
+  </WebShell3>;
+}
 
 /* ═══════════════ registration ═══════════════ */
-(window.NEW_DRAFT_MODULES = window.NEW_DRAFT_MODULES || []).push({ module: 'Catalogue · sell flow', note: 'the screens the sell flow was missing: new cart and customer, submit with the credit-line check, sent state; two calmer grid headers for compare (13 Oct, review 2)', subs: [
+(window.NEW_DRAFT_MODULES = window.NEW_DRAFT_MODULES || []).push({ module: 'Catalogue · sell flow', note: 'the screens the sell flow was missing: new cart and customer, submit (never blocked), the order in the approval queue with edit and delete; two calmer grid headers for compare (13 Oct, review 2)', subs: [
   { name: 'New cart & customer', flow: 'new cart → recent or new customer → start',
     phone: [['Carts · new cart sheet', ScreenCsNewCart], ['Carts · new customer sheet', ScreenCsNewCustomer]],
     web: [['Carts · new cart, customer picker in the pane', WebCsNewCart], ['Carts · new customer in the pane', WebCsNewCustomer]] },
-  { name: 'Submit for approval', flow: 'summary with credit line → fits / over the line → sent',
-    phone: [['Cart · submit for approval sheet', ScreenCsSubmit], ['Cart · over the credit line', ScreenCsSubmitBlocked], ['Cart · sent for approval', ScreenCsSubmitted]],
-    web: [['Cart · submit for approval in the pane', WebCsSubmit], ['Cart · over the credit line, in the pane', WebCsSubmitBlocked]] },
-  { name: 'Calmer grid header', flow: 'three rows → two rows, compare with the final',
-    phone: [['Grid · three-row header (compare with final f-1)', ScreenCsGrid3], ['Grid · two-row header, lists scroll with the grid (compare with f-1)', ScreenCsGrid2]],
+  { name: 'Submit for approval', flow: 'summary → sent → in the queue → editing → delete, in words',
+    phone: [['Cart · submit for approval sheet', ScreenCsSubmit], ['Cart · sent for approval', ScreenCsSubmitted], ['Sale orders · my order in the queue, edit or delete', ScreenCsInQueue], ['Sale orders · editing SO-3456 as cart A', ScreenCsEditing], ['Sale orders · delete, in words', ScreenCsDeleteConfirm]],
+    web: [['Cart · submit for approval in the pane', WebCsSubmit], ['Sale orders · my order in the queue, Edit and Delete in the pane', WebCsInQueue]] },
+  { name: 'Calmer grid header', flow: 'three rows → two rows → two rows after the first swipe, compare with the final',
+    phone: [['Grid · three-row header (compare with final f-1)', ScreenCsGrid3], ['Grid · two-row header, lists scroll with the grid (compare with f-1)', ScreenCsGrid2], ['Grid · two-row header, after the first swipe', ScreenCsGrid2Swiped]],
     web: [] },
 ] });
 
-Object.assign(window, { CS_RECENT, CS_NEW, CS_CREDIT, CS_NOTE, CS_TABS, CS_QUICK, CS_ROW_H, csTotals, CsSearch, CsSeg, CsChoice, CsField, CsOptRow, CsCustRow, CsLabel, CsRow, CsDesigns, CsCartChips, CsNewCartBody, CsStartBtn, CsNewCustBody, CsAddBtn, CsCredit, CsSubmitBody, CsStrip, CsSubmitFoot, CsSentCard, CsMergedRow, CsHeader, CsCount, CsGridCards, CsOverCarts, CsWebCartsMain, CsPane, CsBack, CsWebShell,
-  ScreenCsNewCart, ScreenCsNewCustomer, ScreenCsSubmit, ScreenCsSubmitBlocked, ScreenCsSubmitted, ScreenCsGrid3, ScreenCsGrid2, WebCsNewCart, WebCsNewCustomer, WebCsSubmit, WebCsSubmitBlocked });
+Object.assign(window, { CS_RECENT, CS_NEW, CS_CUST, CS_NOTE, CS_TABS, CS_QUICK, CS_ROW_H, csTotals, csOrder, csLines, CsSearch, CsSeg, CsChoice, CsField, CsOptRow, CsCustRow, CsLabel, CsDesigns, CsCartChips, CsNewCartBody, CsStartBtn, CsNewCustBody, CsAddBtn, CsSubmitBody, CsSubmitFoot, CsInfoStrip, CsQueueStrip, CsQueueButtons, CsSentCard, CsMergedRow, CsFilterCount, CsHeader, CsCount, CsGridCards, CsGrid2Frame, CsOverCarts, CsWebCartsMain, CsPane, CsBack, CsWebShell,
+  ScreenCsNewCart, ScreenCsNewCustomer, ScreenCsSubmit, ScreenCsSubmitted, ScreenCsInQueue, ScreenCsEditing, ScreenCsDeleteConfirm, ScreenCsGrid3, ScreenCsGrid2, ScreenCsGrid2Swiped, WebCsNewCart, WebCsNewCustomer, WebCsSubmit, WebCsInQueue });

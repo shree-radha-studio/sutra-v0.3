@@ -4,7 +4,9 @@
    Reuses from base: frameF, Hit, OutBtn, Pill, Meta, Mono, Thumb, CallChip, Sect, glass, PriceF, money, LineG, Legend,
    StatusPill, Ic, T.Btn, T.Chip, T.Kpi, T.Step, T.Tag, T.Island, WebShell3, ViewTabs (see COMPONENTS.md).
    Roles drawn: Sales (sale executive, no ₹ tile) on the phone landing, Sale manager (₹) on the web landing, sub-admin
-   (cannot approve over the credit line) on the blocked card, Guard on the gate pass. */
+   (cannot approve over the credit line) on the flagged card, Guard on the gate pass.
+   Owner's rule (13 Oct): nothing blocks a sale order at submission; the salesperson can edit or delete it while it waits;
+   every reason not to approve shows on the approver's card as a flag, in words, with the fact beside it. */
 
 /* ── module data (fictional; the board's own names and codes) ── */
 const Hm_SEG = [['Home'], ['Notifications', 5], ['Approvals', 7, true], ['Gate pass']];   // web sub-menu buttons: [label, count, chevron]
@@ -18,7 +20,7 @@ const HM_C = { name: 'Ramleela Fashion', city: 'Surat', tier: 'Platinum', since:
 const HM_NOTE = '2018 ke red ka stock check karna hai';
 /* order SO-3455 · lines: design, rate, colours as [name, qty, in stock, at the last step] */
 const HM_LINES = [
-  { code: '2798', rate: 4995, cols: [['Sky', 4, 20], ['Peach', 0, 15], ['Purple', 1, 2]] },
+  { code: '2798', rate: 4995, cols: [['Sky', 4, 20, null, 6], ['Peach', 0, 15], ['Purple', 1, 2]] },   // 5th item: the qty it had before the edit
   { code: '6002', rate: 4995, cols: [['Lilac', 3, 12]] },
   { code: '3661', rate: 5995, cols: [['Peach', 2, 0, 8]] },
 ];
@@ -26,14 +28,15 @@ const hmQty = l => l.cols.reduce((s, c) => s + c[1], 0);
 const HM_PCS = HM_LINES.reduce((s, l) => s + hmQty(l), 0);                                  // 10
 const HM_TOTAL = HM_LINES.reduce((s, l) => s + hmQty(l) * l.rate, 0);                       // 51,950
 const HM_INSTOCK = HM_LINES.reduce((s, l) => s + l.cols.reduce((t, c) => t + Math.min(c[1], c[2]), 0), 0);   // 8
-const HM_OPEN = { within: 64000, blocked: 82000 };   // open exposure of Ramleela: P3 fits the line, P4 crosses it
+const HM_OPEN = { within: 64000, over: 82000 };   // open exposure of Ramleela: P3 fits the line, P4 crosses it
 const HM_HIST = [['SO-3398', '24/08/26', '05/09/26'], ['SO-3302', '29/07/26', '14/08/26'], ['SO-3215', '02/07/26', '17/07/26']];
 const HM_CH = { cust: { o: [38, 42, 35, 48, 52, 46, 58, 61, 54, 66, 72, 68], p: [30, 40, 34, 42, 45, 44, 50, 52, 49, 58, 60, 52] }, agency: { o: [210, 235, 198, 260, 284, 251, 312, 330, 298, 356, 372, 348], p: [190, 220, 190, 236, 262, 240, 280, 298, 270, 320, 330, 300] } };
-const HM_QUEUE = [   // sale orders waiting, oldest first
-  { no: 'SO-3448', name: 'A V Creation', city: 'Ambala', amt: 19980, pcs: 4, flag: null, by: 'Sunita Rao', on: '08/09/26', d: '6002' },
-  { no: 'SO-3451', name: 'Preeti Fashion Hub', city: 'Ludhiana', amt: 39955, pcs: 9, flag: ['danger', 'over credit line'], by: 'Rohan Mehta', on: '09/09/26', d: '2006' },
-  { no: 'SO-3455', name: 'Ramleela Fashion', city: 'Surat', amt: HM_TOTAL, pcs: HM_PCS, flag: ['danger', 'overdue ₹62,400'], by: 'Rohan Mehta', on: '10/09/26', d: '2798' },
-  { no: 'SO-3460', name: 'Kavya Silks', city: 'Jaipur', amt: 26970, pcs: 6, flag: ['blue', 'new customer'], by: 'Sunita Rao', on: '11/09/26', d: '2006' },
+/* sale orders waiting: flags in words (tone, text), flagged first (danger count, then warn count, then oldest) */
+const HM_QUEUE = [
+  { no: 'SO-3455', name: 'Ramleela Fashion', city: 'Surat', amt: HM_TOTAL, pcs: HM_PCS, flags: [['danger', 'Overdue ₹62,400'], ['warn', 'GR ratio 40 %'], ['warn', 'Edited after submit']], by: 'Rohan Mehta', on: '10/09/26', d: '2798' },
+  { no: 'SO-3451', name: 'Preeti Fashion Hub', city: 'Ludhiana', amt: 39955, pcs: 9, flags: [['danger', 'Over credit line ₹9,950'], ['warn', 'Priority 1']], by: 'Rohan Mehta', on: '09/09/26', d: '2006' },
+  { no: 'SO-3460', name: 'Kavya Silks', city: 'Jaipur', amt: 26970, pcs: 6, flags: [['warn', 'New customer']], by: 'Sunita Rao', on: '11/09/26', d: '2006' },
+  { no: 'SO-3448', name: 'A V Creation', city: 'Ambala', amt: 19980, pcs: 4, flags: [], by: 'Sunita Rao', on: '08/09/26', d: '6002' },
 ];
 /* sale return SR-0112 */
 const HM_RET = { no: 'SR-0112', on: '12/09/26', by: 'Anil Verma · dispatch',
@@ -113,7 +116,7 @@ function ScreenHmHome({ T }) {
       <div style={{ display: 'grid', gap: 6 }}>
         <HmNeed T={T} icon="clipboard-check" title="3 approvals waiting" sub="SO-3455 · SO-3451 · SO-3448" />
         <HmNeed T={T} icon="shopping-basket" title="2 carts open since yesterday" sub="Ramleela Fashion · RL Fashion" />
-        <HmNeed T={T} icon="octagon-alert" tone="danger" title="1 cart over the credit line" sub="RL Fashion · Meerut · needs admin" />
+        <HmNeed T={T} icon="octagon-alert" tone="danger" title="1 cart over the credit line" sub="RL Fashion · Meerut · will go up flagged" />
       </div>
       <Sect T={T} style={sc}>Quick links</Sect>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0,1fr))', gap: 6 }}>{HM_QUICK.map(([ic, l]) => <HmQuick key={l} T={T} icon={ic} label={l} h={46} />)}</div>
@@ -161,7 +164,7 @@ function WebHmHome({ T }) {
         <HmNeed T={T} icon="package-plus" title="1 purchase inward" sub="GRN-0451 · Surat Fabrics · ₹84,000" />
         <HmNeed T={T} icon="factory" title="1 production overage" sub="PO-1187 · Rahul (karigar) · +6 pcs" />
         <HmNeed T={T} icon="shopping-basket" title="2 carts open since yesterday" sub="Ramleela Fashion · RL Fashion" />
-        <HmNeed T={T} icon="octagon-alert" tone="danger" title="1 cart over the credit line" sub="RL Fashion · Meerut" tag={<Pill T={T} tone="danger" small>Needs admin</Pill>} />
+        <HmNeed T={T} icon="octagon-alert" tone="danger" title="1 cart over the credit line" sub="RL Fashion · Meerut · will go up flagged" />
       </div>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 20 }}><span style={{ fontFamily: T.fontDisplay, fontSize: 20, fontWeight: 600, color: T.ink }}>Quick links</span></div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, minmax(0,1fr))', gap: 10, marginTop: 10 }}>{HM_QUICK.map(([ic, l, s]) => <HmQuick key={l} T={T} icon={ic} label={l} sub={s} h={84} />)}</div>
@@ -175,15 +178,26 @@ function WebHmHome({ T }) {
 
 /* ── Approvals pieces ── */
 /* head: back · order no (mono) · RAISED pill, and the one-line facts under it */
-const HmDocHead = ({ T, no, meta, pill = 'Raised' }) => <div style={{ ...hmLift(T), paddingBottom: 10 }}>
+const HmDocHead = ({ T, no, meta, note, pill = 'Raised' }) => <div style={{ ...hmLift(T), paddingBottom: 10 }}>
   <div style={{ display: 'flex', alignItems: 'center', gap: 8, height: 46, padding: '0 12px' }}><Hit T={T} icon="chevron-left" size={40} /><span style={{ fontFamily: T.fontMono, fontSize: 16, fontWeight: 600, color: T.ink }}>{no}</span><StatusPill T={T} s={pill} /><span style={{ flex: 1 }} /><Hit T={T} icon="printer" size={38} iconSize={17} style={{ background: T.chipBg }} /></div>
   <div style={{ padding: '0 16px', fontFamily: T.fontUI, fontSize: 12.5, color: T.ink3 }}>{meta}</div>
+  {note && <div style={{ padding: '2px 16px 0', fontFamily: T.fontUI, fontSize: 12, color: T.ink2, lineHeight: 1.35 }}>{note}</div>}
 </div>;
-/* words under the head when the order cannot be approved by this role */
-const HmBlockedStrip = ({ T, over }) => <div style={{ flex: 'none', padding: '10px 14px 0' }}><div style={{ display: 'flex', gap: 10, padding: '10px 12px', borderRadius: 16, background: T.danger + '1A', border: `1px solid ${T.danger}66` }}>
-  <Ic name="octagon-alert" size={20} color={T.danger} style={{ marginTop: 1 }} />
-  <span style={{ fontFamily: T.fontUI, fontSize: 12.5, color: T.ink2, lineHeight: 1.35 }}><b style={{ color: T.ink, fontWeight: 600 }}>Over the credit line by {money(over)}.</b> Only admin can approve. Reject, hold, or send to admin.</span>
-</div></div>;
+/* "Look twice": every reason not to approve, as a row of words with the fact beside it. Nothing here stops the order. */
+const hmFlags = (over, open) => [
+  ...(over > 0 ? [['danger', `Over the credit line by ${money(over)}`, `line ${money(HM_C.line)}, open ${money(open)}, this order ${money(HM_TOTAL)}`]] : []),
+  ['danger', 'Overdue ₹62,400', '2 bills, oldest 41 d'],
+  ['warn', 'GR ratio 40 %', 'goods returned, last 12 months'],
+  ['warn', 'Edited after submit', '2 min ago · qty of 2798 Sky 6 → 4'],
+];
+function HmFlags({ T, flags, web }) {
+  if (!flags.length) return null;
+  const c = flags.some(f => f[0] === 'danger') ? T.danger : T.warn;
+  return <div style={{ display: web ? 'flex' : 'block', gap: 14, padding: web ? '7px 14px' : '10px 12px 8px', borderRadius: 18, background: c + '14', border: `1px solid ${c}55` }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 8, ...(web ? { width: 124, flex: 'none', alignSelf: 'flex-start', paddingTop: 1 } : { marginBottom: 4 }) }}><Ic name="eye" size={16} color={c} /><span style={{ fontFamily: T.fontDisplay, fontSize: web ? 16 : 17, fontWeight: 600, color: T.ink }}>Look twice</span><span style={{ fontFamily: T.fontUI, fontSize: 11, fontWeight: 600, color: c, fontVariantNumeric: 'tabular-nums' }}>{flags.length}</span></div>
+    <div style={{ flex: 1, minWidth: 0 }}>{flags.map(([tone, label, fact]) => <div key={label} style={{ display: 'flex', gap: 9, alignItems: 'flex-start', padding: web ? '1px 0' : '4px 0' }}><span style={{ width: 7, height: 7, borderRadius: 4, background: tone === 'danger' ? T.danger : T.warn, flex: 'none', marginTop: 6 }} /><span style={{ fontFamily: T.fontUI, fontSize: 12.5, color: T.ink2, lineHeight: 1.4 }}><b style={{ color: T.ink, fontWeight: 600 }}>{label}</b> · {fact}</span></div>)}</div>
+  </div>;
+}
 /* the customer: name (display), where · tier · since, call chip, broker chip, purchase history */
 function HmCustomer({ T, c = HM_C, web }) {
   if (web) return <HmCard T={T} pad="9px 14px 10px">
@@ -207,7 +221,7 @@ const hmStanding = (open, c = HM_C) => [
   ['Customer score', '68', 'high band'],
   ['GR ratio', '40 %', 'goods returned', 'danger'],
   ['FY billing', money(450000), 'this year'],
-  ['Overdue', money(62400), '1 of 2 bills', 'danger'],
+  ['Overdue', money(62400), 'oldest 41 d', 'danger'],
   ['Open bills', '2', money(open) + ' open'],
 ];
 const HmStanding = ({ T, items, cols = 3 }) => <div style={{ display: 'grid', gridTemplateColumns: `repeat(${cols}, minmax(0,1fr))`, gap: 8 }}>{items.map(([l, v, s, tone]) => <T.Kpi key={l} label={l} value={v} sub={s} tone={tone} small />)}</div>;
@@ -219,12 +233,12 @@ function HmCredit({ T, open, order = HM_TOTAL, line = HM_C.line, web }) {
   const dot = c => <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: 4, background: c, margin: '0 3px 0 0' }} />;
   const cur = over ? T.danger : T.ink;
   return <HmCard T={T} pad={web ? '8px 14px 9px' : 14} style={over ? { borderColor: T.danger + '66' } : null}>
-    <div style={{ fontFamily: T.fontUI, fontSize: web ? 12 : 11.5, color: T.ink3, lineHeight: 1.45, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Credit line <span style={b}>{money(line)}</span> · {dot(T.ink3)}open <span style={b}>{money(open)}</span> · {dot(cur)}this order <span style={{ ...b, color: cur }}>{money(order)}</span></div>
+    <div style={{ fontFamily: T.fontUI, fontSize: web ? 12 : 11.5, color: T.ink3, lineHeight: 1.45, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Credit line <span style={b}>{money(line)}</span> · {dot(T.ink3)}open <span style={b}>{money(open)}</span> · {dot(cur)}this order <span style={{ ...b, color: cur }}>{money(order)}</span>{web && !over && <> · free <span style={b}>{money(free)}</span></>}</div>
     <div style={{ position: 'relative', marginTop: over ? (web ? 12 : 24) : (web ? 8 : 10) }}>
       <div style={{ height: 12, borderRadius: 6, background: T.chipBg, display: 'flex', overflow: 'hidden' }}><span style={{ width: w(open), background: T.ink3 }} /><span style={{ width: w(order), background: cur }} /></div>
       {over && <><span style={{ position: 'absolute', left: w(line), top: -6, bottom: -6, width: 2, marginLeft: -1, background: T.ink, borderRadius: 1 }} />{!web && <span style={{ position: 'absolute', left: w(line), top: -22, transform: 'translateX(-100%)', paddingRight: 5, fontFamily: T.fontUI, fontSize: 10.5, color: T.ink2, whiteSpace: 'nowrap' }}>line {money(line)}</span>}</>}
     </div>
-    <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginTop: web ? 6 : 8, fontFamily: T.fontUI, fontSize: 13, fontWeight: 600, color: over ? T.danger : T.ok }}><Ic name={over ? 'octagon-alert' : 'circle-check'} size={16} />{over ? `Over the line by ${money(total - line)} · needs admin` : `Inside the line · ${money(free)} free after this order`}</div>
+    {!web && <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginTop: 8, fontFamily: T.fontUI, fontSize: 13, fontWeight: 600, color: over ? T.danger : T.ok }}><Ic name={over ? 'octagon-alert' : 'circle-check'} size={16} />{over ? `Over the line by ${money(total - line)} · admin clears it` : `Inside the line · ${money(free)} free after this order`}</div>}
   </HmCard>;
 }
 /* appetite: what they usually buy, by price tier (BRD F:54) */
@@ -238,10 +252,10 @@ function HmAppetite({ T, tiers = [['High', 67], ['Mid', 25], ['Low', 8]], web })
 }
 /* order lines: photo, number head, a stepper per colour with "× rate" and the stock beside it */
 function HmColRow({ T, c, rate, web }) {
-  const [n, q, st, last] = c; const short = q > st;
+  const [n, q, st, last, was] = c; const short = q > st;
   return <div style={{ display: 'flex', alignItems: 'center', gap: 10, minHeight: web ? 32 : 46, opacity: q ? 1 : .62 }}>
     <span style={{ width: 4, height: 20, borderRadius: 2, background: XD.cols[n], flex: 'none' }} />
-    <span style={{ flex: 1, minWidth: 0 }}><div style={{ fontFamily: T.fontUI, fontSize: 13.5, fontWeight: 500, color: T.ink, lineHeight: 1.15 }}>{n}</div><Meta T={T} style={{ display: 'block', fontSize: 11, color: short ? T.warn : T.ink3 }}>{st} in stock{last ? ` · at last step ${last}` : ''}</Meta></span>
+    <span style={{ flex: 1, minWidth: 0 }}><div style={{ fontFamily: T.fontUI, fontSize: 13.5, fontWeight: 500, color: T.ink, lineHeight: 1.15 }}>{n}{was != null && <span style={{ marginLeft: 7, fontSize: 10.5, fontWeight: 600, color: T.warn }}>edited · was {was}</span>}</div><Meta T={T} style={{ display: 'block', fontSize: 11, color: short ? T.warn : T.ink3 }}>{st} in stock{last ? ` · at last step ${last}` : ''}</Meta></span>
     <T.Step v={q} />
     <span style={{ fontFamily: T.fontUI, fontSize: 12, color: T.ink2, fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap', minWidth: 52, textAlign: 'right' }}>× {money(rate)}</span>
   </div>;
@@ -284,7 +298,8 @@ const HmChart = ({ T, title, d, h = 66, mini }) => <HmCard T={T} pad={mini ? '10
   <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 5, fontSize: 10, color: T.ink3 }}><span>Oct 25</span><span>Apr 26</span><span>Sep 26</span></div>
 </HmCard>;
 /* docked at the foot of the phone: the link to the owner, then Reject · Hold · the one maroon button */
-const HmFoot = ({ T, primary = 'Approve', icon = 'check' }) => <div style={{ position: 'absolute', left: 14, right: 14, bottom: 22, padding: '4px 8px 8px', borderRadius: T.rDock, ...glass(T) }}>
+const HmFoot = ({ T, primary = 'Approve', icon = 'check', note }) => <div style={{ position: 'absolute', left: 14, right: 14, bottom: 22, padding: '4px 8px 8px', borderRadius: T.rDock, ...glass(T) }}>
+  {note && <div style={{ textAlign: 'center', paddingTop: 6, fontFamily: T.fontUI, fontSize: 11.5, color: T.ink3 }}>{note}</div>}
   <div className="press" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, height: 32, fontFamily: T.fontUI, fontSize: 12.5, color: T.ink2, fontWeight: 500 }}>Mark for inspection<Ic name="arrow-right" size={13} />owner</div>
   <div style={{ display: 'flex', gap: 8 }}><T.Btn kind="secondary" style={{ padding: '0 16px', flex: 'none' }}>Reject</T.Btn><T.Btn kind="secondary" style={{ padding: '0 16px', flex: 'none' }}>Hold</T.Btn><T.Btn icon={icon} style={{ flex: 1, minWidth: 0 }}>{primary}</T.Btn></div>
 </div>;
@@ -297,8 +312,8 @@ function HmQCard({ T, q, picked, web }) {
     <div style={{ flex: 1, minWidth: 0 }}>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}><span style={{ flex: 1, minWidth: 0, fontFamily: T.fontDisplay, fontSize: web ? 18 : 20, fontWeight: 600, color: T.ink, lineHeight: 1.1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{q.name}</span><PriceF v={q.amt} size={web ? 16 : 18} font={T.fontSerif} color={T.ink} dim={T.ink3} /></div>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 7, marginTop: 4 }}><Mono T={T} size={12}>{q.no}</Mono><Meta T={T} style={{ flex: 1, minWidth: 0 }}>{q.city}</Meta><Meta T={T} style={{ flex: 'none' }}>{q.pcs} pcs</Meta></div>
-      {web ? <><div style={{ marginTop: 6, minHeight: 20 }}>{q.flag ? <Pill T={T} tone={q.flag[0]} small>{q.flag[1]}</Pill> : null}</div><Meta T={T} style={{ display: 'block', marginTop: 4, fontSize: 11 }}>{q.by} · {q.on}</Meta></>
-        : <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 7, minHeight: 22 }}>{q.flag ? <Pill T={T} tone={q.flag[0]} small>{q.flag[1]}</Pill> : null}<span style={{ flex: 1 }} /><Meta T={T} style={{ fontSize: 11, flex: 'none' }}>{q.by} · {q.on}</Meta></div>}
+      {q.flags.length > 0 && <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginTop: 7 }}>{q.flags.map(([tone, text]) => <Pill key={text} T={T} tone={tone} small>{text}</Pill>)}</div>}
+      <Meta T={T} style={{ display: 'block', marginTop: 6, fontSize: 11 }}>{q.by} · {q.on}</Meta>
     </div>
   </div>;
 }
@@ -308,20 +323,22 @@ function ScreenHmApprovals({ T }) {
       <HmTabsRow T={T} tabs={[['Sale orders', 4], ['Returns', 1], ['Purchase inwards', 1], ['Overages', 1], ['Costing', 0]]} active="Sale orders" />
     </HmPageHead>
     <HmBody pb={112}>
-      <Meta T={T} style={{ display: 'block', margin: '2px 2px 8px' }}>4 sale orders · oldest first</Meta>
+      <Meta T={T} style={{ display: 'block', margin: '2px 2px 8px' }}>4 sale orders · flagged first</Meta>
       <div style={{ display: 'grid', gap: 9 }}>{HM_QUEUE.map(q => <HmQCard key={q.no} T={T} q={q} />)}</div>
     </HmBody>
   </>, <T.Island active="Home" />);
 }
 
 /* ── P3 / P4 · the sale-order card ── */
-function HmApprovalSO({ T, blocked, scroll }) {
-  const open = blocked ? HM_OPEN.blocked : HM_OPEN.within;
-  const over = open + HM_TOTAL - HM_C.line;
+function HmApprovalSO({ T, over: isOver, role = 'manager', scroll }) {
+  const open = isOver ? HM_OPEN.over : HM_OPEN.within;
+  const over = Math.max(0, open + HM_TOTAL - HM_C.line);
+  const sub = role === 'subadmin';
   return frameF(T, <>
-    <HmDocHead T={T} no="SO-3455" meta="10/09/26 · In-cabin · raised by Rohan Mehta" />
-    {blocked && <HmBlockedStrip T={T} over={over} />}
-    <HmBody pb={146} scroll={scroll}>
+    <HmDocHead T={T} no="SO-3455" meta="10/09/26 · In-cabin" note="Raised by Rohan Mehta · the salesperson can still edit or delete it until you act" />
+    <HmBody pb={sub ? 170 : 150} scroll={scroll}>
+      <HmFlags T={T} flags={hmFlags(over, open)} />
+      <div style={{ height: 10 }} />
       <HmCustomer T={T} />
       <Sect T={T}>Their record</Sect>
       <HmStanding T={T} items={hmStanding(open)} />
@@ -337,10 +354,11 @@ function HmApprovalSO({ T, blocked, scroll }) {
       <Sect T={T}>Orders and payments</Sect>
       <div style={{ display: 'grid', gap: 10 }}><HmChart T={T} title="Orders vs payments · 12 months" d={HM_CH.cust} /><HmChart T={T} title="Raghani Co. (agency) · orders vs payments" d={HM_CH.agency} /></div>
     </HmBody>
-  </>, <HmFoot T={T} primary={blocked ? 'Send to admin' : 'Approve'} icon={blocked ? 'send' : 'check'} />);
+  </>, <HmFoot T={T} primary={sub ? 'Send to admin' : 'Approve'} icon={sub ? 'send' : 'check'} note={sub ? 'Over-the-line flags are cleared by admin' : null} />);
 }
 const ScreenHmApproveSO = ({ T }) => <HmApprovalSO T={T} />;
-const ScreenHmApproveSOBlocked = ({ T }) => <HmApprovalSO T={T} blocked />;
+const ScreenHmApproveSOFlagged = ({ T }) => <HmApprovalSO T={T} over role="subadmin" />;
+const ScreenHmApproveSOAdmin = ({ T }) => <HmApprovalSO T={T} over role="admin" />;
 
 /* ── P5 · sale return card ── */
 function ScreenHmApproveReturn({ T, scroll }) {
@@ -375,27 +393,27 @@ function ScreenHmApproveReturn({ T, scroll }) {
 const HmLab = ({ T, children, right, style }) => <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, margin: '12px 0 6px', ...style }}><span style={{ width: 3, height: 12, borderRadius: 2, background: T.accent, alignSelf: 'center' }} /><span style={{ fontFamily: T.fontDisplay, fontSize: 15.5, fontWeight: 600, color: T.ink }}>{children}</span><span style={{ flex: 1 }} />{right}</div>;
 function HmWebQueue({ T }) {
   return <div style={{ width: 300, flex: 'none', borderRight: `1px solid ${T.line}`, padding: '12px 12px 0', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-    <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, margin: '0 2px 10px' }}><span style={{ fontFamily: T.fontDisplay, fontSize: 18, fontWeight: 600, color: T.ink }}>Sale orders</span><Meta T={T}>4 · oldest first</Meta><span style={{ flex: 1 }} /><Hit T={T} icon="sliders-horizontal" size={30} iconSize={14} style={{ background: T.chipBg, alignSelf: 'center' }} /></div>
+    <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, margin: '0 2px 10px' }}><span style={{ fontFamily: T.fontDisplay, fontSize: 18, fontWeight: 600, color: T.ink }}>Sale orders</span><Meta T={T}>4 · flagged first</Meta><span style={{ flex: 1 }} /><Hit T={T} icon="sliders-horizontal" size={30} iconSize={14} style={{ background: T.chipBg, alignSelf: 'center' }} /></div>
     <div style={{ display: 'grid', gap: 8 }}>{HM_QUEUE.map(q => <HmQCard key={q.no} T={T} q={q} web picked={q.no === 'SO-3455'} />)}</div>
   </div>;
 }
 /* the card in the middle: facts on the order, the lines with steppers, the note, actions docked at the foot */
-function HmWebCard({ T, blocked }) {
-  const open = blocked ? HM_OPEN.blocked : HM_OPEN.within, over = open + HM_TOTAL - HM_C.line;
+function HmWebCard({ T, over: isOver, role = 'manager' }) {
+  const open = isOver ? HM_OPEN.over : HM_OPEN.within, sub = role === 'subadmin';
   return <div style={{ flex: 1, minWidth: 0, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
-    <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', padding: '12px 16px 0' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 5, height: 28 }}><span style={{ fontFamily: T.fontMono, fontSize: 17, fontWeight: 600, color: T.ink }}>SO-3455</span><StatusPill T={T} s="Raised" /><span style={{ fontSize: 12, color: T.ink3, flex: 1, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>10/09/26 · In-cabin · raised by Rohan Mehta</span><Hit T={T} icon="printer" size={30} iconSize={15} style={{ background: T.chipBg }} /></div>
-      {blocked && <div style={{ display: 'flex', gap: 10, padding: '6px 12px', borderRadius: 14, background: T.danger + '1A', border: `1px solid ${T.danger}66`, marginBottom: 6, alignItems: 'center' }}><Ic name="octagon-alert" size={18} color={T.danger} /><span style={{ fontSize: 12.5, color: T.ink2, lineHeight: 1.35 }}><b style={{ color: T.ink, fontWeight: 600 }}>Over the credit line by {money(over)}.</b> Only admin can approve.</span></div>}
+    <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', padding: '10px 16px 0' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, height: 28 }}><span style={{ fontFamily: T.fontMono, fontSize: 17, fontWeight: 600, color: T.ink }}>SO-3455</span><StatusPill T={T} s="Raised" /><span style={{ fontSize: 12, color: T.ink3, flex: 1, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>10/09/26 · In-cabin</span><Hit T={T} icon="printer" size={28} iconSize={14} style={{ background: T.chipBg }} /></div>
+      <div style={{ fontSize: 11.5, color: T.ink2, margin: '0 0 6px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Raised by Rohan Mehta · the salesperson can still edit or delete it until you act</div>
       <HmCustomer T={T} web />
       <div style={{ marginTop: 6 }}><HmCredit T={T} open={open} web /></div>
       <div style={{ marginTop: 6 }}><HmLines T={T} web /></div>
       <div style={{ marginTop: 6 }}><HmNote T={T} tight /></div>
     </div>
-    <div style={{ flex: 'none', display: 'flex', alignItems: 'center', gap: 8, padding: '6px 16px', borderTop: `1px solid ${T.line}`, background: T.surface }}>
-      <span className="press" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: T.fontUI, fontSize: 12.5, color: T.ink2, fontWeight: 500 }}>Mark for inspection<Ic name="arrow-right" size={13} />owner</span>
+    <div style={{ flex: 'none', display: 'flex', alignItems: 'center', gap: 8, padding: '5px 16px', borderTop: `1px solid ${T.line}`, background: T.surface }}>
+      <span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="press" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: T.fontUI, fontSize: 12.5, color: T.ink2, fontWeight: 500 }}>Mark for inspection<Ic name="arrow-right" size={13} />owner</span>{sub && <Meta T={T} style={{ fontSize: 11 }}>Over-the-line flags are cleared by admin</Meta>}</span>
       <span style={{ flex: 1 }} />
-      <T.Btn kind="secondary" style={{ height: 40 }}>Reject</T.Btn><T.Btn kind="secondary" style={{ height: 40 }}>Hold</T.Btn>
-      <T.Btn icon={blocked ? 'send' : 'check'} style={{ height: 40, padding: '0 24px' }}>{blocked ? 'Send to admin' : 'Approve'}</T.Btn>
+      <T.Btn kind="secondary" style={{ height: 38 }}>Reject</T.Btn><T.Btn kind="secondary" style={{ height: 38 }}>Hold</T.Btn>
+      <T.Btn icon={sub ? 'send' : 'check'} style={{ height: 38, padding: '0 24px' }}>{sub ? 'Send to admin' : 'Approve'}</T.Btn>
     </div>
   </div>;
 }
@@ -414,15 +432,16 @@ function HmRecordPane({ T, open }) {
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}><HmChart T={T} mini title="Ramleela Fashion" d={HM_CH.cust} h={54} /><HmChart T={T} mini title="Raghani Co. (agency)" d={HM_CH.agency} h={54} /></div>
   </div>;
 }
-function HmWebApprovals({ T, blocked }) {
-  const open = blocked ? HM_OPEN.blocked : HM_OPEN.within;
+function HmWebApprovals({ T, over: isOver, role = 'manager' }) {
+  const open = isOver ? HM_OPEN.over : HM_OPEN.within, over = Math.max(0, open + HM_TOTAL - HM_C.line);
   return <WebShell3 T={T} module="Home" crumb={['Home', 'Approvals', 'Sale orders', 'SO-3455']} section="Approvals" seg={Hm_SEG} active="Approvals" tabs={Hm_TABS('appr')} paneTitle="Ramleela Fashion" pane={<HmRecordPane T={T} open={open} />}>
     <ViewTabs T={T} tabs={Hm_APPR_TABS} active="Sale orders" />
-    <div style={{ flex: 1, minHeight: 0, display: 'flex' }}><HmWebQueue T={T} /><HmWebCard T={T} blocked={blocked} /></div>
+    <div style={{ padding: '8px 24px 0', flex: 'none' }}><HmFlags T={T} web flags={hmFlags(over, open)} /></div>
+    <div style={{ flex: 1, minHeight: 0, display: 'flex', marginTop: 8 }}><HmWebQueue T={T} /><HmWebCard T={T} over={isOver} role={role} /></div>
   </WebShell3>;
 }
 const WebHmApprovals = ({ T }) => <HmWebApprovals T={T} />;
-const WebHmApproveBlocked = ({ T }) => <HmWebApprovals T={T} blocked />;
+const WebHmApproveFlagged = ({ T }) => <HmWebApprovals T={T} over role="subadmin" />;
 
 /* ── gate pass: phone P6 · web W4 ── */
 const HmKindDisc = ({ T, kind, s = 42 }) => <span style={{ width: s, height: s, borderRadius: 14, background: T.chipBg, color: T.ink2, display: 'grid', placeItems: 'center', flex: 'none' }}><Ic name={HM_KIND_IC[kind]} size={s * .45} sw={1.7} /></span>;
@@ -504,20 +523,20 @@ function WebHmGate({ T }) {
     phone: [['Home · sale executive landing', ScreenHmHome]],
     web: [['Home · landing on the web shell', WebHmHome]] },
   { name: 'Approvals', flow: 'queue → sale order card → over the credit line → sale return card',
-    phone: [['Approvals · queue', ScreenHmApprovals], ['Approvals · sale order card', ScreenHmApproveSO], ['Approvals · over the credit line', ScreenHmApproveSOBlocked], ['Approvals · sale return card', ScreenHmApproveReturn]],
-    web: [['Approvals · queue, card, facts pane', WebHmApprovals], ['Approvals · over the credit line', WebHmApproveBlocked]] },
+    phone: [['Approvals · queue', ScreenHmApprovals], ['Approvals · sale order card', ScreenHmApproveSO], ['Approvals · flagged, over the credit line (sub-admin)', ScreenHmApproveSOFlagged], ['Approvals · flagged, admin approves', ScreenHmApproveSOAdmin], ['Approvals · sale return card', ScreenHmApproveReturn]],
+    web: [['Approvals · queue, card, facts pane', WebHmApprovals], ['Approvals · flagged, over the credit line (sub-admin)', WebHmApproveFlagged]] },
   { name: 'Gate pass', flow: 'tokens',
     phone: [['Gate pass · tokens', ScreenHmGate]],
     web: [['Gate pass · token list, token pane', WebHmGate]] },
 ] });
 
-Object.assign(window, { Hm_SEG, Hm_TABS, Hm_APPR_TABS, HM_C, HM_LINES, HM_TOTAL, HM_PCS, HM_QUEUE, HM_RET, HM_AUTO, HM_MANUAL, HmCard, HmBody, HmHeader, HmPageHead, HmTabsRow, HmSeg, HmNeed, HmQuick, HmNotice, HmNoticePane, HmDocHead, HmBlockedStrip, HmCustomer, HmStanding, HmCredit, HmAppetite, HmColRow, HmLines, HmNote, HmHistory, HmChart, HmFoot, HmQCard, HmApprovalSO, HmLab, HmWebQueue, HmWebCard, HmRecordPane, HmWebApprovals, HmKindDisc, HmTokenRow, HmTokenTable, HmTokenPane,
-  ScreenHmHome, WebHmHome, ScreenHmApprovals, ScreenHmApproveSO, ScreenHmApproveSOBlocked, ScreenHmApproveReturn, WebHmApprovals, WebHmApproveBlocked, ScreenHmGate, WebHmGate });
+Object.assign(window, { Hm_SEG, Hm_TABS, Hm_APPR_TABS, HM_C, HM_LINES, HM_TOTAL, HM_PCS, HM_QUEUE, HM_RET, HM_AUTO, HM_MANUAL, HmCard, HmBody, HmHeader, HmPageHead, HmTabsRow, HmSeg, HmNeed, HmQuick, HmNotice, HmNoticePane, HmDocHead, HmFlags, HmCustomer, HmStanding, HmCredit, HmAppetite, HmColRow, HmLines, HmNote, HmHistory, HmChart, HmFoot, HmQCard, HmApprovalSO, HmLab, HmWebQueue, HmWebCard, HmRecordPane, HmWebApprovals, HmKindDisc, HmTokenRow, HmTokenTable, HmTokenPane,
+  ScreenHmHome, WebHmHome, ScreenHmApprovals, ScreenHmApproveSO, ScreenHmApproveSOFlagged, ScreenHmApproveSOAdmin, ScreenHmApproveReturn, WebHmApprovals, WebHmApproveFlagged, ScreenHmGate, WebHmGate });
 
 /*TMPSTART*/
 (window.NEW_DRAFT_MODULES = window.NEW_DRAFT_MODULES || []).push({ module: 'Home · tmp', note: 'tmp', subs: [{ name: 'tmp', flow: 'tmp', phone: [
-  ['so 480', ({ T }) => <HmApprovalSO T={T} scroll={480} />], ['so 960', ({ T }) => <HmApprovalSO T={T} scroll={960} />], ['so 1440', ({ T }) => <HmApprovalSO T={T} scroll={1440} />],
-  ['blocked 480', ({ T }) => <HmApprovalSO T={T} blocked scroll={480} />],
+  ['so 0', ({ T }) => <HmApprovalSO T={T} scroll={1} />], ['so 480', ({ T }) => <HmApprovalSO T={T} scroll={480} />], ['so 960', ({ T }) => <HmApprovalSO T={T} scroll={960} />], ['so 1440', ({ T }) => <HmApprovalSO T={T} scroll={1440} />],
+  ['flagged 480', ({ T }) => <HmApprovalSO T={T} over role="subadmin" scroll={480} />],
   ['ret 480', ({ T }) => <ScreenHmApproveReturn T={T} scroll={480} />], ['ret 960', ({ T }) => <ScreenHmApproveReturn T={T} scroll={960} />],
 ], web: [] }] });
 /*TMPEND*/
